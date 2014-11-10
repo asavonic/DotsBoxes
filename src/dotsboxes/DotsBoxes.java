@@ -7,6 +7,8 @@ public class DotsBoxes {
 	 */
 	public static void main(String[] args) 
 	{
+		SessionManager smanager = new SessionManager();
+		smanager.Delete();
 		System.out.println("Hello World");
 	}
 
