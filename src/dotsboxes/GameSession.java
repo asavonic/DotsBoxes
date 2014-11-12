@@ -23,10 +23,10 @@ public class GameSession
 	 * @name    HandleEvent
 	 * @brief   Handle event.
 	 * Receive and handle event.
-	 * @param event - event that needs to handled into GameSession.
+	 * @param Event - event that needs to handled into GameSession.
 	 * @retval void
 	 */
-	public void HandleEvent( event ev)
+	public void HandleEvent( Event ev)
 	{
 		Debug.log("Event recieved.");
 		Debug.log("Event handled.");

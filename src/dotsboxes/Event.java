@@ -1,19 +1,19 @@
 package dotsboxes;
 /**
- * @file   event.java
+ * @file   Event.java
  * @brief  This file implements class that represent events.
  */
 
-public class event 
+public class Event 
 {
-	Happen happen;
+	public Happen happen;
 	/**
-	 * @name    event
+	 * @name    Event
 	 * @brief   Constructor event.
 	 * Init event object with assigning argument's type.
 	 * @param Happen - type of event.
 	 */
-	event( Happen someThing)
+	Event( Happen someThing)
 	{
 		happen = someThing;
 		Debug.log("Event created.");
