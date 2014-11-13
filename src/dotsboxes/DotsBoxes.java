@@ -35,6 +35,7 @@ public class DotsBoxes {
 		
 		System.out.println("Hello World");
 		smanager.Delete();
+		System.exit(0);
 	}
 
 }

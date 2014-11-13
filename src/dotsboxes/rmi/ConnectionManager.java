@@ -15,6 +15,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import dotsboxes.Debug;
+import dotsboxes.Event;
+import dotsboxes.EventType;
 import dotsboxes.PlayerDesc;
 
 /**
@@ -46,7 +48,6 @@ public class ConnectionManager {
 		m_PendingTransmittors = new LinkedList<EventTransmitter>();
 		
 		new_connection.Connect(remote_player_desc.getInetAdress(), remote_player_desc.getPort());
-		
 		m_PendingConnections.add(new_connection);
 	}
 	
@@ -58,9 +59,17 @@ public class ConnectionManager {
 	private NodeRegisterImpl register;
 	private Registry registry;
 	
-	public void accept_remote_transmitter(EventTransmitter remote_transmitter) 
+	public void accept_remote_transmitter(EventTransmitter remote_transmitter)
 	{
 		m_PendingTransmittors.add(remote_transmitter);
 		Debug.log("Add pending transmitter");
+		try {
+			remote_transmitter.transmit(new Event(EventType.ConnectionHandshake));
+		} catch (RemoteException e) {
+			m_PendingTransmittors.remove(remote_transmitter);
+			Debug.log("Remove pending transmitter");
+			e.printStackTrace();
+		}
+		
 	}
 }

@@ -4,8 +4,12 @@ package dotsboxes;
  * @brief  This file implements class that represent events.
  */
 
-public class Event 
+public class Event implements java.io.Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1029903096709060936L;
 	public EventType happen;
 	/**
 	 * @name    Event
@@ -13,7 +17,7 @@ public class Event
 	 * Init event object with assigning argument's type.
 	 * @param EventType - type of event.
 	 */
-	Event( EventType someThing)
+	public Event( EventType someThing)
 	{
 		happen = someThing;
 		Debug.log("Event created.");

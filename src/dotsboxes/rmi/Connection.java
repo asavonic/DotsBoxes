@@ -12,6 +12,7 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 
 import dotsboxes.Debug;
+import dotsboxes.Event;
 import dotsboxes.PlayerDesc;
 /**
  *
@@ -33,6 +34,11 @@ public class Connection
 		
 		remote_register.register(m_LocalEventTransmitter);
 		Debug.log("Connection.Connect(): registration sent");
+	}
+	
+	public void send_event(Event event) throws RemoteException 
+	{
+		m_RemoteEventTransmitter.transmit(event);
 	}
 	
 	public EventTransmitter getLocalEventTransmitter() {
