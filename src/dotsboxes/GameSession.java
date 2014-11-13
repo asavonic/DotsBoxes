@@ -21,7 +21,7 @@ public class GameSession
 	{
 		send_event = callback;
 		Debug.log("GameSassion initializated.");
-		SendEvent( new Event( Event_type.AnythingHapping));
+		SendEvent( new Event( EventType.AnythingHapping));
 	}
 	
 	/**

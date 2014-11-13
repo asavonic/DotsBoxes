@@ -11,6 +11,7 @@ import java.net.InetAddress;
  */
 public class PlayerDesc {
 	InetAddress m_InetAdress;
+	int m_Port;
 	String m_Name;
 	byte[] m_Hash;
 	
@@ -19,6 +20,12 @@ public class PlayerDesc {
 	}
 	public void setInetAdress(InetAddress inetAdress) {
 		m_InetAdress = inetAdress;
+	}
+	public int getPort() {
+		return m_Port;
+	}
+	public void setPort(int port) {
+		m_Port = port;
 	}
 	public String getName() {
 		return m_Name;
