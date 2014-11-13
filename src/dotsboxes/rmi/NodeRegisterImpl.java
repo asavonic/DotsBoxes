@@ -5,6 +5,8 @@ package dotsboxes.rmi;
 
 import java.rmi.Remote;
 
+import dotsboxes.Debug;
+
 /**
  *
  *
@@ -19,6 +21,7 @@ public class NodeRegisterImpl implements NodeRegister
 	@Override
 	public void register(EventTransmitter transmitter) 
 	{
+		Debug.log("NodeRegisterImpl.register(): pushing new remote transmitter");
 		m_Manager.accept_remote_transmitter(transmitter);
 	}
 
