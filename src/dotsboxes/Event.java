@@ -6,14 +6,14 @@ package dotsboxes;
 
 public class Event 
 {
-	public Happen happen;
+	public Event_type happen;
 	/**
 	 * @name    Event
 	 * @brief   Constructor event.
 	 * Init event object with assigning argument's type.
-	 * @param Happen - type of event.
+	 * @param Event_type - type of event.
 	 */
-	Event( Happen someThing)
+	Event( Event_type someThing)
 	{
 		happen = someThing;
 		Debug.log("Event created.");
@@ -25,7 +25,7 @@ public class Event
 	 * @param void.
 	 * @retval Happen
 	 */
-	public Happen GetType()
+	public Event_type GetType()
 	{
 		Debug.log("Event type returned.");
 		return happen;

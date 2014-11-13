@@ -4,9 +4,12 @@ package dotsboxes;
  * @brief  This file implements class that handle game logic object and connection object.
  */
 
+import dotsboxes.callbacks.GameEvent;
+
 public class SessionManager 
 {
-	GameSession game;
+	GameSession m_game;
+	GameEvent m_game_event;
 	/**
 	 * @name    SessionManager
 	 * @brief   Constructor SessionManager. 
@@ -18,7 +21,8 @@ public class SessionManager
 		Debug.log("Session manager: initialization:");
 		int some_number_of_players = 0;
 		int some_size_of_field = 0;	
-		game = new GameSession( some_number_of_players, some_size_of_field);
+		m_game_event = new GameEvent();
+		m_game = new GameSession( some_number_of_players, some_size_of_field, m_game_event);
 		Debug.log("Session manager: initializated.");
 	}
 	/**
@@ -29,7 +33,7 @@ public class SessionManager
 	 */
 	public void Delete()
 	{
-		game.Delete();
+		m_game.Delete();
 		Debug.log("Session manager destroyed.");
 	}
 }

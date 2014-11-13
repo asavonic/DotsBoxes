@@ -3,10 +3,13 @@ package dotsboxes;
  * @file   GameSession.java
  * @brief  This file implement game logic ( add edge, add player's mark, win, lose, ...)
  */
+import dotsboxes.callbacks.EventCallback;
+
 public class GameSession 
 {
 	int m_fieldSize;
 	int m_numberOfPlayers;
+	EventCallback send_event;
 	/**
 	 * @name    GameSession
 	 * @brief   Constructor GameSession.
@@ -14,9 +17,11 @@ public class GameSession
 	 * @param field_size - size of game field.
 	 * @param players_number - number of players.
 	 */
-	GameSession( int field_size, int players_number /* , call_back() */ )
+	GameSession( int field_size, int players_number, EventCallback callback )
 	{
+		send_event = callback;
 		Debug.log("GameSassion initializated.");
+		SendEvent( new Event( Event_type.AnythingHapping));
 	}
 	
 	/**
@@ -32,6 +37,10 @@ public class GameSession
 		Debug.log("Event handled.");
 	}
 	
+	private void SendEvent( Event ev)
+	{
+		send_event.new_event(ev);
+	}
 	/**
 	 * @name    Delete
 	 * @brief   Destroy game logic objects.

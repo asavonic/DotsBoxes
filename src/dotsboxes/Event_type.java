@@ -1,6 +1,6 @@
 package dotsboxes;
 
-public enum Happen 
+public enum Event_type
 {
 	AnythingHapping,
 	
