@@ -15,6 +15,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import dotsboxes.Debug;
+import dotsboxes.Event;
 import dotsboxes.PlayerDesc;
 
 /**

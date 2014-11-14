@@ -6,7 +6,8 @@ package dotsboxes;
 
 public class Event 
 {
-	public EventType happen;
+	public EventType m_eventType;
+	public PlayerDesc m_SenderDesc;
 	/**
 	 * @name    Event
 	 * @brief   Constructor event.
@@ -15,7 +16,7 @@ public class Event
 	 */
 	Event( EventType someThing)
 	{
-		happen = someThing;
+		m_eventType = someThing;
 		Debug.log("Event created.");
 	}
 	
@@ -29,7 +30,7 @@ public class Event
 	public EventType GetType()
 	{
 		Debug.log("Event type returned.");
-		return happen;
+		return m_eventType;
 	}
 	/**
 	 * @name    Delete
@@ -50,5 +51,12 @@ public class Event
 		m_SenderDesc = senderDesc;
 	}
 	
-	public PlayerDesc m_SenderDesc;
+	public String TypeToString()
+	{
+		switch(m_eventType)
+		{
+			default:
+					return "Undefined type.";
+		}
+	}
 }

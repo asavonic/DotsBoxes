@@ -4,25 +4,30 @@ package dotsboxes;
  * @brief  This file implements class that handle game logic object and connection object.
  */
 
-import dotsboxes.callbacks.GameEvent;
+import java.rmi.AccessException;
+import java.rmi.AlreadyBoundException;
+import java.rmi.RemoteException;
 
-public class SessionManager 
+import dotsboxes.callbacks.EventCallback;
+import dotsboxes.rmi.ConnectionManager;
+
+public class SessionManager implements EventCallback
 {
-	GameSession m_game;
-	GameEvent m_game_event;
 	/**
 	 * @name    SessionManager
 	 * @brief   Constructor SessionManager. 
 	 * Init SessionManager with create GameSession and ConnectionManager.
 	 * @param void.
+	 * @throws AlreadyBoundException 
+	 * @throws RemoteException 
+	 * @throws AccessException 
 	 */
 	SessionManager()
 	{
 		Debug.log("Session manager: initialization:");
 		int some_number_of_players = 0;
 		int some_size_of_field = 0;	
-		m_game_event = new GameEvent();
-		m_game = new GameSession( some_number_of_players, some_size_of_field, m_game_event);
+		m_game = new GameSession( some_number_of_players, some_size_of_field, this);
 		
 		Debug.log("Session manager: initializated.");
 	}
@@ -37,4 +42,17 @@ public class SessionManager
 		m_game.Delete();
 		Debug.log("Session manager destroyed.");
 	}
+	@Override
+	public void new_game_event(Event event) 
+	{
+		Debug.log("Recieved game event : " + event.TypeToString());
+	}
+	
+	public void new_connect_event(Event event) 
+	{
+		Debug.log("Recieved connect event." + event.TypeToString());
+	}
+	
+		GameSession       m_game;
+		ConnectionManager m_connect;
 }

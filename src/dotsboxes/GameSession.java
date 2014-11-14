@@ -7,9 +7,7 @@ import dotsboxes.callbacks.EventCallback;
 
 public class GameSession 
 {
-	int m_fieldSize;
-	int m_numberOfPlayers;
-	EventCallback send_event;
+
 	/**
 	 * @name    GameSession
 	 * @brief   Constructor GameSession.
@@ -19,7 +17,7 @@ public class GameSession
 	 */
 	GameSession( int field_size, int players_number, EventCallback callback )
 	{
-		send_event = callback;
+		m_send_event = callback;
 		Debug.log("GameSassion initializated.");
 		SendEvent( new Event( EventType.AnythingHapping));
 	}
@@ -39,7 +37,7 @@ public class GameSession
 	
 	private void SendEvent( Event ev)
 	{
-		send_event.new_event(ev);
+		m_send_event.new_game_event(ev);
 	}
 	/**
 	 * @name    Delete
@@ -51,4 +49,8 @@ public class GameSession
 	{
 		Debug.log("GameSession :  deleted.");
 	}
+	
+	int m_fieldSize;
+	int m_numberOfPlayers;
+	EventCallback m_send_event;
 }
