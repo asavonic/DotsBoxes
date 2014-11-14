@@ -6,7 +6,7 @@ package dotsboxes;
 
 public class Event 
 {
-	public EventType m_eventType;
+	private EventType m_eventType;
 	public PlayerDesc m_SenderDesc;
 	/**
 	 * @name    Event
@@ -60,7 +60,7 @@ public class Event
 		case game_VertexChanged:
 			return "game_VertexChanged";
 		default:
-				return "Undefined type.";
+			return "Undefined type.";
 		}
 	}
 }
