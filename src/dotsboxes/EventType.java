@@ -2,9 +2,8 @@ package dotsboxes;
 
 public enum EventType 
 {
-	AnythingHapping,
-	SomeThingElse,
-	SomeThingEspecial,
+	game_EdgeChanged,
+	game_VertexChanged,
 	
 	ConnectionHandshake,
 	ConnectionPing,

@@ -55,8 +55,12 @@ public class Event
 	{
 		switch(m_eventType)
 		{
-			default:
-					return "Undefined type.";
+		case game_EdgeChanged:
+			return "game_EdgeChanged";
+		case game_VertexChanged:
+			return "game_VertexChanged";
+		default:
+				return "Undefined type.";
 		}
 	}
 }

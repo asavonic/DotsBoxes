@@ -25,9 +25,10 @@ public class SessionManager implements EventCallback
 	SessionManager()
 	{
 		Debug.log("Session manager: initialization:");
-		int some_number_of_players = 0;
-		int some_size_of_field = 0;	
-		m_game = new GameSession( some_number_of_players, some_size_of_field, this);
+		int some_number_of_players = 3;
+		int some_height_of_field = 10;	
+		int some_width_of_field = 10;	
+		m_game = new GameSession( some_height_of_field, some_width_of_field, some_number_of_players, 0, this);
 		
 		Debug.log("Session manager: initializated.");
 	}
@@ -42,7 +43,7 @@ public class SessionManager implements EventCallback
 		m_game.Delete();
 		Debug.log("Session manager destroyed.");
 	}
-	@Override
+
 	public void new_game_event(Event event) 
 	{
 		Debug.log("Recieved game event : " + event.TypeToString());
