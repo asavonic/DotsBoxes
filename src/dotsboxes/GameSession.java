@@ -4,8 +4,12 @@ package dotsboxes;
  * @brief  This file implement game logic ( add edge, add player's mark, win, lose, ...)
  */
 import dotsboxes.callbacks.EventCallback;
+import dotsboxes.events.Event;
+import dotsboxes.events.EventType;
+import dotsboxes.events.GameEvent;
+import dotsboxes.utils.Debug;
 
-public class GameSession 
+public class GameSession implements EventCallback
 {
 
 	/**
@@ -15,12 +19,14 @@ public class GameSession
 	 * @param field_size - size of game field.
 	 * @param players_number - number of players.
 	 */
-	GameSession( int field_height, int field_width, int players_number, int current_player_tag, EventCallback callback )
+	GameSession( int field_height, int field_width, int players_number, int current_player_tag )
 	{
 		m_fieldHeight      = field_height;
 		m_fieldWidth       = field_width;
 		m_numberOfPlayers  = players_number;
-		m_send_event       = callback;
+		
+		EventManager.Subscribe( EventType.game_Turn, this); //Subscribe on game_Turn event.
+		
 		current_player_tag = current_player_tag;
 		m_edgesV  = new int[m_fieldHeight + 1][m_fieldWidth];
 		m_edgesH  = new int[m_fieldHeight][m_fieldWidth + 1];
@@ -39,15 +45,6 @@ public class GameSession
 		}
 		
 		Debug.log("GameSassion initializated.");
-		AddEdge( 0, 1, /* vertical? =  */ 0,  3);
-		AddEdge( 1, 0, /* vertical? =  */ 1,  3);
-		AddEdge( 1, 1, /* vertical? =  */ 0,  3);
-		AddEdge( 1, 1, /* vertical? =  */ 1,  3);
-		AddMark( 0, 0, 3);
-		AddMark( 1, 0, 3);
-		AddMark( 0, 1, 3);
-		AddMark( 1, 1, 3);
-		Debug.log("Win player number " + CheckWin());
 	}
 	
 	/**
@@ -60,13 +57,32 @@ public class GameSession
 	public void HandleEvent( Event ev)
 	{
 		Debug.log("Event recieved.");
+		
+		switch(ev.GetType())
+		{
+		case game_Turn:
+			GameEvent game_event = (GameEvent) ev; 
+			if (game_event.isEdgeChanged())
+			{
+				AddEdge( game_event.getI(), game_event.getJ(), game_event.getVert(), game_event.getPlrTag());
+			}
+			else 
+			{
+				AddMark( game_event.getI(), game_event.getJ(), game_event.getPlrTag());
+			}
+			break;
+		default:
+			Debug.log("Unknown event in GameSession!");
+			return;
+		}	
+		
 		Debug.log("Event handled.");
 	}
 	
-	private void AddEdge( int i, int j, int vert, int player_tag)
+	private void AddEdge( int i, int j, boolean vert, int player_tag)
 	{
-		int max_number_height = ( 1 == vert ) ? (m_fieldHeight + 1) : m_fieldHeight;
-		int max_number_width = ( 0 == vert ) ? (m_fieldWidth + 1) : m_fieldWidth;
+		int max_number_height = ( vert ) ? (m_fieldHeight + 1) : m_fieldHeight;
+		int max_number_width = ( !vert ) ? (m_fieldWidth + 1) : m_fieldWidth;
 		
 		if( player_tag <= 0 || player_tag > m_numberOfPlayers)
 		{
@@ -79,7 +95,7 @@ public class GameSession
 			return;
 		}
 		
-		if ( 1 == vert )
+		if ( vert )
 		{
 			if (0 == m_edgesV[i][j])
 			{
@@ -184,9 +200,88 @@ public class GameSession
 		return player_tag;
 	}
 	
+	public void Draw()
+	{
+		Debug.log("========================================");
+		
+		Debug.log("Nuber of players = " + m_numberOfPlayers);
+		Debug.log("Height = " + m_fieldHeight);
+		Debug.log("Width = " + m_fieldWidth);
+		Debug.log("");
+		
+		String horizontalLines  = new String();
+		String hor_lin = new String("---------");
+		String ver_lin = new String("|");
+		for( int j = 0; j < m_fieldWidth; ++j )
+		{
+			horizontalLines += hor_lin;
+		}
+		
+		for( int i = 0; i < m_fieldHeight; ++i )
+		{
+			String horizontalValue = new String("    ");		
+			for( int j = 0; j < m_fieldWidth; ++j )
+			{
+				horizontalValue += ver_lin;
+				if (border == m_edgesV[i][j])
+				{
+					horizontalValue += String.valueOf(m_edgesV[i][j]);
+				}
+				else
+				{
+					horizontalValue += " ";
+					horizontalValue += String.valueOf(m_edgesV[i][j]);
+				}
+				horizontalValue += ver_lin;
+				horizontalValue += "  ";
+			}
+			Debug.log(horizontalLines);
+			Debug.log(horizontalValue);
+			Debug.log(horizontalLines);
+			
+			horizontalValue = new String();
+			for( int j = 0; j < m_fieldHeight; ++j )
+			{
+				horizontalValue += ver_lin;
+				horizontalValue += " ";
+				horizontalValue += String.valueOf(m_edgesH[i][j]);
+				horizontalValue += ver_lin;
+				horizontalValue += "*";
+				horizontalValue += String.valueOf(m_vertex[i][j]);
+			}
+			horizontalValue += ver_lin;
+			horizontalValue += String.valueOf(m_edgesH[i][m_fieldHeight]);
+			horizontalValue += ver_lin;
+			
+			Debug.log(horizontalValue);
+		}
+		String horizontalValue = new String("    ");
+		for( int j = 0; j < m_fieldWidth; ++j )
+		{
+			horizontalValue += ver_lin;
+			if (border == m_edgesV[m_fieldHeight][j])
+			{
+				horizontalValue += String.valueOf(m_edgesV[m_fieldHeight][j]);
+			}
+			else
+			{
+				horizontalValue += " ";
+				horizontalValue += String.valueOf(m_edgesV[m_fieldHeight][j]);
+			}
+			horizontalValue += ver_lin;
+			horizontalValue += "  ";
+		}
+		Debug.log(horizontalLines);
+		Debug.log(horizontalValue);
+		Debug.log(horizontalLines);
+		
+		Debug.log("");
+		Debug.log("========================================");
+		
+	}
 	private void SendEvent( Event ev)
 	{
-		m_send_event.new_game_event(ev);
+		EventManager.NewEvent(ev);
 	}
 	/**
 	 * @name    Delete
@@ -203,7 +298,6 @@ public class GameSession
 	int m_fieldWidth;
 	int m_numberOfPlayers;
 	int m_current_player_tag;
-	EventCallback m_send_event;
 	int m_edgesV[][];  // List of vertical edges.
 	int m_edgesH[][];  // List of horizontal edges.
 	int m_vertex[][];

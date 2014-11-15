@@ -2,7 +2,7 @@
  * Implements function for print debug message.
  * Change return value isEnabled() if you want disable or enable print.  
  */
-package dotsboxes;
+package dotsboxes.utils;
 
 
 public class Debug

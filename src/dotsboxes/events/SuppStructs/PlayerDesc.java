@@ -1,7 +1,7 @@
 /**
  * 
  */
-package dotsboxes;
+package dotsboxes.events.SuppStructs;
 
 import java.net.InetAddress;
 

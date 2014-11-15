@@ -5,7 +5,7 @@ package dotsboxes.rmi;
 
 import java.rmi.Remote;
 
-import dotsboxes.Debug;
+import dotsboxes.utils.Debug;
 
 /**
  *

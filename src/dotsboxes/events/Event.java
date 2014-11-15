@@ -1,4 +1,8 @@
-package dotsboxes;
+package dotsboxes.events;
+
+import dotsboxes.events.SuppStructs.PlayerDesc;
+import dotsboxes.utils.Debug;
+
 /**
  * @file   Event.java
  * @brief  This file implements class that represent events.
@@ -7,14 +11,13 @@ package dotsboxes;
 public class Event 
 {
 	private EventType m_eventType;
-	public PlayerDesc m_SenderDesc;
 	/**
 	 * @name    Event
 	 * @brief   Constructor event.
 	 * Init event object with assigning argument's type.
 	 * @param EventType - type of event.
 	 */
-	Event( EventType someThing)
+	public Event( EventType someThing)
 	{
 		m_eventType = someThing;
 		Debug.log("Event created.");
@@ -43,14 +46,6 @@ public class Event
 		Debug.log("Event deleted.");
 	}
 	
-	public PlayerDesc getSenderDesc() {
-		return m_SenderDesc;
-	}
-
-	public void setSenderDesc(PlayerDesc senderDesc) {
-		m_SenderDesc = senderDesc;
-	}
-	
 	public String TypeToString()
 	{
 		switch(m_eventType)
@@ -59,8 +54,12 @@ public class Event
 			return "game_EdgeChanged";
 		case game_VertexChanged:
 			return "game_VertexChanged";
+		case Generic:
+			return "Generic";
+		case game_Turn:
+			return "game_Turn";
 		default:
-			return "Undefined type.";
+			return "Please define this type in ./src/dotsboxes/events/Event.java!";
 		}
 	}
 }

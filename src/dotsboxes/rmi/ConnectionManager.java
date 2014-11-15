@@ -14,9 +14,9 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.LinkedList;
 import java.util.List;
 
-import dotsboxes.Debug;
-import dotsboxes.Event;
-import dotsboxes.PlayerDesc;
+import dotsboxes.events.Event;
+import dotsboxes.events.SuppStructs.PlayerDesc;
+import dotsboxes.utils.Debug;
 
 /**
  *
