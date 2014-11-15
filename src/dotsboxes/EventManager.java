@@ -28,16 +28,18 @@ public final class EventManager
 	{
 		if (null == m_customers || null == m_subcribes)
 			Init();
-		if ( EventType.Generic == ev_type && !m_customers.contains(callback))
+		if ( EventType.Generic == ev_type )
 		{
-			m_customers.add(callback);
+			if (!m_customers.contains(callback))
+				m_customers.add(callback);
 		}
 		else
 		{
 			Vector<EventCallback> vector = m_subcribes.get(ev_type);
 			if ( null != vector )
 			{
-				vector.add(callback);
+				if (!vector.contains(callback))
+					vector.add(callback);
 			}
 			else
 			{
