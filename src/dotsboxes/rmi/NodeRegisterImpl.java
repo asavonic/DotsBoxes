@@ -3,7 +3,9 @@
  */
 package dotsboxes.rmi;
 
-import dotsboxes.Debug;
+import java.rmi.Remote;
+
+import dotsboxes.utils.Debug;
 
 /**
  *

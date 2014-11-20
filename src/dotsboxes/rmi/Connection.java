@@ -11,9 +11,9 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 
-import dotsboxes.Debug;
-import dotsboxes.Event;
-import dotsboxes.PlayerDesc;
+import dotsboxes.events.Event;
+import dotsboxes.events.SuppStructs.PlayerDesc;
+import dotsboxes.utils.Debug;
 /**
  *
  *

@@ -6,7 +6,9 @@ import java.rmi.AlreadyBoundException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 
+import dotsboxes.events.SuppStructs.PlayerDesc;
 import dotsboxes.rmi.ConnectionManager;
+import dotsboxes.utils.Debug;
 
 public class DotsBoxes {
 
@@ -16,7 +18,7 @@ public class DotsBoxes {
 	public static void main(String[] args) 
 	{
 		SessionManager smanager = new SessionManager();
-		
+		EventManager.Init();
 		try {
 			ConnectionManager conn_manager = new ConnectionManager();
 			

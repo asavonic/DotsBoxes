@@ -14,10 +14,10 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.LinkedList;
 import java.util.List;
 
-import dotsboxes.Debug;
-import dotsboxes.Event;
-import dotsboxes.EventType;
-import dotsboxes.PlayerDesc;
+import dotsboxes.events.Event;
+import dotsboxes.events.EventType;
+import dotsboxes.events.SuppStructs.PlayerDesc;
+import dotsboxes.utils.Debug;
 
 /**
  *
@@ -48,6 +48,7 @@ public class ConnectionManager {
 		m_PendingTransmittors = new LinkedList<EventTransmitter>();
 		
 		new_connection.Connect(remote_player_desc.getInetAdress(), remote_player_desc.getPort());
+		
 		m_PendingConnections.add(new_connection);
 	}
 	

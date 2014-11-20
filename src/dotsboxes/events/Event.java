@@ -1,4 +1,8 @@
-package dotsboxes;
+package dotsboxes.events;
+
+import dotsboxes.events.SuppStructs.PlayerDesc;
+import dotsboxes.utils.Debug;
+
 /**
  * @file   Event.java
  * @brief  This file implements class that represent events.
@@ -10,7 +14,7 @@ public class Event implements java.io.Serializable
 	 * 
 	 */
 	private static final long serialVersionUID = 1029903096709060936L;
-	public EventType happen;
+	private EventType m_eventType;
 	/**
 	 * @name    Event
 	 * @brief   Constructor event.
@@ -19,7 +23,7 @@ public class Event implements java.io.Serializable
 	 */
 	public Event( EventType someThing)
 	{
-		happen = someThing;
+		m_eventType = someThing;
 		Debug.log("Event created.");
 	}
 	
@@ -29,10 +33,11 @@ public class Event implements java.io.Serializable
 	 * @param void.
 	 * @retval EventType
 	 */
+
 	public EventType GetType()
 	{
 		Debug.log("Event type returned.");
-		return happen;
+		return m_eventType;
 	}
 	/**
 	 * @name    Delete
@@ -45,13 +50,20 @@ public class Event implements java.io.Serializable
 		Debug.log("Event deleted.");
 	}
 	
-	public PlayerDesc getSenderDesc() {
-		return m_SenderDesc;
+	public String TypeToString()
+	{
+		switch(m_eventType)
+		{
+		case game_EdgeChanged:
+			return "game_EdgeChanged";
+		case game_VertexChanged:
+			return "game_VertexChanged";
+		case Generic:
+			return "Generic";
+		case game_Turn:
+			return "game_Turn";
+		default:
+			return "Please define this type in ./src/dotsboxes/events/Event.java!";
+		}
 	}
-
-	public void setSenderDesc(PlayerDesc senderDesc) {
-		m_SenderDesc = senderDesc;
-	}
-	
-	public PlayerDesc m_SenderDesc;
 }

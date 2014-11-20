@@ -3,8 +3,8 @@
  */
 package dotsboxes.rmi;
 
-import dotsboxes.Debug;
-import dotsboxes.Event;
+import dotsboxes.events.Event;
+import dotsboxes.utils.Debug;
 
 /**
  *
