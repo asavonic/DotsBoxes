@@ -13,6 +13,7 @@ import java.rmi.server.UnicastRemoteObject;
 
 import dotsboxes.events.Event;
 import dotsboxes.events.SuppStructs.PlayerDesc;
+import dotsboxes.rmi.exceptions.ConnectionAlreadyEstablished;
 import dotsboxes.utils.Debug;
 /**
  *
@@ -26,14 +27,15 @@ public class Connection
 		m_LocalEventTransmitter = (EventTransmitter)UnicastRemoteObject.exportObject((Remote) local_event_transmitter, 0);
 	}
 	
-	public void Connect(InetAddress address, int port) throws RemoteException, NotBoundException 
+	public void Connect(InetAddress address, int port) throws RemoteException, NotBoundException, ConnectionAlreadyEstablished 
 	{
 		Debug.log("Connection.Connect(): trying to connect");
 		Registry registry = LocateRegistry.getRegistry(address.getHostAddress(), port);
 		NodeRegister remote_register = (NodeRegister)registry.lookup("NodeRegister");
 		
-		remote_register.register(m_LocalEventTransmitter);
-		Debug.log("Connection.Connect(): registration sent");
+		Debug.log("Connection.Connect(): sending connection request");
+		m_RemoteEventTransmitter = remote_register.register(m_LocalEventTransmitter);
+		Debug.log("Connection.Connect(): connection established");
 	}
 	
 	public void send_event(Event event) throws RemoteException 

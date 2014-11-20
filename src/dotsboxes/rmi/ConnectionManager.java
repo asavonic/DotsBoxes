@@ -17,6 +17,7 @@ import java.util.List;
 import dotsboxes.events.Event;
 import dotsboxes.events.EventType;
 import dotsboxes.events.SuppStructs.PlayerDesc;
+import dotsboxes.rmi.exceptions.ConnectionAlreadyEstablished;
 import dotsboxes.utils.Debug;
 
 /**
@@ -40,37 +41,30 @@ public class ConnectionManager {
 		Debug.log("ConnectionManager: deleted.");
 	}
 	
-	public void CreateConnection(PlayerDesc remote_player_desc) throws RemoteException, NotBoundException
+	public void connect(PlayerDesc remote_player_desc) throws RemoteException, NotBoundException, ConnectionAlreadyEstablished
 	{
 		Connection new_connection = new Connection();
 		m_ActiveConnections = new LinkedList<Connection>();
-		m_PendingConnections = new LinkedList<Connection>();
-		m_PendingTransmittors = new LinkedList<EventTransmitter>();
 		
 		new_connection.Connect(remote_player_desc.getInetAdress(), remote_player_desc.getPort());
-		
-		m_PendingConnections.add(new_connection);
 	}
 	
 	public List<Connection> m_ActiveConnections;
-	public List<Connection> m_PendingConnections;
-	public List<EventTransmitter> m_PendingTransmittors;
 	private int m_Port;
 	
 	private NodeRegisterImpl register;
 	private Registry registry;
 	
-	public void accept_remote_transmitter(EventTransmitter remote_transmitter)
+	public void accept_new_connection(Connection new_connection) throws ConnectionAlreadyEstablished
 	{
-		m_PendingTransmittors.add(remote_transmitter);
-		Debug.log("Add pending transmitter");
-		try {
-			remote_transmitter.transmit(new Event(EventType.ConnectionHandshake));
-		} catch (RemoteException e) {
-			m_PendingTransmittors.remove(remote_transmitter);
-			Debug.log("Remove pending transmitter");
-			e.printStackTrace();
+		for ( int i = 0; i < m_ActiveConnections.size(); i++) {
+			if (m_ActiveConnections.get(i).getRemoteEventTransmitter() == new_connection.getRemoteEventTransmitter()) {
+				throw new ConnectionAlreadyEstablished();
+			}
 		}
 		
+		m_ActiveConnections.add(new_connection);
+		
+		Debug.log("ConnectionManager: new connection accepted");
 	}
 }

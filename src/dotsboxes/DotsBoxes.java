@@ -8,6 +8,7 @@ import java.rmi.RemoteException;
 
 import dotsboxes.events.SuppStructs.PlayerDesc;
 import dotsboxes.rmi.ConnectionManager;
+import dotsboxes.rmi.exceptions.ConnectionAlreadyEstablished;
 import dotsboxes.utils.Debug;
 
 public class DotsBoxes {
@@ -26,9 +27,9 @@ public class DotsBoxes {
 			remote_player.setInetAdress(InetAddress.getLocalHost());
 			remote_player.setPort(10000);
 			
-			conn_manager.CreateConnection(remote_player);
+			conn_manager.connect(remote_player);
 			
-		} catch (RemoteException | AlreadyBoundException | NotBoundException e) {
+		} catch (RemoteException | AlreadyBoundException | NotBoundException | ConnectionAlreadyEstablished e) {
 			e.printStackTrace();
 		} catch (UnknownHostException e) {
 			Debug.log("Exception: host not found");
