@@ -25,12 +25,12 @@ import dotsboxes.utils.Debug;
  *
  */
 public class ConnectionManager {
-	public ConnectionManager() throws AccessException, RemoteException, AlreadyBoundException
+	public ConnectionManager(int port) throws AccessException, RemoteException, AlreadyBoundException
 	{
 		register = new NodeRegisterImpl(this);
 		
 		NodeRegister stub = (NodeRegister)UnicastRemoteObject.exportObject(register, 0);
-		m_Port = 10000;
+		m_Port = port;
 		registry = LocateRegistry.createRegistry(m_Port);
   		registry.bind("NodeRegister", (Remote) stub);
   		Debug.log("ConnectionManager init done. Server running on port " + m_Port );

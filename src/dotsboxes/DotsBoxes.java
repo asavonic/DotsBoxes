@@ -18,10 +18,11 @@ public class DotsBoxes {
 	 */
 	public static void main(String[] args) 
 	{
+		int port = Integer.parseInt(args[0]);
 		SessionManager smanager = new SessionManager();
 		EventManager.Init();
 		try {
-			ConnectionManager conn_manager = new ConnectionManager();
+			ConnectionManager conn_manager = new ConnectionManager(port);
 			
 			PlayerDesc remote_player = new PlayerDesc();
 			remote_player.setInetAdress(InetAddress.getLocalHost());
