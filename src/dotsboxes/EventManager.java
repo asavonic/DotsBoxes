@@ -24,7 +24,7 @@ public final class EventManager
 		m_customers = new Vector<EventCallback>();
 	}
 	
-	static void Subscribe( EventType ev_type, EventCallback callback)
+	public static void Subscribe( EventType ev_type, EventCallback callback)
 	{
 		if (null == m_customers || null == m_subcribes)
 			Init();
@@ -48,7 +48,7 @@ public final class EventManager
 		}
 	}
 	
-	static void NewEvent(Event event)
+	public static void NewEvent(Event event)
 	{
 		if (null == m_customers || null == m_subcribes)
 			Init();
