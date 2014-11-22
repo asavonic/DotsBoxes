@@ -4,6 +4,7 @@
 package dotsboxes.players;
 
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 /**
  * Represents the player.
@@ -14,6 +15,20 @@ public class PlayerDesc {
 	int m_Port;
 	String m_Name;
 	byte[] m_Hash;
+	
+	public void fromString(String str) throws UnknownHostException {
+		String[] elements = str.split(" ");
+		m_Name = elements[0];
+		m_InetAdress = InetAddress.getByName(elements[1]);
+		m_Port = Integer.parseInt(elements[2]);
+		
+		String hash_str = elements[3];
+		m_Hash = new byte[hash_str.length()];
+		
+		for( int i = 0; i < hash_str.length(); i++) {
+			m_Hash[i] = (byte) hash_str.charAt(i);
+		}
+	}
 	
 	public InetAddress getInetAdress() {
 		return m_InetAdress;
