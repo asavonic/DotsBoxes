@@ -19,6 +19,8 @@ public class DotsBoxes {
 	public static void main(String[] args) 
 	{
 		int port = Integer.parseInt(args[0]);
+		Configuration.setPort(port);
+		Configuration.setKnownPlayersFilepath( "known_players.conf" );
 		SessionManager smanager = new SessionManager();
 		EventManager.Init();
 		try {
