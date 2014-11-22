@@ -30,6 +30,7 @@ public class SessionManager implements EventCallback
 	SessionManager()
 	{
 		Debug.log("Session manager: initialization:");
+		m_gameConnections = new GameConnections();
 		int some_number_of_players = 3;
 		int some_height_of_field = 2;	
 		int some_width_of_field = 2;	
@@ -64,13 +65,14 @@ public class SessionManager implements EventCallback
 		Debug.log("Recieved connect event." + event.TypeToString());
 	}
 	
-		GameSession       m_game;
-		ConnectionManager m_connect;
-		EventManager      m_eventMngr;
-		int m_current_player_tag;
-		@Override
-		public void HandleEvent(Event event) {
-			Debug.log("Recieved game event New!!!! : " + event.TypeToString());
-			
-		}
+	GameSession       m_game;
+	ConnectionManager m_connect;
+	GameConnections   m_gameConnections;
+	EventManager      m_eventMngr;
+	int m_current_player_tag;
+	@Override
+	public void HandleEvent(Event event) {
+		Debug.log("Recieved game event New!!!! : " + event.TypeToString());
+		
+	}
 }
