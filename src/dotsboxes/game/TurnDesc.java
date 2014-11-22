@@ -1,4 +1,4 @@
-package dotsboxes.events.SuppStructs;
+package dotsboxes.game;
 
 public class TurnDesc 
 {

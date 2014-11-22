@@ -1,6 +1,6 @@
 package dotsboxes.events;
 
-import dotsboxes.events.SuppStructs.TurnDesc;
+import dotsboxes.game.TurnDesc;
 
 public class GameEvent extends Event 
 {

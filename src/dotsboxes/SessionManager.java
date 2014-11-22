@@ -12,7 +12,7 @@ import dotsboxes.callbacks.EventCallback;
 import dotsboxes.events.Event;
 import dotsboxes.events.EventType;
 import dotsboxes.events.GameEvent;
-import dotsboxes.events.SuppStructs.TurnDesc;
+import dotsboxes.game.TurnDesc;
 import dotsboxes.rmi.ConnectionManager;
 import dotsboxes.utils.Debug;
 

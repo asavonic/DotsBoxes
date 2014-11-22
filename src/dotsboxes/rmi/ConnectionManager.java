@@ -16,7 +16,7 @@ import java.util.List;
 
 import dotsboxes.events.Event;
 import dotsboxes.events.EventType;
-import dotsboxes.events.SuppStructs.PlayerDesc;
+import dotsboxes.players.PlayerDesc;
 import dotsboxes.rmi.exceptions.ConnectionAlreadyEstablished;
 import dotsboxes.utils.Debug;
 

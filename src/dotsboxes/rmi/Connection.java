@@ -12,7 +12,7 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 
 import dotsboxes.events.Event;
-import dotsboxes.events.SuppStructs.PlayerDesc;
+import dotsboxes.players.PlayerDesc;
 import dotsboxes.rmi.exceptions.ConnectionAlreadyEstablished;
 import dotsboxes.utils.Debug;
 /**

@@ -1,6 +1,6 @@
 package dotsboxes.events;
 
-import dotsboxes.events.SuppStructs.PlayerDesc;
+import dotsboxes.players.PlayerDesc;
 import dotsboxes.utils.Debug;
 
 /**

@@ -6,7 +6,7 @@ import java.rmi.AlreadyBoundException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 
-import dotsboxes.events.SuppStructs.PlayerDesc;
+import dotsboxes.players.PlayerDesc;
 import dotsboxes.rmi.ConnectionManager;
 import dotsboxes.rmi.exceptions.ConnectionAlreadyEstablished;
 import dotsboxes.utils.Debug;

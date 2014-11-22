@@ -1,6 +1,6 @@
 package dotsboxes.events;
 
-import dotsboxes.events.SuppStructs.PlayerDesc;
+import dotsboxes.players.PlayerDesc;
 
 public class ConnectionEvent extends Event 
 {
