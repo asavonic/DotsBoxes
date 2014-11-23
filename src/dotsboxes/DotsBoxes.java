@@ -27,19 +27,9 @@ public class DotsBoxes {
 		EventManager.Init();
 		try {
 			ConnectionManager.Init(port);
-			
-			PlayerDesc remote_player = new PlayerDesc();
-			remote_player.setInetAdress(InetAddress.getLocalHost());
-			remote_player.setPort(10000);
-			
-			ConnectionManager.connect(remote_player);
-			
-		} catch (RemoteException | AlreadyBoundException | NotBoundException | ConnectionAlreadyEstablished e) {
+		} catch (RemoteException | AlreadyBoundException e) {
 			e.printStackTrace();
 			System.exit(1);
-		} catch (UnknownHostException e) {
-			System.exit(2);
-			Debug.log("Exception: host not found");
 		}
 			
 		smanager.Delete();
