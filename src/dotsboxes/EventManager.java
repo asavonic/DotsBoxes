@@ -23,17 +23,23 @@ public final class EventManager
 	
 	static TreeMap<EventType, Vector<EventCallback>> m_subcribes;
 	static Vector<EventSenderPair> m_eventsQueue;
+	static Vector<EventSenderPair> m_DebugHistory;
+	static int m_completedCommandCount;
 	
 	private EventManager()
 	{
-		m_subcribes   = new TreeMap<EventType, Vector<EventCallback>>();
-		m_eventsQueue = new Vector<EventSenderPair>();
+		Init();
 	}
 	
 	static void Init()
 	{
 		m_subcribes = new TreeMap<EventType, Vector<EventCallback>>();
 		m_eventsQueue = new Vector<EventSenderPair>();
+		if(Debug.isEnabled())
+		{
+			m_DebugHistory = new Vector<EventSenderPair>();
+			m_completedCommandCount = 0;
+		}
 	}
 	
 	public static void Subscribe( EventType ev_type, EventCallback callback)
@@ -67,6 +73,8 @@ public final class EventManager
 		
 		EventSenderPair ray = new EventSenderPair(event, callback);
 		m_eventsQueue.addElement(ray);         // Add event in queue.
+		if (Debug.isEnabled())
+			m_DebugHistory.addElement(ray);
 	}
 	public static void NewAnonimEvent(Event event)
 	{
@@ -75,6 +83,8 @@ public final class EventManager
 		
 		EventSenderPair ray = new EventSenderPair(event);
 		m_eventsQueue.addElement(ray);         // Add event in queue.
+		if (Debug.isEnabled())
+			m_DebugHistory.addElement(ray);
 	}
 	
 	public static void ProcessEvents()
@@ -109,7 +119,26 @@ public final class EventManager
 				}
 				Debug.log("Event  " + ev_type + " has been processed.");
 				m_eventsQueue.remove(0);
+				if (Debug.isEnabled())
+					m_completedCommandCount++;
 			}
+		}
+	}
+	
+	public static void PrintDebugHistory()
+	{
+		int numbersOfCommand = m_DebugHistory.size();
+		Debug.log("All events : " + numbersOfCommand);
+		Debug.log("Completed  : " + m_completedCommandCount);
+		Debug.log("");
+		int iterator = 0;
+		for(EventSenderPair pair: m_DebugHistory)
+		{
+			Event event = pair.GetEvent();
+			EventCallback sender = pair.GetSender();
+			
+			Debug.log( iterator + " : Class " + event.TypeToString() + " push event " + String.valueOf(sender.getClass()));
+			iterator++;
 		}
 	}
 }
