@@ -3,6 +3,8 @@ package dotsboxes;
  * @file   GameSession.java
  * @brief  This file implement game logic ( add edge, add player's mark, win, lose, ...)
  */
+import java.util.Vector;
+
 import dotsboxes.callbacks.EventCallback;
 import dotsboxes.events.Event;
 import dotsboxes.events.EventType;
@@ -25,13 +27,15 @@ public class GameSession implements EventCallback
 		m_fieldWidth       = field_width;
 		m_numberOfPlayers  = players_number;
 		
+		
 		EventManager.Subscribe( EventType.game_Turn, this); //Subscribe on game_Turn event.
 		
 		current_player_tag = current_player_tag;
-		m_edgesV  = new int[m_fieldHeight + 1][m_fieldWidth];
-		m_edgesH  = new int[m_fieldHeight][m_fieldWidth + 1];
-		m_vertex  = new int[m_fieldHeight][m_fieldWidth];
+		m_edgesV   = new int[m_fieldHeight + 1][m_fieldWidth];
+		m_edgesH   = new int[m_fieldHeight][m_fieldWidth + 1];
+		m_vertex   = new int[m_fieldHeight][m_fieldWidth];
 		m_counters = new int[m_numberOfPlayers + 1];
+		m_history  = new Vector<Event>();
 		
 		for( int i = 0; i < m_fieldHeight; ++i)
 		{
@@ -53,6 +57,12 @@ public class GameSession implements EventCallback
 		EventManager.NewEvent(event, this);
 	}
 	
+	private void SendEvent(Event event)
+	{
+		event.Cast(EventType.game_Turn);
+		EventManager.NewEvent(event, this);
+	}
+	
 	/**
 	 * @name    HandleEvent
 	 * @brief   Handle event.
@@ -66,17 +76,48 @@ public class GameSession implements EventCallback
 		
 		switch(ev.GetType())
 		{
-		case game_Turn:
+		case GUI_game_Turn:
 			GameEvent game_event = (GameEvent) ev; 
 			if (game_event.isEdgeChanged())
 			{
 				boolean result = AddEdge( game_event.getI(), game_event.getJ(), game_event.getVert(), game_event.getPlrTag());
-				if (result) SendGUIEvent(ev);
+				if (result) 
+				{
+					SendEvent(ev);
+					m_history.add(ev);
+				}
 			}
 			else 
 			{
 				boolean result = AddMark( game_event.getI(), game_event.getJ(), game_event.getPlrTag());
-				if (result) SendGUIEvent(ev);
+				if (result)
+				{
+					SendEvent(ev);
+					m_history.add(ev);
+				}
+			}
+			break;
+		case game_Turn:
+			GameEvent game_event1 = (GameEvent) ev; 
+			if (m_history.contains(ev))    // I can do that better.
+				break;
+			if (game_event1.isEdgeChanged())
+			{
+				boolean result = AddEdge( game_event1.getI(), game_event1.getJ(), game_event1.getVert(), game_event1.getPlrTag());
+				if (result)
+				{
+					SendGUIEvent(ev);
+					m_history.add(ev);
+				}
+			}
+			else 
+			{
+				boolean result = AddMark( game_event1.getI(), game_event1.getJ(), game_event1.getPlrTag());
+				if (result)
+				{
+					SendGUIEvent(ev);
+					m_history.add(ev);
+				}
 			}
 			break;
 		default:
@@ -310,6 +351,7 @@ public class GameSession implements EventCallback
 	int m_edgesH[][];  // List of horizontal edges.
 	int m_vertex[][];
 	int m_counters[];    // List of number of marked vertex.
+	Vector<Event> m_history;
 	static public int border = -1;
 	static public int empty  =  0;
 }
