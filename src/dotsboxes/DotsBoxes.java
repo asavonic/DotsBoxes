@@ -19,20 +19,22 @@ public class DotsBoxes {
 	 */
 	public static void main(String[] args) 
 	{
-		System.out.println("Hello World");
-		int port = Integer.parseInt(args[0]);
-		Configuration.setPort(port);
-		Configuration.setKnownPlayersFilepath( args[1] );
-		SessionManager smanager = new SessionManager();
-		EventManager.Init();
 		try {
+			System.out.println("Hello World");
+			int port = Integer.parseInt(args[0]);
+			Configuration.setPort(port);
+			Configuration.setKnownPlayersFilepath( args[1] );
+			
 			ConnectionManager.Init(port);
+			EventManager.Init();
+			
+			SessionManager smanager = new SessionManager();
+			smanager.Delete();
 		} catch (RemoteException | AlreadyBoundException e) {
 			e.printStackTrace();
 			System.exit(1);
 		}
-			
-		smanager.Delete();
+		
 		System.exit(0);
 	}
 

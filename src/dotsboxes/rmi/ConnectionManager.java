@@ -32,6 +32,7 @@ public final class ConnectionManager {
 	
 	public static void Init(int port) throws AccessException, RemoteException, AlreadyBoundException
 	{
+		Debug.log("ConnectionManager init...");
 		m_ActiveConnections = new LinkedList<Connection>();
 		register = new NodeRegisterImpl();
 		
