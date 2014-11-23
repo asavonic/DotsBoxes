@@ -21,7 +21,7 @@ public class DotsBoxes {
 		System.out.println("Hello World");
 		int port = Integer.parseInt(args[0]);
 		Configuration.setPort(port);
-		Configuration.setKnownPlayersFilepath( "known_players.conf" );
+		Configuration.setKnownPlayersFilepath( args[1] );
 		SessionManager smanager = new SessionManager();
 		EventManager.Init();
 		try {

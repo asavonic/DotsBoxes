@@ -52,16 +52,15 @@ for player in players:
 
 processes = []
 for player in players:
-    cmd = run_cmdline + [player.port]
-
-    known_players_file = open("known_players.conf", "w" )
     conf = KnownPlayersConfig(player.known_players)
-    known_players_file.write( str(conf) )
+    conf_filename = "{0}.conf".format(player.port)
+    with open(conf_filename, "w" ) as file:
+        file.write( str(conf) )
 
     output_file = open( "{0}.log".format(player.name), "w")
-    processes.append( proc.Popen(cmd, stdout=output_file, stderr=output_file) )
 
-    os.remove("known_players.conf")
+    cmd = run_cmdline + [player.port, conf_filename]
+    processes.append( proc.Popen(cmd, stdout=output_file, stderr=output_file) )
 
 retcode = 0
 for process in processes:
