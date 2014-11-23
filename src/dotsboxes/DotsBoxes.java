@@ -9,6 +9,7 @@ import java.rmi.RemoteException;
 import dotsboxes.players.PlayerDesc;
 import dotsboxes.rmi.ConnectionManager;
 import dotsboxes.rmi.exceptions.ConnectionAlreadyEstablished;
+import dotsboxes.utils.Configuration;
 import dotsboxes.utils.Debug;
 
 public class DotsBoxes {

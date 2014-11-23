@@ -1,7 +1,7 @@
 /**
  * 
  */
-package dotsboxes;
+package dotsboxes.utils;
 
 import java.nio.file.FileSystems;
 import java.nio.file.Path;

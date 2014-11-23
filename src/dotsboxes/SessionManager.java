@@ -11,7 +11,8 @@ import java.rmi.RemoteException;
 import dotsboxes.callbacks.EventCallback;
 import dotsboxes.events.Event;
 import dotsboxes.events.EventType;
-import dotsboxes.events.GameEvent;
+import dotsboxes.events.GameStartEvent;
+import dotsboxes.events.GameTurnEvent;
 import dotsboxes.game.TurnDesc;
 import dotsboxes.rmi.ConnectionManager;
 import dotsboxes.utils.Debug;
@@ -38,10 +39,13 @@ public class SessionManager implements EventCallback
 		
 		EventManager.Subscribe(EventType.Generic, this);
 		
-		GameEvent g_event = new GameEvent(EventType.game_Turn, true, new TurnDesc( 0, 1, 1));
-		EventManager.NewEvent(g_event, this);
-		m_game.Draw();
+		//GameTurnEvent g_event = new GameTurnEvent(EventType.game_Turn, true, new TurnDesc( 0, 1, 1));
+		//EventManager.NewEvent(g_event, this);
+		//m_game.Draw();
 		//Debug.log("Session manager: initializated.");
+		
+		
+		EventManager.NewEvent( new GameStartEvent(some_number_of_players), this);
 		EventManager.ProcessEvents();
 	}
 	/**
@@ -55,25 +59,18 @@ public class SessionManager implements EventCallback
 		m_game.Delete();
 		Debug.log("Session manager destroyed.");
 	}
-
-	public void new_game_event(Event event) 
-	{
-		Debug.log("Recieved game event : " + event.TypeToString());
+	
+	@Override
+	public void HandleEvent(Event event) {
+		Debug.log("Recieved game event New!!!! : " + event.TypeToString());
+		
 	}
 	
-	public void new_connect_event(Event event) 
-	{
-		Debug.log("Recieved connect event." + event.TypeToString());
-	}
 	
 	GameSession       m_game;
 	ConnectionManager m_connect;
 	GameConnections   m_gameConnections;
 	EventManager      m_eventMngr;
 	int m_current_player_tag;
-	@Override
-	public void HandleEvent(Event event) {
-		Debug.log("Recieved game event New!!!! : " + event.TypeToString());
-		
-	}
+	
 }

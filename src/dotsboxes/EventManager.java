@@ -53,7 +53,7 @@ public final class EventManager
 		
 		if (null != vector && !vector.contains(callback))   
 		{
-			if (null != vectorGen && !vectorGen.contains(callback))
+			if (!(null != vectorGen && !vectorGen.contains(callback)))
 			{
 				vector.add(callback);
 			}
@@ -119,6 +119,7 @@ public final class EventManager
 				}
 				Debug.log("Event  " + ev_type + " has been processed.");
 				m_eventsQueue.remove(0);
+				PrintDebugHistory();
 				if (Debug.isEnabled())
 					m_completedCommandCount++;
 			}
@@ -137,7 +138,7 @@ public final class EventManager
 			Event event = pair.GetEvent();
 			EventCallback sender = pair.GetSender();
 			
-			Debug.log( iterator + " : Class " + event.TypeToString() + " push event " + String.valueOf(sender.getClass()));
+			Debug.log( iterator + " : Class " + String.valueOf(sender.getClass()) + " push event " + event.TypeToString());
 			iterator++;
 		}
 	}

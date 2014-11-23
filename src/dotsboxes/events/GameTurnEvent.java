@@ -2,11 +2,11 @@ package dotsboxes.events;
 
 import dotsboxes.game.TurnDesc;
 
-public class GameEvent extends Event 
+public class GameTurnEvent extends Event 
 {
 	boolean m_edge; // True if player mark edge.
 	TurnDesc m_turnDesc;
-	public GameEvent(EventType someThing, boolean edge, TurnDesc turnDesc) 
+	public GameTurnEvent(EventType someThing, boolean edge, TurnDesc turnDesc) 
 	{
 		super(someThing);
 		m_edge = edge;

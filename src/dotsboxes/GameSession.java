@@ -8,7 +8,7 @@ import java.util.Vector;
 import dotsboxes.callbacks.EventCallback;
 import dotsboxes.events.Event;
 import dotsboxes.events.EventType;
-import dotsboxes.events.GameEvent;
+import dotsboxes.events.GameTurnEvent;
 import dotsboxes.utils.Debug;
 
 public class GameSession implements EventCallback
@@ -29,6 +29,7 @@ public class GameSession implements EventCallback
 		
 		
 		EventManager.Subscribe( EventType.game_Turn, this); //Subscribe on game_Turn event.
+		EventManager.Subscribe( EventType.game_Start, this); 
 		
 		current_player_tag = current_player_tag;
 		m_edgesV   = new int[m_fieldHeight + 1][m_fieldWidth];
@@ -63,6 +64,62 @@ public class GameSession implements EventCallback
 		EventManager.NewEvent(event, this);
 	}
 	
+	
+	private void GUITurn(Event ev)
+	{
+		GameTurnEvent game_event = (GameTurnEvent) ev; 
+		if (game_event.isEdgeChanged())
+		{
+			boolean result = AddEdge( game_event.getI(), game_event.getJ(), game_event.getVert(), game_event.getPlrTag());
+			if (result) 
+			{
+				SendEvent(ev);
+				m_history.add(ev);
+			}
+		}
+		else 
+		{
+			boolean result = AddMark( game_event.getI(), game_event.getJ(), game_event.getPlrTag());
+			if (result)
+			{
+				SendEvent(ev);
+				m_history.add(ev);
+			}
+		}
+	}
+	
+	private void Turn(Event ev)
+	{
+		GameTurnEvent game_event1 = (GameTurnEvent) ev; 
+		if (m_history.contains(ev))    // I can do that better.
+		{
+			Debug.log("Turn already exist.");
+			return;
+		}
+		if (game_event1.isEdgeChanged())
+		{
+			boolean result = AddEdge( game_event1.getI(), game_event1.getJ(), game_event1.getVert(), game_event1.getPlrTag());
+			if (result)
+			{
+				SendGUIEvent(ev);
+				m_history.add(ev);
+			}
+		}
+		else 
+		{
+			boolean result = AddMark( game_event1.getI(), game_event1.getJ(), game_event1.getPlrTag());
+			if (result)
+			{
+				SendGUIEvent(ev);
+				m_history.add(ev);
+			}
+		}
+	}
+	
+	private void CheckOurTurn()
+	{
+		
+	}
 	/**
 	 * @name    HandleEvent
 	 * @brief   Handle event.
@@ -77,48 +134,13 @@ public class GameSession implements EventCallback
 		switch(ev.GetType())
 		{
 		case GUI_game_Turn:
-			GameEvent game_event = (GameEvent) ev; 
-			if (game_event.isEdgeChanged())
-			{
-				boolean result = AddEdge( game_event.getI(), game_event.getJ(), game_event.getVert(), game_event.getPlrTag());
-				if (result) 
-				{
-					SendEvent(ev);
-					m_history.add(ev);
-				}
-			}
-			else 
-			{
-				boolean result = AddMark( game_event.getI(), game_event.getJ(), game_event.getPlrTag());
-				if (result)
-				{
-					SendEvent(ev);
-					m_history.add(ev);
-				}
-			}
+			GUITurn(ev);
 			break;
 		case game_Turn:
-			GameEvent game_event1 = (GameEvent) ev; 
-			if (m_history.contains(ev))    // I can do that better.
-				break;
-			if (game_event1.isEdgeChanged())
-			{
-				boolean result = AddEdge( game_event1.getI(), game_event1.getJ(), game_event1.getVert(), game_event1.getPlrTag());
-				if (result)
-				{
-					SendGUIEvent(ev);
-					m_history.add(ev);
-				}
-			}
-			else 
-			{
-				boolean result = AddMark( game_event1.getI(), game_event1.getJ(), game_event1.getPlrTag());
-				if (result)
-				{
-					SendGUIEvent(ev);
-					m_history.add(ev);
-				}
-			}
+			Turn(ev);
+			break;
+		case game_Start:
+			
 			break;
 		default:
 			Debug.log("Unknown event in GameSession!");

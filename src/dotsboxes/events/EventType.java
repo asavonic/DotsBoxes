@@ -6,6 +6,7 @@ public enum EventType
 	
 	GUI_game_Turn,
 	game_Turn,
+	game_Start,
 	
 	ConnectionHandshake,
 	ConnectionPing,
