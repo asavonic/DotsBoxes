@@ -39,9 +39,10 @@ public class SessionManager implements EventCallback
 		EventManager.Subscribe(EventType.Generic, this);
 		
 		GameEvent g_event = new GameEvent(EventType.game_Turn, true, new TurnDesc( 0, 1, 1));
-		EventManager.NewEvent(g_event);
+		EventManager.NewEvent(g_event, this);
 		m_game.Draw();
 		//Debug.log("Session manager: initializated.");
+		EventManager.ProcessEvents();
 	}
 	/**
 	 * @name  Delete

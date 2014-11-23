@@ -18,6 +18,7 @@ public class DotsBoxes {
 	 */
 	public static void main(String[] args) 
 	{
+		System.out.println("Hello World");
 		int port = Integer.parseInt(args[0]);
 		Configuration.setPort(port);
 		Configuration.setKnownPlayersFilepath( "known_players.conf" );
@@ -37,8 +38,7 @@ public class DotsBoxes {
 		} catch (UnknownHostException e) {
 			Debug.log("Exception: host not found");
 		}
-		
-		System.out.println("Hello World");
+			
 		smanager.Delete();
 		System.exit(0);
 	}

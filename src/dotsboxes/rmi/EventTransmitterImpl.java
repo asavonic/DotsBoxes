@@ -16,7 +16,7 @@ public class EventTransmitterImpl implements EventTransmitter {
 	@Override
 	public void transmit(Event event) {
 		Debug.log("Event recieved");
-		EventManager.NewEvent(event);
+		EventManager.NewAnonimEvent(event);
 	}
 
 }

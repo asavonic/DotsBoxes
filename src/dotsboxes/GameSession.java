@@ -47,6 +47,12 @@ public class GameSession implements EventCallback
 		Debug.log("GameSassion initializated.");
 	}
 	
+	private void SendGUIEvent(Event event)
+	{
+		event.Cast(EventType.GUI_game_Turn);
+		EventManager.NewEvent(event, this);
+	}
+	
 	/**
 	 * @name    HandleEvent
 	 * @brief   Handle event.
@@ -64,11 +70,13 @@ public class GameSession implements EventCallback
 			GameEvent game_event = (GameEvent) ev; 
 			if (game_event.isEdgeChanged())
 			{
-				AddEdge( game_event.getI(), game_event.getJ(), game_event.getVert(), game_event.getPlrTag());
+				boolean result = AddEdge( game_event.getI(), game_event.getJ(), game_event.getVert(), game_event.getPlrTag());
+				if (result) SendGUIEvent(ev);
 			}
 			else 
 			{
-				AddMark( game_event.getI(), game_event.getJ(), game_event.getPlrTag());
+				boolean result = AddMark( game_event.getI(), game_event.getJ(), game_event.getPlrTag());
+				if (result) SendGUIEvent(ev);
 			}
 			break;
 		default:
@@ -79,7 +87,7 @@ public class GameSession implements EventCallback
 		Debug.log("Event handled.");
 	}
 	
-	private void AddEdge( int i, int j, boolean vert, int player_tag)
+	private boolean AddEdge( int i, int j, boolean vert, int player_tag)
 	{
 		int max_number_height = ( vert ) ? (m_fieldHeight + 1) : m_fieldHeight;
 		int max_number_width = ( !vert ) ? (m_fieldWidth + 1) : m_fieldWidth;
@@ -87,12 +95,12 @@ public class GameSession implements EventCallback
 		if( player_tag <= 0 || player_tag > m_numberOfPlayers)
 		{
 			Debug.log("Invalid value(player)! Player tag = " + player_tag + ".");
-			return;
+			return false;
 		}
 		if( i < 0 || j < 0 || i > max_number_height || j > max_number_width)
 		{
 			Debug.log("Invalid value(edge)! Player tag = " + player_tag + ". i = " + i + "(max = " + max_number_height + "); j = " + j + "(max = " + max_number_width + ").");
-			return;
+			return false;
 		}
 		
 		if ( vert )
@@ -101,11 +109,12 @@ public class GameSession implements EventCallback
 			{
 				m_edgesV[i][j] = player_tag;
 				Debug.log("Player " + player_tag + " mark edge [" + i + "][" + j + "](vertical).");
-				SendEvent( new Event( EventType.game_EdgeChanged ) );
+				return true;
 			}
 			else 
 			{
 				Debug.log("Player " + player_tag + " try to mark edge [" + i + "][" + j + "] (vertical) but edge busy already.");
+				return false;
 			}
 		} else 
 		{
@@ -113,26 +122,27 @@ public class GameSession implements EventCallback
 			{
 				m_edgesH[i][j] = player_tag;
 				Debug.log("Player " + player_tag + " mark edge [" + i + "][" + j + "](horizontal).");
-				SendEvent( new Event( EventType.game_EdgeChanged ) );
+				return true;
 			}
 			else 
 			{
 				Debug.log("Player " + player_tag + " try to mark edge [" + i + "][" + j + "] (horizontal) but edge busy already.");
+				return false;
 			}
 		}
 	}
 	
-	private void AddMark( int i, int j, int player_tag)
+	private boolean AddMark( int i, int j, int player_tag)
 	{
 		if (player_tag <= 0 || player_tag > m_numberOfPlayers)
 		{
 			Debug.log("Invalid value(player)! Player tag = " + player_tag + ".");
-			return;
+			return false;
 		}
 		if (i < 0 || j < 0 || i > m_fieldHeight || j > m_fieldWidth)
 		{
 			Debug.log("Invalid value (mark)! Player tag = " + player_tag + ". i = " + i + "(max = " + m_fieldHeight + "); j = " + j + "(max = " + m_fieldWidth + ").");
-			return;
+			return false;
 		}
 		if (((player_tag != m_edgesV[i][j])     & (border != m_edgesV[i][j]))     || 
 			((player_tag != m_edgesH[i][j])     & (border != m_edgesH[i][j]))     ||  //Check for edges around.
@@ -140,18 +150,19 @@ public class GameSession implements EventCallback
 			((player_tag != m_edgesH[i][j + 1]) & (border != m_edgesH[i][j + 1])) )
 		{
 			Debug.log("Player " + player_tag + " try to mark vertex [" + i + "][" + j + "] but edges around this vertex doesn't mark as him.");
-			return;
+			return false;
 		}
 		if (0 == m_vertex[i][j])
 		{
 			m_vertex[i][j] = player_tag;
 			m_counters[player_tag] += 1;
 			Debug.log("Player " + player_tag + " mark vertex [" + i + "][" + j + "].");
-			SendEvent( new Event( EventType.game_VertexChanged ) );
+			return true;
 		}
 		else 
 		{
 			Debug.log("Player " + player_tag + " try to mark edge [" + i + "][" + j + "] but edge busy already.");
+			return false;
 		}
 	}
 	
@@ -279,10 +290,7 @@ public class GameSession implements EventCallback
 		Debug.log("========================================");
 		
 	}
-	private void SendEvent( Event ev)
-	{
-		EventManager.NewEvent(ev);
-	}
+
 	/**
 	 * @name    Delete
 	 * @brief   Destroy game logic objects.

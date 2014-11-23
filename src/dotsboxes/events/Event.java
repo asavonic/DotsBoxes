@@ -39,6 +39,11 @@ public class Event implements java.io.Serializable
 		Debug.log("Event type returned.");
 		return m_eventType;
 	}
+	
+	public void Cast(EventType type)
+	{
+		m_eventType = type;
+	}
 	/**
 	 * @name    Delete
 	 * @brief   Destroy event object.
@@ -54,10 +59,8 @@ public class Event implements java.io.Serializable
 	{
 		switch(m_eventType)
 		{
-		case game_EdgeChanged:
-			return "game_EdgeChanged";
-		case game_VertexChanged:
-			return "game_VertexChanged";
+		case GUI_game_Turn:
+			return "GUI_game_Turn";
 		case Generic:
 			return "Generic";
 		case game_Turn:

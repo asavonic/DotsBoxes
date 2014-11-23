@@ -2,9 +2,9 @@ package dotsboxes.events;
 
 public enum EventType 
 {
-	Generic,
-	game_EdgeChanged,
-	game_VertexChanged,
+	Generic,	
+	
+	GUI_game_Turn,
 	game_Turn,
 	
 	ConnectionHandshake,
