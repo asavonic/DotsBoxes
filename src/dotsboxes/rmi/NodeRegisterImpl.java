@@ -15,9 +15,8 @@ import dotsboxes.utils.Debug;
  */
 public class NodeRegisterImpl implements NodeRegister 
 {
-	public NodeRegisterImpl(ConnectionManager manager) 
+	public NodeRegisterImpl() 
 	{
-		m_Manager = manager;
 	}
 
 	@Override
@@ -26,10 +25,8 @@ public class NodeRegisterImpl implements NodeRegister
 		Connection connection = new Connection();
 		connection.setRemoteEventTransmitter(remote_transmitter);
 		
-		m_Manager.accept_new_connection(connection);
+		ConnectionManager.accept_new_connection(connection);
 		
 		return connection.getLocalEventTransmitter();
 	}
-
-	public ConnectionManager m_Manager;
 }

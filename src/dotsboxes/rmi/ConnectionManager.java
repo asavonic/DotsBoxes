@@ -24,10 +24,16 @@ import dotsboxes.utils.Debug;
  *
  *
  */
-public class ConnectionManager {
+public final class ConnectionManager {
 	public ConnectionManager(int port) throws AccessException, RemoteException, AlreadyBoundException
 	{
-		register = new NodeRegisterImpl(this);
+		Init(port);
+	}
+	
+	public static void Init(int port) throws AccessException, RemoteException, AlreadyBoundException
+	{
+		m_ActiveConnections = new LinkedList<Connection>();
+		register = new NodeRegisterImpl();
 		
 		NodeRegister stub = (NodeRegister)UnicastRemoteObject.exportObject(register, 0);
 		m_Port = port;
@@ -36,26 +42,19 @@ public class ConnectionManager {
   		Debug.log("ConnectionManager init done. Server running on port " + m_Port );
 	}
 	
-	public void Delete()
-	{
-		Debug.log("ConnectionManager: deleted.");
-	}
-	
-	public void connect(PlayerDesc remote_player_desc) throws RemoteException, NotBoundException, ConnectionAlreadyEstablished
+	public static void connect(PlayerDesc remote_player_desc) throws RemoteException, NotBoundException, ConnectionAlreadyEstablished
 	{
 		Connection new_connection = new Connection();
-		m_ActiveConnections = new LinkedList<Connection>();
-		
-		new_connection.Connect(remote_player_desc.getInetAdress(), remote_player_desc.getPort());
+		new_connection.Connect(remote_player_desc);
 	}
 	
-	public List<Connection> m_ActiveConnections;
-	private int m_Port;
+	public static List<Connection> m_ActiveConnections;
+	private static int m_Port;
 	
-	private NodeRegisterImpl register;
-	private Registry registry;
+	private static NodeRegisterImpl register;
+	private static Registry registry;
 	
-	public void accept_new_connection(Connection new_connection) throws ConnectionAlreadyEstablished
+	public static void accept_new_connection(Connection new_connection) throws ConnectionAlreadyEstablished
 	{
 		for ( int i = 0; i < m_ActiveConnections.size(); i++) {
 			if (m_ActiveConnections.get(i).getRemoteEventTransmitter() == new_connection.getRemoteEventTransmitter()) {

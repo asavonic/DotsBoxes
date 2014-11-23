@@ -26,13 +26,13 @@ public class DotsBoxes {
 		SessionManager smanager = new SessionManager();
 		EventManager.Init();
 		try {
-			ConnectionManager conn_manager = new ConnectionManager(port);
+			ConnectionManager.Init(port);
 			
 			PlayerDesc remote_player = new PlayerDesc();
 			remote_player.setInetAdress(InetAddress.getLocalHost());
 			remote_player.setPort(10000);
 			
-			conn_manager.connect(remote_player);
+			ConnectionManager.connect(remote_player);
 			
 		} catch (RemoteException | AlreadyBoundException | NotBoundException | ConnectionAlreadyEstablished e) {
 			e.printStackTrace();
