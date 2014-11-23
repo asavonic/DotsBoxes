@@ -34,5 +34,10 @@ public class PlayersMap
 		}
 	}
 	
+	public LinkedList<PlayerDesc> getPlayersList()
+	{
+		return m_KnownPlayers;
+	}
+	
 	private LinkedList<PlayerDesc> m_KnownPlayers;
 }

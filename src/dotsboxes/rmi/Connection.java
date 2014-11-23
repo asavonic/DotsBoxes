@@ -38,6 +38,12 @@ public class Connection
 		Debug.log("Connection.Connect(): connection established");
 	}
 	
+	public void Connect(PlayerDesc player) throws RemoteException, NotBoundException, ConnectionAlreadyEstablished
+	{
+		this.Connect(player.getInetAdress(), player.getPort());
+		m_RemotePlayerDesc = player;
+	}
+	
 	public void send_event(Event event) throws RemoteException 
 	{
 		m_RemoteEventTransmitter.transmit(event);

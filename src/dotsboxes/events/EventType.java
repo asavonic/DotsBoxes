@@ -10,5 +10,7 @@ public enum EventType
 	
 	ConnectionHandshake,
 	ConnectionPing,
-	ConnectionClose
+	ConnectionClose,
+	
+	NewGameRequest
 }

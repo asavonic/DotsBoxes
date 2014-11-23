@@ -42,10 +42,22 @@ public final class ConnectionManager {
   		Debug.log("ConnectionManager init done. Server running on port " + m_Port );
 	}
 	
-	public static void connect(PlayerDesc remote_player_desc) throws RemoteException, NotBoundException, ConnectionAlreadyEstablished
+	public static Connection connect(PlayerDesc remote_player_desc) throws RemoteException, NotBoundException, ConnectionAlreadyEstablished
 	{
 		Connection new_connection = new Connection();
 		new_connection.Connect(remote_player_desc);
+		return new_connection;
+	}
+	
+	public static Connection getConnection(PlayerDesc player)
+	{
+		for ( Connection connection : m_ActiveConnections) {
+			if ( connection.getRemotePlayerDesc() == player ) {
+				return connection;
+			}
+		}
+		
+		return null;
 	}
 	
 	public static List<Connection> m_ActiveConnections;
