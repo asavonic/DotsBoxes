@@ -35,7 +35,9 @@ public class DotsBoxes {
 			
 		} catch (RemoteException | AlreadyBoundException | NotBoundException | ConnectionAlreadyEstablished e) {
 			e.printStackTrace();
+			System.exit(1);
 		} catch (UnknownHostException e) {
+			System.exit(2);
 			Debug.log("Exception: host not found");
 		}
 			
