@@ -68,8 +68,40 @@ public class SessionManager implements EventCallback
 	
 	@Override
 	public void HandleEvent(Event event) {
-		Debug.log("Recieved game event New!!!! : " + event.TypeToString());
+		Debug.log("SessionManager: recieved event: " + event.TypeToString());
 		
+		switch ( event.GetType() ) {
+		case ConnectionClose:
+			break;
+		case ConnectionHandshake:
+			break;
+		case ConnectionPing:
+			break;
+		case GUI_game_Turn:
+			break;
+		case Generic:
+			break;
+		case NewGameRequest:
+			break;
+		case game_Start:
+			break;
+		case game_Start_GUI_Request:
+			HandleGameStartGUIRequest(event);
+			break;
+		case game_Turn:
+			break;
+		default:
+			break;
+		
+		}
+		
+	}
+	
+	public void HandleGameStartGUIRequest(Event event)
+	{
+		Debug.log("SessionManager: HandleGameStartGUIRequest()");
+		int remote_players_num = 2; // TODO remove hardcode, get it from event
+		m_gameConnections.find_n_players(remote_players_num); // add NewGameDesc
 	}
 	
 	

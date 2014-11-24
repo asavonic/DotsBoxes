@@ -13,5 +13,8 @@ public enum EventType
 	ConnectionPing,
 	ConnectionClose,
 	
-	NewGameRequest
+	NewGameRequest,
+	
+	remote_New_Game_Request,
+	remote_New_Game_Accept
 }
