@@ -36,6 +36,8 @@ public class SessionManager implements EventCallback
 		int some_height_of_field = 2;	
 		int some_width_of_field = 2;	
 		m_game = new GameSession( some_height_of_field, some_width_of_field, some_number_of_players, 0);
+		m_GUI = new GUI();
+		m_GUI.frame.setVisible(true);
 		
 		EventManager.Subscribe(EventType.Generic, this);
 		
@@ -46,6 +48,10 @@ public class SessionManager implements EventCallback
 		
 		
 		EventManager.NewEvent( new GameStartEvent(some_number_of_players), this);
+	}
+	
+	public void Run()
+	{
 		EventManager.ProcessEvents();
 	}
 	/**
@@ -71,6 +77,7 @@ public class SessionManager implements EventCallback
 	ConnectionManager m_connect;
 	GameConnections   m_gameConnections;
 	EventManager      m_eventMngr;
+	GUI               m_GUI;
 	int m_current_player_tag;
 	
 }

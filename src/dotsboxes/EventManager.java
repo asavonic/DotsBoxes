@@ -138,7 +138,10 @@ public final class EventManager
 			Event event = pair.GetEvent();
 			EventCallback sender = pair.GetSender();
 			
-			Debug.log( iterator + " : Class " + String.valueOf(sender.getClass()) + " push event " + event.TypeToString());
+			if( null != sender )
+				Debug.log( iterator + " : Class " + String.valueOf(sender.getClass()) + " push event " + event.TypeToString());
+			else
+				Debug.log( iterator + " : Anonim class push event " + event.TypeToString());
 			iterator++;
 		}
 	}
