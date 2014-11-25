@@ -66,7 +66,7 @@ public final class EventManager
 		}
 		else 
 		{
-			Debug.log("You have subscribed already.");
+			Debug.log(" You have subscribed already. Class:" + String.valueOf(callback.getClass()) + ". Event type: " + String.valueOf(ev_type));
 		}
 	}
 	
