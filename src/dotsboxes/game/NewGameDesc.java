@@ -8,6 +8,6 @@ package dotsboxes.game;
  *
  */
 public class NewGameDesc {
-	public int num_players;
+	public int m_NumPlayers;
 	// TODO add more fields
 }

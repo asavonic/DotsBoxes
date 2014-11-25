@@ -14,7 +14,7 @@ public class Event implements java.io.Serializable
 	 * 
 	 */
 	private static final long serialVersionUID = 1029903096709060936L;
-	private EventType m_eventType;
+	protected EventType m_eventType;
 	/**
 	 * @name    Event
 	 * @brief   Constructor event.
