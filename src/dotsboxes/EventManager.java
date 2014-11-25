@@ -103,15 +103,16 @@ public final class EventManager
 				Vector<EventCallback> vectorGen = m_subcribes.get(ev_type.Generic);   // Get generic customers.
 				
 				
-				if (( null != vector))   
+				if (( null != vector) || (null != vectorGen))   
 				{
-					for(EventCallback i_callback: vector)              // Go over all target customers ...
-						if (i_callback != sender)							// expect sender ...
-							i_callback.HandleEvent(event);                    // and send event to them.
-					
-					for(EventCallback i_callback: vectorGen)              // Go over all generic customers ...
-						if (i_callback != sender)							// expect sender ...
-							i_callback.HandleEvent(event);                    // and send event to them.
+					if(( null != vector))
+						for(EventCallback i_callback: vector)              // Go over all target customers ...
+							if (i_callback != sender)							// expect sender ...
+								i_callback.HandleEvent(event);                    // and send event to them.
+					if(null != vectorGen)
+						for(EventCallback i_callback: vectorGen)              // Go over all generic customers ...
+							if (i_callback != sender)							// expect sender ...
+								i_callback.HandleEvent(event);                    // and send event to them.
 				}
 				else
 				{
@@ -119,9 +120,11 @@ public final class EventManager
 				}
 				Debug.log("Event  " + ev_type + " has been processed.");
 				m_eventsQueue.remove(0);
-				PrintDebugHistory();
 				if (Debug.isEnabled())
+				{
 					m_completedCommandCount++;
+					PrintDebugHistory();
+				}
 			}
 		}
 	}
