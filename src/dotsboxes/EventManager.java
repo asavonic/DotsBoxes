@@ -53,12 +53,12 @@ public final class EventManager
 		
 		if (null != vector && !vector.contains(callback))   
 		{
-			if ((null != vectorGen && !vectorGen.contains(callback)))
+			if (!(null != vectorGen && !vectorGen.contains(callback)))
 			{
 				vector.add(callback);
 			}
 		}
-		else if ((null != vectorGen && !vectorGen.contains(callback)))
+		else if (!(null != vectorGen && !vectorGen.contains(callback)))
 		{
 			vector = new Vector<EventCallback>();
 			vector.add(callback);
