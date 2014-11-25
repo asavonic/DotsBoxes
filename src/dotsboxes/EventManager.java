@@ -47,27 +47,37 @@ public final class EventManager
 		if (null == m_subcribes && null ==  m_eventsQueue)			// Check fot init.
 			Init();
 		
-
+		
 		Vector<EventCallback> vector    = m_subcribes.get(ev_type);           // Get target customers.
 		Vector<EventCallback> vectorGen = m_subcribes.get(EventType.Generic); // Get generic customers.
 		
-		if (null != vector && !vector.contains(callback))   
+		if (null != vector)   
 		{
-			if (!(null != vectorGen && !vectorGen.contains(callback)))
+			if (!vector.contains(callback))
+				if (!(null != vectorGen && !vectorGen.contains(callback)))
+				{
+					vector.add(callback);
+				}
+		}
+		else if (null != vectorGen)
+		{
+			if (!vectorGen.contains(callback))
 			{
+				vector = new Vector<EventCallback>();
 				vector.add(callback);
+				m_subcribes.put( ev_type, vector);
+			}
+			else 
+			{
+				Debug.log(" You have subscribed already. Class:" + String.valueOf(callback.getClass()) + ". Event type: " + String.valueOf(ev_type));
 			}
 		}
-		else if (!(null != vectorGen && !vectorGen.contains(callback)))
+		else
 		{
 			vector = new Vector<EventCallback>();
 			vector.add(callback);
 			m_subcribes.put( ev_type, vector);
-		}
-		else 
-		{
-			Debug.log(" You have subscribed already. Class:" + String.valueOf(callback.getClass()) + ". Event type: " + String.valueOf(ev_type));
-		}
+		}		
 	}
 	
 	public static void NewEvent(Event event, EventCallback callback)
@@ -146,7 +156,7 @@ public final class EventManager
 			EventCallback sender = pair.GetSender();
 			
 			if( null != sender )
-				Debug.log( iterator + " : Class " + String.valueOf(sender.getClass()) + " push event " + event.TypeToString());
+				Debug.log( iterator + " :" + String.valueOf(sender.getClass()) + " push event " + event.TypeToString());
 			else
 				Debug.log( iterator + " : Anonim class push event " + event.TypeToString());
 			iterator++;

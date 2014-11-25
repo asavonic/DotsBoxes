@@ -24,7 +24,7 @@ public class Event implements java.io.Serializable
 	public Event( EventType someThing)
 	{
 		m_eventType = someThing;
-		Debug.log("Event created.");
+		//Debug.log("Event created.");
 	}
 	
 	/**
@@ -36,7 +36,7 @@ public class Event implements java.io.Serializable
 
 	public EventType GetType()
 	{
-		Debug.log("Event type returned.");
+		//Debug.log("Event type returned.");
 		return m_eventType;
 	}
 	
