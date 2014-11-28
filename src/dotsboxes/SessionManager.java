@@ -79,6 +79,8 @@ public class SessionManager implements EventCallback
 		case GUI_to_the_Game:
 			m_GUI.ShowField();
 			break;
+		case GUI_game_exit:
+			System.exit(0);
 		}
 		//m_GUI.ShowField();
 		
