@@ -4,18 +4,23 @@ package dotsboxes;
  * @brief  This file implements class that handle game logic object and connection object.
  */
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.rmi.AccessException;
 import java.rmi.AlreadyBoundException;
 import java.rmi.RemoteException;
 
 import dotsboxes.callbacks.EventCallback;
+import dotsboxes.events.CurrentPlayerChange;
 import dotsboxes.events.Event;
 import dotsboxes.events.EventType;
 import dotsboxes.events.GameStartEvent;
 import dotsboxes.events.GameTurnEvent;
 import dotsboxes.game.TurnDesc;
+import dotsboxes.players.PlayerDesc;
 import dotsboxes.rmi.ConnectionManager;
 import dotsboxes.utils.Debug;
+import dotsboxes.utils.Configuration;
 
 public class SessionManager implements EventCallback
 {
@@ -47,10 +52,19 @@ public class SessionManager implements EventCallback
 		//EventManager.NewEvent(g_event, this);
 		//m_game.Draw();
 		//Debug.log("Session manager: initializated.");
+		m_CurrentPlayer = new PlayerDesc();
+		m_CurrentPlayer.setName("Tester" + Configuration.getPort() );
+		try {
+			m_CurrentPlayer.setInetAdress( InetAddress.getByName("127.0.0.1") );
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		}
 		
-		
+		EventManager.NewEvent( new CurrentPlayerChange(m_CurrentPlayer), this);
 		EventManager.NewEvent( new GameStartEvent(some_number_of_players), this);
 	}
+	
+	private PlayerDesc m_CurrentPlayer;
 	
 	public void Run()
 	{
@@ -93,8 +107,8 @@ public class SessionManager implements EventCallback
 			break;
 		case game_Start:
 			break;
-		case game_Start_GUI_Request:
-			HandleGameStartGUIRequest(event);
+		case gui_New_Game_Request:
+			HandleGUINewGameRequest(event);
 			break;
 		case game_Turn:
 			break;
@@ -105,9 +119,9 @@ public class SessionManager implements EventCallback
 		}
 	}
 	
-	public void HandleGameStartGUIRequest(Event event)
+	public void HandleGUINewGameRequest(Event event)
 	{
-		Debug.log("SessionManager: HandleGameStartGUIRequest()");
+		Debug.log("SessionManager: HandleGUINewGameRequest()");
 		int remote_players_num = 2; // TODO remove hardcode, get it from event
 		m_gameConnections.find_n_players(remote_players_num); // add NewGameDesc
 	}

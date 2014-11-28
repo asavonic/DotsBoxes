@@ -43,17 +43,17 @@ public final class ConnectionManager {
   		Debug.log("ConnectionManager init done. Server running on port " + m_Port );
 	}
 	
-	public static Connection connect(PlayerDesc remote_player_desc) throws RemoteException, NotBoundException, ConnectionAlreadyEstablished
+	public static Connection connect(PlayerDesc local_player_desc, PlayerDesc remote_player_desc) throws RemoteException, NotBoundException, ConnectionAlreadyEstablished
 	{
 		Connection new_connection = new Connection();
-		new_connection.Connect(remote_player_desc);
+		new_connection.Connect(local_player_desc, remote_player_desc);
 		return new_connection;
 	}
 	
 	public static Connection getConnection(PlayerDesc player)
 	{
 		for ( Connection connection : m_ActiveConnections) {
-			if ( connection.getRemotePlayerDesc() == player ) {
+			if ( player.equals( connection.getRemotePlayerDesc() ) ) {
 				return connection;
 			}
 		}
@@ -77,6 +77,6 @@ public final class ConnectionManager {
 		
 		m_ActiveConnections.add(new_connection);
 		
-		Debug.log("ConnectionManager: new connection accepted");
+		Debug.log("ConnectionManager: new connection to player " + new_connection.getRemotePlayerDesc().getName() + " accepted");
 	}
 }

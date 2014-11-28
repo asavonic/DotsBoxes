@@ -21,5 +21,7 @@ public enum EventType
 	
 	gui_New_Game_Request,
 	remote_New_Game_Request,
-	remote_New_Game_Accept
+	remote_New_Game_Accept,
+	
+	internal_Current_Player_Change
 }

@@ -27,21 +27,17 @@ public class Connection
 		m_LocalEventTransmitter = (EventTransmitter)UnicastRemoteObject.exportObject((Remote) local_event_transmitter, 0);
 	}
 	
-	public void Connect(InetAddress address, int port) throws RemoteException, NotBoundException, ConnectionAlreadyEstablished 
+	public void Connect(PlayerDesc local_player, PlayerDesc remote_player) throws RemoteException, NotBoundException, ConnectionAlreadyEstablished
 	{
 		Debug.log("Connection.Connect(): trying to connect");
-		Registry registry = LocateRegistry.getRegistry(address.getHostAddress(), port);
+		Registry registry = LocateRegistry.getRegistry(remote_player.getInetAdress().getHostAddress(), remote_player.getPort());
 		NodeRegister remote_register = (NodeRegister)registry.lookup("NodeRegister");
 		
 		Debug.log("Connection.Connect(): sending connection request");
-		m_RemoteEventTransmitter = remote_register.register(m_LocalEventTransmitter);
+		m_RemoteEventTransmitter = remote_register.register(m_LocalEventTransmitter, local_player);
 		Debug.log("Connection.Connect(): connection established");
-	}
-	
-	public void Connect(PlayerDesc player) throws RemoteException, NotBoundException, ConnectionAlreadyEstablished
-	{
-		this.Connect(player.getInetAdress(), player.getPort());
-		m_RemotePlayerDesc = player;
+		
+		m_RemotePlayerDesc = remote_player;
 	}
 	
 	public void send_event(Event event) throws RemoteException 

@@ -8,8 +8,11 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 
 import dotsboxes.callbacks.EventCallback;
+import dotsboxes.events.CurrentPlayerChange;
 import dotsboxes.events.Event;
 import dotsboxes.events.EventType;
+import dotsboxes.events.NewGameAccept;
+import dotsboxes.events.NewGameRequest;
 import dotsboxes.players.PlayerDesc;
 import dotsboxes.players.PlayersMap;
 import dotsboxes.rmi.Connection;
@@ -35,6 +38,7 @@ public class GameConnections implements EventCallback {
 		
 		EventManager.Subscribe(EventType.remote_New_Game_Accept, this);
 		EventManager.Subscribe(EventType.remote_New_Game_Request, this);
+		EventManager.Subscribe(EventType.internal_Current_Player_Change, this);
 	}
 	
 	public void broadcast_event(Event event)
@@ -45,7 +49,7 @@ public class GameConnections implements EventCallback {
 			try {
 				Connection player_connection = ConnectionManager.getConnection(player);
 				if ( player_connection == null ) {
-					player_connection = ConnectionManager.connect(player);
+					player_connection = ConnectionManager.connect(m_CurrentPlayer, player);
 				}
 				player_connection.send_event(event);
 			} catch (RemoteException | NotBoundException
@@ -59,22 +63,50 @@ public class GameConnections implements EventCallback {
 	public void find_n_players(int num_players)
 	{
 		Debug.log("GameConnections: find_n_players()");
-		broadcast_event(new Event(EventType.remote_New_Game_Request));
+		broadcast_event(new NewGameRequest(m_CurrentPlayer));
 		
 	}
 	
 	public void HandleNewGameAccept( Event event )
 	{
-		Debug.log("GameConnections: someone accepted our New_Game_Request");
+		NewGameAccept new_game_accept = (NewGameAccept) event;
+		Debug.log("GameConnections: " + new_game_accept.getSender().getName() + " accepted our New_Game_Request");
 	}
 	
 	public void HandleNewGameRequest( Event event )
 	{
-		Debug.log("GameConnections: someone accepted out New_Game_Request");
-		EventManager.NewEvent( new Event( EventType.remote_New_Game_Accept ), this);
+		NewGameRequest new_game_request = (NewGameRequest) event;
+		Debug.log("GameConnections: " + new_game_request.getSender().getName() + " requested us to join the game, accepting");
+
+		Connection remote = ConnectionManager.getConnection(new_game_request.getSender());
+		
+		if ( remote == null ) {
+			// this should not normally happen since we already received event from sender
+			try {
+				remote = ConnectionManager.connect(m_CurrentPlayer, new_game_request.getSender());
+			} catch (RemoteException | NotBoundException
+					| ConnectionAlreadyEstablished e) {
+				e.printStackTrace();
+			}
+		}
+		
+		try {
+			remote.send_event(new NewGameAccept(m_CurrentPlayer));
+		} catch (RemoteException e) {
+			// add reset
+			e.printStackTrace();
+		}
+	}
+	
+	public void HandleCurrentPlayerChange( Event event )
+	{
+		CurrentPlayerChange player_change = (CurrentPlayerChange) event;
+		m_CurrentPlayer = player_change.getNewPlayer();
+		Debug.log("GameConnections: " + m_CurrentPlayer.getName() + " is now the active user");
 	}
 	
 	private PlayersMap m_PlayersMap;
+	private PlayerDesc m_CurrentPlayer;
 
 	@Override
 	public void HandleEvent(Event event) {
@@ -99,8 +131,13 @@ public class GameConnections implements EventCallback {
 			break;
 		case remote_New_Game_Accept:
 			HandleNewGameAccept(event);
+			break;
 		case remote_New_Game_Request:
 			HandleNewGameRequest(event);
+			break;
+		case internal_Current_Player_Change:
+			HandleCurrentPlayerChange(event);
+			break;
 		default:
 			break;
 		}

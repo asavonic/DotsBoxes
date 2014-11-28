@@ -6,6 +6,8 @@ package dotsboxes.utils;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 
+import dotsboxes.players.PlayerDesc;
+
 /**
  *
  *
@@ -13,6 +15,7 @@ import java.nio.file.Path;
 public final class Configuration {
 	static private Path m_KnownPlayersFilepath;
 	static private int m_Port;
+	static private PlayerDesc m_DefaultPlayer;
 	
 	public static Path getKnownPlayersFilepath() {
 		return m_KnownPlayersFilepath;
