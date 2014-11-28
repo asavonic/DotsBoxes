@@ -137,29 +137,36 @@ public final class EventManager
 				if (Debug.isEnabled())
 				{
 					m_completedCommandCount++;
-					PrintDebugHistory();
+					PrintDebugHistory(5);
 				}
 			}
 		}
 	}
 	
-	public static void PrintDebugHistory()
+	public static void PrintDebugHistory( int tailLen)
 	{
 		int numbersOfCommand = m_DebugHistory.size();
 		Debug.log("All events : " + numbersOfCommand);
 		Debug.log("Completed  : " + m_completedCommandCount);
 		Debug.log("");
-		int iterator = 0;
-		for(EventSenderPair pair: m_DebugHistory)
+
+		int debugHistoryLen = m_DebugHistory.size();
+		
+		if(tailLen > debugHistoryLen)
+			tailLen = debugHistoryLen;
+		
+		for( int i = debugHistoryLen - tailLen; i < debugHistoryLen; ++i )
 		{
+			EventSenderPair pair = m_DebugHistory.elementAt(i);
+			
 			Event event = pair.GetEvent();
 			EventCallback sender = pair.GetSender();
 			
 			if( null != sender )
-				Debug.log( iterator + " :" + String.valueOf(sender.getClass()) + " push event " + event.TypeToString());
+				Debug.log( i + " :" + String.valueOf(sender.getClass()) + " push event " + event.TypeToString());
 			else
-				Debug.log( iterator + " : Anonim class push event " + event.TypeToString());
-			iterator++;
+				Debug.log( i + " : Anonim class push event " + event.TypeToString());
+			
 		}
 	}
 }
