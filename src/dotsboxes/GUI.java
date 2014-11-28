@@ -130,6 +130,12 @@ public class GUI {
 		Menu.add(StartGame);
 		
 		Button button = new Button("Exit");
+		button.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) 
+			{
+				EventManager.NewAnonimEvent( new dotsboxes.events.Event(EventType.GUI_game_exit));
+			}
+		});
 		Menu.add(button);
 		
 		

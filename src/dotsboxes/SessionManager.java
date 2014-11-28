@@ -98,6 +98,8 @@ public class SessionManager implements EventCallback
 			break;
 		case game_Turn:
 			break;
+		case GUI_game_exit:
+			System.exit(0);
 		default:
 			break;
 		}
