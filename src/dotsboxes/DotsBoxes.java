@@ -29,6 +29,7 @@ public class DotsBoxes {
 			EventManager.Init();
 			
 			SessionManager smanager = new SessionManager();
+			smanager.Run();
 			smanager.Delete();
 		} catch (RemoteException | AlreadyBoundException e) {
 			e.printStackTrace();
