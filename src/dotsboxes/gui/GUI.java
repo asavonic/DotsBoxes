@@ -8,6 +8,7 @@ import dotsboxes.gui.Field;
 import java.awt.*;
 import java.awt.geom.*;
 
+import dotsboxes.callbacks.EventCallback;
 import dotsboxes.events.EventType;
 import dotsboxes.events.GameTurnEvent;
 import dotsboxes.game.TurnDesc;
@@ -52,6 +53,7 @@ import javax.swing.JPanel;
 import javax.swing.JLayeredPane;
 import javax.swing.JSplitPane;
 import javax.swing.JDesktopPane;
+
 import java.awt.FlowLayout;
 
 import javax.swing.JInternalFrame;
@@ -62,7 +64,7 @@ import java.awt.Button;
 import javax.swing.JLabel;
 
 
-public class GUI {
+public class GUI implements EventCallback{
 
 	public JFrame m_frame = new JFrame();
 
@@ -104,7 +106,7 @@ public class GUI {
 	 */
 	private void initialize() 
 	{
-		Field.Init(6, 8, 3); // TODO Get from event.
+		//Field.Init(6, 8, 3); // TODO Get from event.
 		
 		
 
@@ -153,7 +155,7 @@ public class GUI {
 		StartGame.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) 
 			{
-				EventManager.NewAnonimEvent( new dotsboxes.events.Event(EventType.game_Start_GUI_Request));
+				EventManager.NewAnonimEvent( new dotsboxes.events.Event(EventType.game_Start));
 			}
 		});
 		Menu.add(StartGame);
@@ -184,5 +186,12 @@ public class GUI {
 		Config.setVisible(false);
 		Field.setVisible(false);
 		m_frame.setVisible(true);
+	}
+
+	@Override
+	public void HandleEvent(dotsboxes.events.Event event) 
+	{
+		// TODO Auto-generated method stub
+		
 	}
 }

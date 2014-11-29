@@ -111,21 +111,11 @@ public class GameConnections implements EventCallback {
 	@Override
 	public void HandleEvent(Event event) {
 		switch ( event.GetType() ) {
-		case ConnectionClose:
-			break;
-		case ConnectionHandshake:
-			break;
-		case ConnectionPing:
-			break;
 		case GUI_game_Turn:
 			break;
 		case Generic:
 			break;
-		case NewGameRequest:
-			break;
 		case game_Start:
-			break;
-		case game_Start_GUI_Request:
 			break;
 		case game_Turn:
 			break;

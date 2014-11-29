@@ -15,18 +15,22 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import dotsboxes.EventManager;
+import dotsboxes.callbacks.EventCallback;
+import dotsboxes.events.Event;
 import dotsboxes.events.EventType;
+import dotsboxes.events.GameStartEvent;
 import dotsboxes.events.GameTurnEvent;
 import dotsboxes.game.TurnDesc;
 import dotsboxes.utils.Debug;
 
-public class Field extends JPanel
+public class Field extends JPanel implements EventCallback
 {
 	JFrame m_frame;
 	
 	int m_num_players;
 	int m_fieldWidth;
 	int m_fieldHeight;
+	int m_current_player_tag;
 	int m_fatLine = 13;
 	
 	int field_begin_x;
@@ -102,11 +106,12 @@ public class Field extends JPanel
 		button_1.setBounds(this.getWidth() - 100, 0, 100, 30);
 	}
 	
-	public void Init(int width, int height, int num_players)
+	public void Init(int width, int height, int num_players, int begin_player_tag)
 	{
 		m_num_players = num_players;
 		m_fieldWidth = width;
 		m_fieldHeight = height;
+		m_current_player_tag = begin_player_tag;
 	
 		if( m_fieldWidth > m_fieldHeight)
 		{
@@ -151,7 +156,7 @@ public class Field extends JPanel
                 		i--;
                 		m_edgesV[i][j] = 1;//TODO
                 		TurnDesc tDesc = new TurnDesc(i, j, 1, true);//TODO player tag.
-                		EventManager.NewAnonimEvent(new dotsboxes.events.GameTurnEvent(EventType.GUI_game_Turn, true, tDesc));
+                		EventManager.NewEvent(new dotsboxes.events.GameTurnEvent(EventType.GUI_game_Turn, true, tDesc), this);
                 		Debug.log("Vertical.");
                 		this.repaint();
                 		return;
@@ -191,7 +196,7 @@ public class Field extends JPanel
         	}
         }
 		
-		for( int i = 0; i < m_fieldWidth; ++i) //Squere
+		for( int i = 0; i < m_fieldWidth; ++i) //Square
 		{
 			int squre_begin_x = field_begin_x + (m_fatLine / 2) + squre_width * i;
 			int squre_width_not_border = squre_width - m_fatLine;
@@ -307,5 +312,23 @@ public class Field extends JPanel
         		}
         	}
         }
+	}
+
+	@Override
+	public void HandleEvent(dotsboxes.events.Event ev) 
+	{
+		switch(ev.GetType())
+		{
+		case game_Turn:
+			//Turn(ev);
+			break;
+		case game_Start:
+			GameStartEvent g = (GameStartEvent)ev;
+			Init(g.getFieldHeight(), g.getFieldWidth(), g.getNumPlayers(), g.getBeginPlayer());
+			break;
+		default:
+			Debug.log("Unknown event in GameSession!");
+			return;
+		}
 	}
 }

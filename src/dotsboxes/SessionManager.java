@@ -16,6 +16,7 @@ import dotsboxes.events.Event;
 import dotsboxes.events.EventType;
 import dotsboxes.events.GameStartEvent;
 import dotsboxes.events.GameTurnEvent;
+import dotsboxes.game.NewGameDesc;
 import dotsboxes.game.TurnDesc;
 import dotsboxes.players.PlayerDesc;
 import dotsboxes.gui.GUI;
@@ -38,21 +39,17 @@ public class SessionManager implements EventCallback
 	{
 		Debug.log("Session manager: initialization:");
 		m_gameConnections = new GameConnections();
-		int some_number_of_players = 3;
-		int some_height_of_field = 2;	
-		int some_width_of_field = 2;	
-		m_game = new GameSession( some_height_of_field, some_width_of_field, some_number_of_players, 0);
+
+		m_game = new GameSession( 0, 0, 0, 0);
 		m_GUI = new GUI();
 		m_GUI.m_frame.setVisible(true);
 		m_GUI.ShowMenu();
 		
-		EventManager.Subscribe(EventType.Generic, this);
-		EventManager.Subscribe(EventType.GUI_game_Turn, this);
+		//EventManager.Subscribe(EventType.Generic, this);
+		//EventManager.Subscribe(EventType.GUI_game_Turn, this);
 		
 		//GameTurnEvent g_event = new GameTurnEvent(EventType.game_Turn, true, new TurnDesc( 0, 1, 1));
-		//EventManager.NewEvent(g_event, this);
-		//m_game.Draw();
-		//Debug.log("Session manager: initializated.");
+		
 		m_CurrentPlayer = new PlayerDesc();
 		m_CurrentPlayer.setName("Tester" + Configuration.getPort() );
 		try {
@@ -61,8 +58,7 @@ public class SessionManager implements EventCallback
 			e.printStackTrace();
 		}
 		
-		EventManager.NewEvent( new CurrentPlayerChange(m_CurrentPlayer), this);
-		EventManager.NewEvent( new GameStartEvent(some_number_of_players), this);
+		//EventManager.NewEvent( new CurrentPlayerChange(m_CurrentPlayer), this);
 	}
 	
 	private PlayerDesc m_CurrentPlayer;
@@ -91,22 +87,19 @@ public class SessionManager implements EventCallback
 		case GUI_back_to_Menu: 
 			m_GUI.ShowMenu();
 			break;
-		case game_Start_GUI_Request:
+		case game_Start:
+			int some_number_of_players = 3;
+			int some_height_of_field = 5;	
+			int some_width_of_field = 3;	
+			NewGameDesc game_desc = new NewGameDesc( some_width_of_field, some_height_of_field, some_number_of_players);
+			EventManager.NewEvent( new GameStartEvent( game_desc, 1), this);
+			
+			
 			m_GUI.ShowField();
-			break;
-		case ConnectionClose:
-			break;
-		case ConnectionHandshake:
-			break;
-		case ConnectionPing:
 			break;
 		case GUI_game_Turn:
 			break;
 		case Generic:
-			break;
-		case NewGameRequest:
-			break;
-		case game_Start:
 			break;
 		case gui_New_Game_Request:
 			HandleGUINewGameRequest(event);

@@ -8,6 +8,7 @@ import java.util.Vector;
 import dotsboxes.callbacks.EventCallback;
 import dotsboxes.events.Event;
 import dotsboxes.events.EventType;
+import dotsboxes.events.GameStartEvent;
 import dotsboxes.events.GameTurnEvent;
 import dotsboxes.utils.Debug;
 
@@ -23,13 +24,18 @@ public class GameSession implements EventCallback
 	 */
 	GameSession( int field_height, int field_width, int players_number, int current_player_tag )
 	{
+		EventManager.Subscribe( EventType.game_Turn, this); //Subscribe on game_Turn event.
+		EventManager.Subscribe( EventType.GUI_game_Turn, this); 
+		EventManager.Subscribe( EventType.game_Start, this); 
+		
+		Init( field_height, field_width, players_number, current_player_tag);
+	}
+	
+	private void Init(int field_height, int field_width, int players_number, int current_player_tag)
+	{
 		m_fieldHeight      = field_height;
 		m_fieldWidth       = field_width;
 		m_numberOfPlayers  = players_number;
-		
-		
-		EventManager.Subscribe( EventType.game_Turn, this); //Subscribe on game_Turn event.
-		EventManager.Subscribe( EventType.game_Start, this); 
 		
 		current_player_tag = current_player_tag;
 		m_edgesV   = new int[m_fieldHeight + 1][m_fieldWidth];
@@ -134,13 +140,15 @@ public class GameSession implements EventCallback
 		switch(ev.GetType())
 		{
 		case GUI_game_Turn:
+			Debug.log("GUI_game_Turn resived.");
 			GUITurn(ev);
 			break;
 		case game_Turn:
 			Turn(ev);
 			break;
 		case game_Start:
-			
+			GameStartEvent g = (GameStartEvent)ev;
+			Init(g.getFieldHeight(), g.getFieldWidth(), g.getNumPlayers(), g.getBeginPlayer());
 			break;
 		default:
 			Debug.log("Unknown event in GameSession!");

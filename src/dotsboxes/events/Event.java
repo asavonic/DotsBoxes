@@ -65,24 +65,14 @@ public class Event implements java.io.Serializable
 			return "Generic";
 		case game_Turn:
 			return "game_Turn";
-		case ConnectionClose:
-			return "ConnectionClose";
-		case ConnectionHandshake:
-			return "ConnectionHandshake";
-		case ConnectionPing:
-			return "ConnectionPing";
 		case GUI_back_to_Menu:
 			return "GUI_back_to_Menu";
 		case GUI_game_exit:
 			return "GUI_game_exit";
 		case GUI_to_the_Game:
 			return "GUI_to_the_Game";
-		case NewGameRequest:
-			return "NewGameRequest";
 		case game_Start:
 			return "game_Start";
-		case game_Start_GUI_Request:
-			return "game_Start_GUI_Request";
 		case gui_New_Game_Request:
 			return "gui_New_Game_Request";
 		case remote_New_Game_Accept:

@@ -113,6 +113,12 @@ public final class EventManager
 				EventCallback sender = ray.GetSender();
 				EventType    ev_type = event.GetType();
 				
+				if( null != sender )
+						Debug.log( "Process event " + event.TypeToString() + "pushed by" +  String.valueOf(sender.getClass()));
+				else
+					Debug.log( "Process " + event.TypeToString() + " pushed by anonim class" );
+				
+				
 				Vector<EventCallback> vector    = m_subcribes.get(ev_type);   // Get target customers.
 				Vector<EventCallback> vectorGen = m_subcribes.get(ev_type.Generic);   // Get generic customers.
 				
