@@ -14,6 +14,7 @@ import dotsboxes.events.EventType;
 import dotsboxes.events.GameStartEvent;
 import dotsboxes.events.GameTurnEvent;
 import dotsboxes.game.TurnDesc;
+import dotsboxes.gui.GUI;
 import dotsboxes.rmi.ConnectionManager;
 import dotsboxes.utils.Debug;
 
@@ -37,7 +38,7 @@ public class SessionManager implements EventCallback
 		int some_width_of_field = 2;	
 		m_game = new GameSession( some_height_of_field, some_width_of_field, some_number_of_players, 0);
 		m_GUI = new GUI();
-		m_GUI.frame.setVisible(true);
+		m_GUI.m_frame.setVisible(true);
 		m_GUI.ShowMenu();
 		
 		EventManager.Subscribe(EventType.Generic, this);
@@ -76,7 +77,7 @@ public class SessionManager implements EventCallback
 		case GUI_back_to_Menu: 
 			m_GUI.ShowMenu();
 			break;
-		case GUI_to_the_Game:
+		case game_Start_GUI_Request:
 			m_GUI.ShowField();
 			break;
 		case GUI_game_exit:
