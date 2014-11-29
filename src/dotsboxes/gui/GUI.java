@@ -1,22 +1,25 @@
-package dotsboxes;
+package dotsboxes.gui;
 import java.awt.EventQueue;
 
-import javax.swing.JFrame;
+import javax.swing.*;
 
-//import com.jgoodies.forms.layout.FormLayout;
-//import com.jgoodies.forms.layout.ColumnSpec;
-//import com.jgoodies.forms.layout.RowSpec;
-//import com.jgoodies.forms.factories.FormFactory;
+import dotsboxes.gui.Field;
+
+import java.awt.*;
+import java.awt.geom.*;
 
 import dotsboxes.events.EventType;
 import dotsboxes.events.GameTurnEvent;
 import dotsboxes.game.TurnDesc;
+import dotsboxes.utils.Debug;
 
 import java.awt.Component;
 
 import javax.swing.Box;
 
+import java.awt.Color;
 import java.awt.Event;
+//import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.GridBagLayout;
 
@@ -27,10 +30,15 @@ import java.awt.GridBagConstraints;
 import javax.swing.AbstractAction;
 
 import java.awt.event.ActionEvent;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 import javax.swing.Action;
 
 import java.awt.event.ActionListener;
+import java.awt.geom.Line2D;
 
 import javax.swing.JRadioButton;
 
@@ -38,59 +46,49 @@ import java.awt.Insets;
 import java.awt.BorderLayout;
 
 import dotsboxes.*;
+
 import javax.swing.JTabbedPane;
 import javax.swing.JPanel;
 import javax.swing.JLayeredPane;
 import javax.swing.JSplitPane;
 import javax.swing.JDesktopPane;
-import net.miginfocom.swing.MigLayout;
+
+
+
+
+
+
+
+
+
+//import net.miginfocom.swing.MigLayout;
 import java.awt.FlowLayout;
+
 import javax.swing.JInternalFrame;
+
 import java.awt.Panel;
 import java.awt.Button;
+
 import javax.swing.JLabel;
 
 
 public class GUI {
 
-	JFrame frame;
-	/**
-	 * @wbp.nonvisual location=276,-21
-	 */
-	//private final JPanel panel = new JPanel();
-	//private final Action action = new SwingAction();
+	public JFrame m_frame = new JFrame();
 
-	/**
-	 * Launch the application.
-	 */
-	/*public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					GUI window = new GUI();
-					window.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}*/
-
-	/**
-	 * Create the application.
-	 */
 	public GUI() {
 		initialize();
 	}
 
-	int m_currentPane;
 	Panel Menu = new Panel();
-	Panel Field = new Panel();
+	Field Field = new Field(m_frame);
 	Panel Config = new Panel();
 	
 	public void ShowMenu()
 	{
-		Menu.setVisible(true);
+		Menu.setBounds(m_frame.getBounds());
+		Menu.repaint();
+		Menu.setVisible(true);	
 		Config.setVisible(false);
 		Field.setVisible(false);
 	}
@@ -106,26 +104,66 @@ public class GUI {
 	{
 		Menu.setVisible(false);
 		Config.setVisible(false);
-		Field.setVisible(true);
+		Field.setBounds(m_frame.getBounds());
+		Field.repaint();
+		Field.setVisible(true);	
 	}
 	
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	private void initialize() {
-		frame = new JFrame();
-		frame.setBounds(100, 100, 756, 505);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.getContentPane().setLayout(null);
-		Menu.setBounds(178, 77, 309, 383);
-		frame.getContentPane().add(Menu);
+	private void initialize() 
+	{
+		Field.Init(6, 8, 3); // TODO Get from event.
+		
+		
+
+		
+		
+		
+		m_frame.addComponentListener( new ComponentListener()
+		{  
+				@Override
+				public void componentResized(ComponentEvent e) {
+					Menu.setSize(m_frame.getWidth(), m_frame.getHeight());
+					Menu.repaint();
+					Field.setSize(m_frame.getWidth(), m_frame.getHeight());
+					Config.setSize(m_frame.getWidth(), m_frame.getHeight());
+					//button_1.setBounds(m_frame.getWidth() - 100, m_frame.getY() + 10, 80, 30);
+				}
+
+				@Override
+				public void componentMoved(ComponentEvent e) {
+					// TODO Auto-generated method stub
+					
+				}
+
+				@Override
+				public void componentShown(ComponentEvent e) {
+					// TODO Auto-generated method stub
+					
+				}
+
+				@Override
+				public void componentHidden(ComponentEvent e) {
+					// TODO Auto-generated method stub
+					
+				}
+		});
+		
+		m_frame.setBounds(10, 10, 756, 505);
+		Menu.setBounds(m_frame.getBounds());
+		m_frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		//frame.getContentPane().setLayout(null);
+		
+		
 		Menu.setLayout(new GridLayout(0, 1, 0, 0));
 		
 		Button StartGame = new Button("Lets start game!");
 		StartGame.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) 
 			{
-				EventManager.NewAnonimEvent( new dotsboxes.events.Event(EventType.GUI_to_the_Game));
+				EventManager.NewAnonimEvent( new dotsboxes.events.Event(EventType.game_Start_GUI_Request));
 			}
 		});
 		Menu.add(StartGame);
@@ -138,26 +176,23 @@ public class GUI {
 			}
 		});
 		Menu.add(button);
+		m_frame.add(Menu);
+		Field.setBounds(m_frame.getBounds());
 		
-		
-		Field.setBounds(10, 10, 661, 462);
-		frame.getContentPane().add(Field);
 		Field.setLayout(null);
+		m_frame.add(Field);
 		
-		Button button_1 = new Button("Back to menu.");
-		button_1.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) 
-			{
-				EventManager.NewAnonimEvent( new dotsboxes.events.Event(EventType.GUI_back_to_Menu));
-			}
-		});
-		button_1.setBounds(547, 10, 104, 23);
-		Field.add(button_1);
+		
+		
 		
 		
 		Config.setBounds(0, 0, 10, 10);
-		frame.getContentPane().add(Config);
+		m_frame.add(Config);
 		
-		m_currentPane = 1;
+		
+		Menu.setVisible(false);
+		Config.setVisible(false);
+		Field.setVisible(false);
+		m_frame.setVisible(true);
 	}
 }
