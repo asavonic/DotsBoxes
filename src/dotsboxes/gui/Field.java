@@ -191,7 +191,7 @@ public class Field extends JPanel
         	}
         }
 		
-		for( int i = 0; i < m_fieldWidth; ++i) //Squere
+		for( int i = 0; i < m_fieldWidth; ++i) //Square
 		{
 			int squre_begin_x = field_begin_x + (m_fatLine / 2) + squre_width * i;
 			int squre_width_not_border = squre_width - m_fatLine;

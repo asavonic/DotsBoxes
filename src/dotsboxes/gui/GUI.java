@@ -4,6 +4,7 @@ import java.awt.EventQueue;
 import javax.swing.*;
 
 import dotsboxes.gui.Field;
+import dotsboxes.gui.newgame.NewGameGUI;
 
 import java.awt.*;
 import java.awt.geom.*;
@@ -73,6 +74,7 @@ public class GUI {
 	Panel Menu = new Panel();
 	Field Field = new Field(m_frame);
 	Panel Config = new Panel();
+	NewGameGUI NewGameGUI = new NewGameGUI();
 	
 	public void ShowMenu()
 	{
@@ -99,18 +101,23 @@ public class GUI {
 		Field.setVisible(true);	
 	}
 	
+	public void ShowNewGameGUI()
+	{
+		Menu.setVisible(false);
+		Config.setVisible(false);
+		Field.setVisible(false);
+		NewGameGUI.setBounds(m_frame.getBounds());
+		NewGameGUI.repaint();
+		NewGameGUI.setVisible(true);	
+	}
+	
 	/**
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() 
 	{
 		Field.Init(6, 8, 3); // TODO Get from event.
-		
-		
 
-		
-		
-		
 		m_frame.addComponentListener( new ComponentListener()
 		{  
 				@Override
@@ -174,15 +181,16 @@ public class GUI {
 		
 		
 		
-		
-		
 		Config.setBounds(0, 0, 10, 10);
 		m_frame.add(Config);
 		
+		NewGameGUI.setBounds(m_frame.getBounds());
+		m_frame.add(NewGameGUI);
 		
 		Menu.setVisible(false);
 		Config.setVisible(false);
 		Field.setVisible(false);
+		NewGameGUI.setVisible(false);
 		m_frame.setVisible(true);
 	}
 }

@@ -91,6 +91,8 @@ public class Event implements java.io.Serializable
 			return "remote_New_Game_Request";
 		case internal_Current_Player_Change:
 			return "internal_Current_Player_Change";
+		case gui_New_Game_Accept:
+			return "gui_New_Game_Accept";
 		default:
 			return "Please define this type in ./src/dotsboxes/events/Event.java!";
 		}

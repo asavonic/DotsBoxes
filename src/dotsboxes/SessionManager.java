@@ -92,7 +92,7 @@ public class SessionManager implements EventCallback
 			m_GUI.ShowMenu();
 			break;
 		case game_Start_GUI_Request:
-			m_GUI.ShowField();
+			m_GUI.ShowNewGameGUI();
 			break;
 		case ConnectionClose:
 			break;
