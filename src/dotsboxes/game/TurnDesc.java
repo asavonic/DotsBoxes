@@ -15,7 +15,7 @@ public class TurnDesc
 		m_vert = false;
 	}
 	
-	TurnDesc( int i, int j, int player_tag, boolean vert)
+	public TurnDesc( int i, int j, int player_tag, boolean vert)
 	{
 		m_i = i;
 		m_j = j;
