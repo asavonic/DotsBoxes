@@ -38,30 +38,25 @@ public class GameSession implements EventCallback
 		m_numberOfPlayers  = players_number;
 		
 		current_player_tag = current_player_tag;
-		m_edgesV   = new int[m_fieldHeight + 1][m_fieldWidth];
-		m_edgesH   = new int[m_fieldHeight][m_fieldWidth + 1];
-		m_vertex   = new int[m_fieldHeight][m_fieldWidth];
+		
+		m_edgesH   = new int[m_fieldHeight + 1][m_fieldWidth];
+		m_edgesV   = new int[m_fieldHeight][m_fieldWidth + 1];		
+		m_vertex   = new int[m_fieldWidth][m_fieldHeight];
 		m_counters = new int[m_numberOfPlayers + 1];
 		m_history  = new Vector<Event>();
 		
-		for( int i = 0; i < m_fieldHeight; ++i)
+		for( int i = 0; i < m_fieldWidth; ++i)
 		{
-			m_edgesH[i][0] = border;
-			m_edgesH[i][m_fieldWidth] = border;
+			m_edgesH[0][i] = border;
+			m_edgesH[m_fieldHeight][i] = border;
 		}
-		for( int j = 0; j < m_fieldWidth; ++j)
+		for( int j = 0; j < m_fieldHeight; ++j)
 		{
-			m_edgesV[0][j] = border;
-			m_edgesV[m_fieldHeight][j] = border;
+			m_edgesV[j][0] = border;
+			m_edgesV[j][m_fieldWidth] = border;
 		}
 		
 		Debug.log("GameSassion initializated.");
-	}
-	
-	private void SendGUIEvent(Event event)
-	{
-		event.Cast(EventType.GUI_game_Turn);
-		EventManager.NewEvent(event, this);
 	}
 	
 	private void SendEvent(Event event)
@@ -69,7 +64,6 @@ public class GameSession implements EventCallback
 		event.Cast(EventType.game_Turn);
 		EventManager.NewEvent(event, this);
 	}
-	
 	
 	private void GUITurn(Event ev)
 	{
@@ -107,7 +101,7 @@ public class GameSession implements EventCallback
 			boolean result = AddEdge( game_event1.getI(), game_event1.getJ(), game_event1.getVert(), game_event1.getPlrTag());
 			if (result)
 			{
-				SendGUIEvent(ev);
+				SendEvent(ev);
 				m_history.add(ev);
 			}
 		}
@@ -116,7 +110,7 @@ public class GameSession implements EventCallback
 			boolean result = AddMark( game_event1.getI(), game_event1.getJ(), game_event1.getPlrTag());
 			if (result)
 			{
-				SendGUIEvent(ev);
+				SendEvent(ev);
 				m_history.add(ev);
 			}
 		}
@@ -210,15 +204,15 @@ public class GameSession implements EventCallback
 			Debug.log("Invalid value(player)! Player tag = " + player_tag + ".");
 			return false;
 		}
-		if (i < 0 || j < 0 || i > m_fieldHeight || j > m_fieldWidth)
+		if (i < 0 || j < 0 || i > m_fieldWidth || j > m_fieldHeight)
 		{
 			Debug.log("Invalid value (mark)! Player tag = " + player_tag + ". i = " + i + "(max = " + m_fieldHeight + "); j = " + j + "(max = " + m_fieldWidth + ").");
 			return false;
 		}
-		if (((player_tag != m_edgesV[i][j])     & (border != m_edgesV[i][j]))     || 
-			((player_tag != m_edgesH[i][j])     & (border != m_edgesH[i][j]))     ||  //Check for edges around.
-			((player_tag != m_edgesV[i + 1][j]) & (border != m_edgesV[i + 1][j])) ||
-			((player_tag != m_edgesH[i][j + 1]) & (border != m_edgesH[i][j + 1])) )
+		if (((0 == m_edgesV[j][i])     & (border != m_edgesV[j][i]))     || 
+			((0 == m_edgesH[j][i])     & (border != m_edgesH[j][i]))     ||  //Check for edges around.
+			((0 == m_edgesH[j + 1][i]) & (border != m_edgesH[j + 1][i])) ||
+			((0 == m_edgesV[j][i + 1]) & (border != m_edgesV[j][i + 1])) )
 		{
 			Debug.log("Player " + player_tag + " try to mark vertex [" + i + "][" + j + "] but edges around this vertex doesn't mark as him.");
 			return false;
