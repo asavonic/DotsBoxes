@@ -10,7 +10,7 @@ package dotsboxes.game;
 public class NewGameDesc {
 	String m_gameName;
 	public int m_num_players;
-	int m_sizeFieldWidth;
+	public int m_sizeFieldWidth;
 	int m_sizeFieldHeight;
 	
 	public int getNumPlayers() {

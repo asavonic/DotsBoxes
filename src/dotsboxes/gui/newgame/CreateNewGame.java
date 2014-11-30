@@ -11,9 +11,12 @@ import javax.swing.JSpinner;
 import javax.swing.SpringLayout;
 
 import dotsboxes.EventManager;
+import dotsboxes.callbacks.EventCallback;
+import dotsboxes.events.Event;
 import dotsboxes.events.EventType;
+import dotsboxes.events.GUI_NewGameRequest;
 
-public class CreateNewGame extends JPanel {
+public class CreateNewGame extends JPanel implements EventCallback {
 	
 	JSpinner m_numLocalPlayers = new JSpinner();
 	JSpinner m_numRemotePlayers = new JSpinner();
@@ -120,14 +123,30 @@ public class CreateNewGame extends JPanel {
 		join_button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) 
 			{
-				EventManager.NewAnonimEvent( new dotsboxes.events.Event(EventType.gui_New_Game_Accept));
+				EventManager.NewEvent(new GUI_NewGameRequest( (int) m_numLocalPlayers.getValue(), 
+															  (int) m_numRemotePlayers.getValue(), 
+															  (int) m_fieldHeight.getValue(), 
+															  (int) m_fieldWidth.getValue()), self);
 			}
 		});
-		//add(m_numLocalPlayers);
-
-		//add(new JLabel("Remote players: "));
-		//add(m_numRemotePlayers);
+		
+		add(join_button);
+		
+		
+		layout.putConstraint(SpringLayout.WEST, parent,
+                5,
+                SpringLayout.WEST, join_button);
+		layout.putConstraint(SpringLayout.NORTH, join_button,
+                30,
+                SpringLayout.SOUTH, remote_players_label);
 	}
 	
+	CreateNewGame self = this;
 	Container m_Parent;
+
+	@Override
+	public void HandleEvent(Event event) {
+		// TODO Auto-generated method stub
+		
+	}
 }
