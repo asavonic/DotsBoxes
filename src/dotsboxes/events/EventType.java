@@ -8,11 +8,13 @@ public enum EventType
 	GUI_back_to_Menu,
 	GUI_to_the_Game,
 	GUI_game_exit,
+	GUI_current_player_changed,
 	game_Turn,
 	game_Start,
 	GUI_game_Start,
 	
 	playersList,
+	
 	
 	turn_unlock,
 	
