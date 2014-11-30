@@ -16,6 +16,7 @@ import dotsboxes.callbacks.EventCallback;
 import dotsboxes.events.CurrentPlayerChange;
 import dotsboxes.events.Event;
 import dotsboxes.events.EventType;
+import dotsboxes.events.GUI_CurrentPlayerChanged;
 import dotsboxes.events.GUI_NewGameRequest;
 import dotsboxes.events.GameStartEvent;
 import dotsboxes.events.GameTurnEvent;
@@ -84,6 +85,8 @@ public class SessionManager implements EventCallback
 			m_CurrentPlayer = player;
 			EventManager.NewEvent(new Event(EventType.turn_unlock), this);
 		}
+		GUI_CurrentPlayerChanged event = new GUI_CurrentPlayerChanged(player.getName());
+		EventManager.NewEvent(event, this);
 	}
 	
 	private void GameCreate(GUI_NewGameRequest event)
@@ -100,6 +103,7 @@ public class SessionManager implements EventCallback
 		for ( int i = 0; i < m_local_players_num; ++i)
 		{
 			PlayerDesc player = new PlayerDesc();//TODO: Andrew! Write right initialization of PlayerDesc! 
+			player.setName(String.valueOf(i));
 			m_playerDescs.addElement(player);
 			m_localPlayersDescs.addElement(player);
 		}
@@ -188,8 +192,9 @@ public class SessionManager implements EventCallback
 			CheckForOurTurn();
 			break;
 		case game_Turn:
-			
-			CheckForOurTurn();
+			GameTurnEvent turnEvent = (GameTurnEvent) event;
+			if(turnEvent.isSwitchTurn())
+				CheckForOurTurn();
 			break;
 		case GUI_game_exit:
 			System.exit(0);
