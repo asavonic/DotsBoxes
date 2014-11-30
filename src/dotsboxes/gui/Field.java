@@ -5,6 +5,7 @@ import java.awt.Button;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Label;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -12,12 +13,14 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import dotsboxes.EventManager;
 import dotsboxes.callbacks.EventCallback;
 import dotsboxes.events.Event;
 import dotsboxes.events.EventType;
+import dotsboxes.events.GUI_CurrentPlayerChanged;
 import dotsboxes.events.GameStartEvent;
 import dotsboxes.events.GameTurnEvent;
 import dotsboxes.game.TurnDesc;
@@ -51,6 +54,7 @@ public class Field extends JPanel implements EventCallback
     
 	Button button_BackToMenu = new Button("Back to menu.");
 	Button button_Clear = new Button("Clear.");
+	JLabel currentPlayer = new JLabel("Text-Only Label");
 	
 	public Field(JFrame frame) 
 	{
@@ -60,6 +64,7 @@ public class Field extends JPanel implements EventCallback
 		
 		EventManager.Subscribe( EventType.game_Start, this); 
 		EventManager.Subscribe( EventType.game_Turn, this); 
+		EventManager.Subscribe( EventType.GUI_current_player_changed, this); 
 		
 		button_BackToMenu.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) 
@@ -71,6 +76,8 @@ public class Field extends JPanel implements EventCallback
 		ButtonResize();
 		
 		this.add(button_BackToMenu);
+		
+		this.add(currentPlayer);
 		
 		button_Clear.addActionListener(new ActionListener() 
 		{
@@ -138,6 +145,8 @@ public class Field extends JPanel implements EventCallback
 	{
 		button_BackToMenu.setBounds(this.getWidth() - 100, 0, 100, 30);
 		button_Clear.setBounds(this.getWidth() - 200, 0, 100, 30);
+		
+		currentPlayer.setBounds(this.getWidth() - 400, 0, 150, 30);
 	}
 	
 	public void Init(int width, int height, int num_players, int begin_player_tag)
@@ -395,6 +404,10 @@ public class Field extends JPanel implements EventCallback
 			GameStartEvent g = (GameStartEvent)ev;
 			Init(g.getFieldWidth(), g.getFieldHeight(),  g.getNumPlayers(), g.getBeginPlayer());
 			this.repaint();
+			break;
+		case GUI_current_player_changed:
+			GUI_CurrentPlayerChanged event = (GUI_CurrentPlayerChanged) ev;
+			currentPlayer.setText(event.getPlayerName());
 			break;
 		default:
 			Debug.log("Unknown event in GameSession!");
