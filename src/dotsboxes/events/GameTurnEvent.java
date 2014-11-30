@@ -6,11 +6,22 @@ public class GameTurnEvent extends Event
 {
 	boolean m_edge; // True if player mark edge.
 	TurnDesc m_turnDesc;
+	boolean m_switchTurn;
+	
+	public GameTurnEvent(EventType someThing, boolean edge, TurnDesc turnDesc, boolean switchTurn) 
+	{
+		super(someThing);
+		m_edge = edge;
+		m_turnDesc = turnDesc;
+		m_switchTurn = switchTurn;
+	}
+	
 	public GameTurnEvent(EventType someThing, boolean edge, TurnDesc turnDesc) 
 	{
 		super(someThing);
 		m_edge = edge;
 		m_turnDesc = turnDesc;
+		m_switchTurn = true;
 	}
 	
 	public boolean isEdgeChanged()
@@ -36,5 +47,15 @@ public class GameTurnEvent extends Event
 	public int getPlrTag()
 	{
 		return m_turnDesc.m_player_tag;
+	}
+	
+	public TurnDesc getTurnDesc()
+	{
+		return m_turnDesc;
+	}
+	
+	public boolean isSwitchTurn()
+	{
+		return m_switchTurn;
 	}
 }
