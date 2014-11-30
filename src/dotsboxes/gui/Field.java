@@ -26,7 +26,11 @@ import dotsboxes.utils.Debug;
 public class Field extends JPanel implements EventCallback
 {
 	JFrame m_frame;
+	Field m_this;
 	
+	final int DEBUG = -2;
+	
+	boolean m_IsInit = false;
 	int m_num_players;
 	int m_fieldWidth;
 	int m_fieldHeight;
@@ -50,12 +54,16 @@ public class Field extends JPanel implements EventCallback
 	public Field(JFrame frame) 
 	{
 		m_frame = frame;
+		m_this = this;
 		
+		
+		EventManager.Subscribe( EventType.game_Start, this); 
+		EventManager.Subscribe( EventType.game_Turn, this); 
 		
 		button_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) 
 			{
-				EventManager.NewAnonimEvent( new dotsboxes.events.Event(EventType.GUI_back_to_Menu));
+				EventManager.NewEvent( new dotsboxes.events.Event(EventType.GUI_back_to_Menu), m_this);
 			}
 		});
 		
@@ -130,6 +138,10 @@ public class Field extends JPanel implements EventCallback
 		}
 		}
 		m_vertex   = new int[m_fieldWidth][m_fieldHeight];
+		
+		m_IsInit = true;
+		
+		
 	}
 	
 	public void DetectClick(int x, int y)
@@ -154,8 +166,9 @@ public class Field extends JPanel implements EventCallback
                 	{
                 		//j--;
                 		i--;
-                		m_edgesV[i][j] = 1;//TODO
-                		TurnDesc tDesc = new TurnDesc(i, j, 1, true);//TODO player tag.
+                		if(Debug.isEnabled())
+                			m_edgesV[i][j] = DEBUG;//TODO
+                		TurnDesc tDesc = new TurnDesc(i, j, 2, true);//TODO player tag.
                 		EventManager.NewEvent(new dotsboxes.events.GameTurnEvent(EventType.GUI_game_Turn, true, tDesc), this);
                 		Debug.log("Vertical.");
                 		this.repaint();
@@ -185,8 +198,9 @@ public class Field extends JPanel implements EventCallback
                 	if(x_pos > x)
                 	{
                 		j--;
-                		m_edgesH[i][j] = 1;//TODO
-                		TurnDesc tDesc = new TurnDesc(i, j, 1, false);//TODO player tag.
+                		if(Debug.isEnabled())
+                			m_edgesH[i][j] = DEBUG;//TODO
+                		TurnDesc tDesc = new TurnDesc(i, j, 2, false);//TODO player tag.
                 		EventManager.NewAnonimEvent(new dotsboxes.events.GameTurnEvent(EventType.GUI_game_Turn, true, tDesc));
                 		Debug.log("Horizontal.");
                 		this.repaint();
@@ -210,8 +224,9 @@ public class Field extends JPanel implements EventCallback
 				
 				if(rect.contains(x, y))
 				{
-					m_vertex[i][j] = 1;
-					TurnDesc tDesc = new TurnDesc(i, j, 1, false);//TODO player tag.
+					if(Debug.isEnabled())
+						m_vertex[i][j] = DEBUG;
+					TurnDesc tDesc = new TurnDesc(i, j, 2, false);//TODO player tag.
             		EventManager.NewAnonimEvent(new dotsboxes.events.GameTurnEvent(EventType.GUI_game_Turn, false, tDesc));
             		Debug.log("Squere.");
             		this.repaint();
@@ -238,6 +253,10 @@ public class Field extends JPanel implements EventCallback
 		
 	public void DrawBox(Graphics2D g2, int x, int y, int width, int height)
 	{
+		int miniFatLine = 5; // Diff between line width generic edge and user marked edge.
+		
+		if(!m_IsInit)
+			return;
 		field_begin_x = x + m_fatLine; // Start field.
 		field_begin_y = y + m_fatLine + button_1.getHeight(); 
 		field_width = width - 2 * m_fatLine  - (width % m_fieldWidth);
@@ -253,18 +272,25 @@ public class Field extends JPanel implements EventCallback
         
         for( int i = 1; i < m_fieldWidth; i++)
         {
+        	g2.setStroke(new BasicStroke(m_fatLine));
         	int x_pos = field_begin_x + i * squre_width;
             g2.drawLine( x_pos, field_begin_y, x_pos, field_begin_y + field_height);
             
+            g2.setStroke(new BasicStroke(m_fatLine - miniFatLine));
             for(int j = 0; j < m_fieldHeight; ++j)
             {
             	switch(m_edgesV[j][i])
             	{
             	case 0:
             		break;
-            	case 1:
+            	case DEBUG:
             		g2.setColor(Color.blue);
-            		g2.drawLine( x_pos, field_begin_y + j * squre_height, x_pos, field_begin_y + (j + 1) * squre_height);
+            		g2.drawLine( x_pos, field_begin_y + j * squre_height + m_fatLine / 2 - m_fatLine % 2 - miniFatLine, x_pos, field_begin_y + (j + 1) * squre_height  - m_fatLine / 2 - m_fatLine % 2 + miniFatLine);
+            		g2.setColor(Color.black);
+            		break;
+            	case 2:
+            		g2.setColor(Color.green);
+            		g2.drawLine( x_pos, field_begin_y + j * squre_height + m_fatLine / 2 - m_fatLine % 2 - miniFatLine, x_pos, field_begin_y + (j + 1) * squre_height  - m_fatLine / 2 - m_fatLine % 2 + miniFatLine);
             		g2.setColor(Color.black);
             		break;
             	}
@@ -274,18 +300,26 @@ public class Field extends JPanel implements EventCallback
         
         for( int i = 1; i < m_fieldHeight; i++)
         {
-        	int y_pos = field_begin_y + i * squre_height;
+        	g2.setStroke(new BasicStroke(m_fatLine));
+        	int y_pos = field_begin_y + i * squre_height ;
             g2.drawLine( field_begin_x, y_pos, field_begin_x + field_width, y_pos);
             
+            g2.setStroke(new BasicStroke(m_fatLine - miniFatLine));
             for(int j = 0; j < m_fieldWidth; ++j)
             {
+            	
             	switch(m_edgesH[i][j])
             	{
             	case 0:
             		break;
-            	case 1:
+            	case DEBUG:
             		g2.setColor(Color.blue);
-            		g2.drawLine( field_begin_x + j * squre_width, y_pos, field_begin_x + (j + 1) * squre_width, y_pos);
+            		g2.drawLine( field_begin_x + j * squre_width + m_fatLine / 2 + m_fatLine % 2  - miniFatLine, y_pos, field_begin_x + (j + 1) * squre_width - m_fatLine / 2 + miniFatLine, y_pos);
+            		g2.setColor(Color.black);
+            		break;
+            	case 2:
+            		g2.setColor(Color.green);
+            		g2.drawLine( field_begin_x + j * squre_width  + m_fatLine / 2 + m_fatLine % 2 - miniFatLine, y_pos, field_begin_x + (j + 1) * squre_width - m_fatLine / 2 + miniFatLine, y_pos);
             		g2.setColor(Color.black);
             		break;
             	}
@@ -297,16 +331,21 @@ public class Field extends JPanel implements EventCallback
         {
         	for( int j = 0; j < m_fieldHeight; ++j)
         	{
-        		int x_pos = field_begin_x + i * squre_width;
-        		int y_pos = field_begin_y + j * squre_height;
+        		int x_pos = field_begin_x + i * squre_width + m_fatLine / 2 + m_fatLine % 2 ;
+        		int y_pos = field_begin_y + j * squre_height + m_fatLine / 2 + m_fatLine % 2;
         		
         		switch(m_vertex[i][j])
         		{
         		case 0:
         			break;
-        		case 1:
+        		case DEBUG:
         			g2.setColor(Color.red);
-        			g2.fillRect(x_pos, y_pos, squre_width, squre_height);
+        			g2.fillRect(x_pos, y_pos, squre_width - m_fatLine, squre_height - m_fatLine);
+            		g2.setColor(Color.black);
+        			break;
+        		case 2:
+        			g2.setColor(Color.green);
+        			g2.fillRect(x_pos, y_pos, squre_width - m_fatLine, squre_height - m_fatLine);
             		g2.setColor(Color.black);
         			break;
         		}
@@ -314,17 +353,33 @@ public class Field extends JPanel implements EventCallback
         }
 	}
 
+	private void HandleGameTurnEvent(GameTurnEvent event)
+	{
+		if(event.isEdgeChanged())
+		{
+			if(event.getVert())
+				m_edgesV[event.getI()][event.getJ()] = event.getPlrTag();
+			else
+				m_edgesH[event.getI()][event.getJ()] = event.getPlrTag();
+		}
+		else
+			m_vertex[event.getI()][event.getJ()] = event.getPlrTag();
+	}
+	
 	@Override
 	public void HandleEvent(dotsboxes.events.Event ev) 
 	{
 		switch(ev.GetType())
 		{
 		case game_Turn:
-			//Turn(ev);
+			GameTurnEvent turnEvent = (GameTurnEvent)ev;
+			HandleGameTurnEvent(turnEvent);
+			this.repaint();
 			break;
 		case game_Start:
 			GameStartEvent g = (GameStartEvent)ev;
-			Init(g.getFieldHeight(), g.getFieldWidth(), g.getNumPlayers(), g.getBeginPlayer());
+			Init(g.getFieldWidth(), g.getFieldHeight(),  g.getNumPlayers(), g.getBeginPlayer());
+			this.repaint();
 			break;
 		default:
 			Debug.log("Unknown event in GameSession!");
