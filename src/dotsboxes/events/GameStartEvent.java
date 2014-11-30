@@ -17,12 +17,12 @@ public class GameStartEvent extends Event
 	
 	public int getFieldWidth()
 	{
-		return m_desc.m_sizeFieldWidth;
+		return m_desc.getSizeFieldWidth();
 	}
 	
 	public int getFieldHeight()
 	{
-		return m_desc.m_sizeFieldHeight;
+		return m_desc.getSizeFieldHeight();
 	}
 	
 	public int getNumPlayers()
