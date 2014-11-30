@@ -45,8 +45,9 @@ public class SessionManager implements EventCallback
 		m_GUI.m_frame.setVisible(true);
 		m_GUI.ShowMenu();
 		
-		//EventManager.Subscribe(EventType.Generic, this);
-		//EventManager.Subscribe(EventType.GUI_game_Turn, this);
+		EventManager.Subscribe(EventType.Generic, this);
+		//EventManager.Subscribe(EventType.GUI_game_Start, this);
+		//EventManager.Subscribe(EventType.GUI_game_Start, this);
 		
 		//GameTurnEvent g_event = new GameTurnEvent(EventType.game_Turn, true, new TurnDesc( 0, 1, 1));
 		
@@ -87,10 +88,10 @@ public class SessionManager implements EventCallback
 		case GUI_back_to_Menu: 
 			m_GUI.ShowMenu();
 			break;
-		case game_Start:
+		case GUI_game_Start:
 			int some_number_of_players = 3;
-			int some_height_of_field = 5;	
-			int some_width_of_field = 3;	
+			int some_height_of_field = 2;	
+			int some_width_of_field = 9;	
 			NewGameDesc game_desc = new NewGameDesc( some_width_of_field, some_height_of_field, some_number_of_players);
 			EventManager.NewEvent( new GameStartEvent( game_desc, 1), this);
 			
