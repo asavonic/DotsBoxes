@@ -65,14 +65,19 @@ public class SessionManager implements EventCallback
 		//	e.printStackTrace();
 		//}
 		
-		EventManager.NewAnonimEvent(new GUI_NewGameRequest(2, 1, 5, 9));
-		EventManager.NewAnonimEvent(new NewGameAccept( new PlayerDesc()));
+		//EventManager.NewAnonimEvent(new GUI_NewGameRequest(2, 1, 5, 9));
+		//EventManager.NewAnonimEvent(new NewGameAccept( new PlayerDesc()));
 		
 		//EventManager.NewEvent( new CurrentPlayerChange(m_CurrentPlayer), this);
 	}
 	
 	private void CheckForOurTurn()
 	{
+		if( null == m_localPlayersDescs || null == m_playersList)
+		{
+			Debug.log("Player list not initializated!");
+			return;
+		}
 		PlayerDesc player = m_playersList.getNext();
 		if(m_localPlayersDescs.contains(player))
 		{
