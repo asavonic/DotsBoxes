@@ -71,9 +71,12 @@ public class CreateNewGame extends JPanel implements EventCallback {
 		layout.putConstraint(SpringLayout.WEST, m_numRemotePlayers,
                 5,
                 SpringLayout.EAST, remote_players_label);
-		layout.putConstraint(SpringLayout.NORTH, m_numLocalPlayers,
-                10,
-                SpringLayout.SOUTH, m_numRemotePlayers);
+		
+		
+		layout.putConstraint(SpringLayout.NORTH, m_numRemotePlayers,
+                5,
+                SpringLayout.SOUTH, m_numLocalPlayers);
+       
 		
 		JLabel field_width_label = new JLabel("Field width: "); 
 		add(field_width_label);
