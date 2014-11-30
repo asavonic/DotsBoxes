@@ -49,7 +49,8 @@ public class Field extends JPanel implements EventCallback
 	int[][] m_edgesH;
 	int[][] m_vertex;
     
-	Button button_1 = new Button("Back to menu.");
+	Button button_BackToMenu = new Button("Back to menu.");
+	Button button_Clear = new Button("Clear.");
 	
 	public Field(JFrame frame) 
 	{
@@ -60,7 +61,7 @@ public class Field extends JPanel implements EventCallback
 		EventManager.Subscribe( EventType.game_Start, this); 
 		EventManager.Subscribe( EventType.game_Turn, this); 
 		
-		button_1.addActionListener(new ActionListener() {
+		button_BackToMenu.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) 
 			{
 				EventManager.NewEvent( new dotsboxes.events.Event(EventType.GUI_back_to_Menu), m_this);
@@ -69,8 +70,32 @@ public class Field extends JPanel implements EventCallback
 		
 		ButtonResize();
 		
-		this.add(button_1);
+		this.add(button_BackToMenu);
 		
+		button_Clear.addActionListener(new ActionListener() 
+		{
+			public void actionPerformed(ActionEvent e) 
+			{
+				for( int i = 1; i < m_fieldWidth; i++)
+		            for(int j = 0; j < m_fieldHeight; ++j)
+		            	if( DEBUG == m_edgesV[j][i])
+		            		m_edgesV[j][i] = 0;		            				
+				for( int i = 1; i < m_fieldHeight; i++)
+		            for(int j = 0; j < m_fieldWidth; ++j)
+		            	if( DEBUG == m_edgesH[i][j])
+		            		m_edgesH[i][j] = 0;
+
+		        for( int i = 0; i < m_fieldWidth; ++i)
+		        	for( int j = 0; j < m_fieldHeight; ++j)
+		        		if( DEBUG == m_vertex[i][j])
+		        			m_vertex[i][j] = 0;
+		        m_this.repaint();
+			}
+		});
+		
+		this.add(button_Clear);
+		
+		ButtonResize();
 		
 		this.addMouseListener( new MouseListener()
 		{
@@ -111,7 +136,8 @@ public class Field extends JPanel implements EventCallback
 
 	public void ButtonResize()
 	{
-		button_1.setBounds(this.getWidth() - 100, 0, 100, 30);
+		button_BackToMenu.setBounds(this.getWidth() - 100, 0, 100, 30);
+		button_Clear.setBounds(this.getWidth() - 200, 0, 100, 30);
 	}
 	
 	public void Init(int width, int height, int num_players, int begin_player_tag)
@@ -120,23 +146,11 @@ public class Field extends JPanel implements EventCallback
 		m_fieldWidth = width;
 		m_fieldHeight = height;
 		m_current_player_tag = begin_player_tag;
-	
-		if( m_fieldWidth > m_fieldHeight)
-		{
-			m_edgesH   = new int[m_fieldHeight + 1][m_fieldWidth];
-			m_edgesV   = new int[m_fieldHeight][m_fieldWidth + 1];
-		}
-		else{if( m_fieldWidth < m_fieldHeight)
-		{
-			m_edgesH   = new int[m_fieldHeight][m_fieldWidth + 1];
-			m_edgesV   = new int[m_fieldHeight + 1][m_fieldWidth];
-		}
-		else
-		{
-			m_edgesH   = new int[m_fieldHeight + 1][m_fieldWidth];
-			m_edgesV   = new int[m_fieldHeight][m_fieldWidth + 1];		
-		}
-		}
+		
+		m_edgesH   = new int[m_fieldHeight + 1][m_fieldWidth];
+		m_edgesV   = new int[m_fieldHeight][m_fieldWidth + 1];		
+		m_vertex   = new int[m_fieldWidth][m_fieldHeight];
+		
 		m_vertex   = new int[m_fieldWidth][m_fieldHeight];
 		
 		m_IsInit = true;
@@ -201,7 +215,7 @@ public class Field extends JPanel implements EventCallback
                 		if(Debug.isEnabled())
                 			m_edgesH[i][j] = DEBUG;//TODO
                 		TurnDesc tDesc = new TurnDesc(i, j, 2, false);//TODO player tag.
-                		EventManager.NewAnonimEvent(new dotsboxes.events.GameTurnEvent(EventType.GUI_game_Turn, true, tDesc));
+                		EventManager.NewEvent(new dotsboxes.events.GameTurnEvent(EventType.GUI_game_Turn, true, tDesc), this);
                 		Debug.log("Horizontal.");
                 		this.repaint();
                 		return;
@@ -227,7 +241,7 @@ public class Field extends JPanel implements EventCallback
 					if(Debug.isEnabled())
 						m_vertex[i][j] = DEBUG;
 					TurnDesc tDesc = new TurnDesc(i, j, 2, false);//TODO player tag.
-            		EventManager.NewAnonimEvent(new dotsboxes.events.GameTurnEvent(EventType.GUI_game_Turn, false, tDesc));
+            		EventManager.NewEvent(new dotsboxes.events.GameTurnEvent(EventType.GUI_game_Turn, false, tDesc), this);
             		Debug.log("Squere.");
             		this.repaint();
             		return;
@@ -241,6 +255,7 @@ public class Field extends JPanel implements EventCallback
         Graphics2D g2 = (Graphics2D)g;
 
         this.setSize(m_frame.getWidth(), m_frame.getHeight());
+        this.setBounds(m_frame.getBounds());
         ButtonResize();
         int x = this.getX();
         int y = this.getY();
@@ -258,9 +273,9 @@ public class Field extends JPanel implements EventCallback
 		if(!m_IsInit)
 			return;
 		field_begin_x = x + m_fatLine; // Start field.
-		field_begin_y = y + m_fatLine + button_1.getHeight(); 
+		field_begin_y = y + m_fatLine + button_BackToMenu.getHeight(); 
 		field_width = width - 2 * m_fatLine  - (width % m_fieldWidth);
-		field_height = height - 3 * m_fatLine - (height % m_fieldHeight) - button_1.getHeight();
+		field_height = height - 3 * m_fatLine - (height % m_fieldHeight) - button_BackToMenu.getHeight();
 		
         g2.setColor(Color.black);
         g2.setStroke(new BasicStroke(m_fatLine));
