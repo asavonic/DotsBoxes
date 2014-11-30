@@ -8,18 +8,13 @@ public enum EventType
 	GUI_back_to_Menu,
 	GUI_to_the_Game,
 	GUI_game_exit,
-	GUI_mark_set,
-	GUI_edge_set,
 	game_Turn,
 	game_Start,
-	game_Start_GUI_Request,
+	GUI_game_Start,
 	
+	playersList,
 	
-	ConnectionHandshake,
-	ConnectionPing,
-	ConnectionClose,
-	
-	NewGameRequest,
+	turn_unlock,
 	
 	gui_New_Game_Request,
 	gui_New_Game_Accept,

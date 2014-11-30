@@ -9,6 +9,7 @@ import dotsboxes.gui.newgame.NewGameGUI;
 import java.awt.*;
 import java.awt.geom.*;
 
+import dotsboxes.callbacks.EventCallback;
 import dotsboxes.events.EventType;
 import dotsboxes.events.GameTurnEvent;
 import dotsboxes.game.TurnDesc;
@@ -53,6 +54,7 @@ import javax.swing.JPanel;
 import javax.swing.JLayeredPane;
 import javax.swing.JSplitPane;
 import javax.swing.JDesktopPane;
+
 import java.awt.FlowLayout;
 
 import javax.swing.JInternalFrame;
@@ -63,11 +65,12 @@ import java.awt.Button;
 import javax.swing.JLabel;
 
 
-public class GUI {
+public class GUI implements EventCallback{
 
 	public JFrame m_frame = new JFrame();
 
 	public GUI() {
+		m_this = this;
 		initialize();
 	}
 
@@ -75,6 +78,7 @@ public class GUI {
 	Field Field = new Field(m_frame);
 	Panel Config = new Panel();
 	NewGameGUI NewGameGUI = new NewGameGUI();
+	GUI m_this;
 	
 	public void ShowMenu()
 	{
@@ -116,7 +120,7 @@ public class GUI {
 	 */
 	private void initialize() 
 	{
-		Field.Init(6, 8, 3); // TODO Get from event.
+		//Field.Init(6, 8, 3); // TODO Get from event.
 
 		m_frame.addComponentListener( new ComponentListener()
 		{  
@@ -126,7 +130,7 @@ public class GUI {
 					Menu.repaint();
 					Field.setSize(m_frame.getWidth(), m_frame.getHeight());
 					Config.setSize(m_frame.getWidth(), m_frame.getHeight());
-					//button_1.setBounds(m_frame.getWidth() - 100, m_frame.getY() + 10, 80, 30);
+					Field.repaint();
 				}
 
 				@Override
@@ -160,7 +164,8 @@ public class GUI {
 		StartGame.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) 
 			{
-				EventManager.NewAnonimEvent( new dotsboxes.events.Event(EventType.game_Start_GUI_Request));
+				
+				EventManager.NewEvent( new dotsboxes.events.Event(EventType.GUI_game_Start), m_this);
 			}
 		});
 		Menu.add(StartGame);
@@ -169,7 +174,7 @@ public class GUI {
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) 
 			{
-				EventManager.NewAnonimEvent( new dotsboxes.events.Event(EventType.GUI_game_exit));
+				EventManager.NewEvent( new dotsboxes.events.Event(EventType.GUI_game_exit), m_this);
 			}
 		});
 		Menu.add(button);
@@ -192,5 +197,12 @@ public class GUI {
 		Field.setVisible(false);
 		NewGameGUI.setVisible(false);
 		m_frame.setVisible(true);
+	}
+
+	@Override
+	public void HandleEvent(dotsboxes.events.Event event) 
+	{
+		// TODO Auto-generated method stub
+		
 	}
 }

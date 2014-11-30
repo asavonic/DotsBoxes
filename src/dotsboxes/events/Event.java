@@ -39,11 +39,7 @@ public class Event implements java.io.Serializable
 		//Debug.log("Event type returned.");
 		return m_eventType;
 	}
-	
-	public void Cast(EventType type)
-	{
-		m_eventType = type;
-	}
+
 	/**
 	 * @name    Delete
 	 * @brief   Destroy event object.
@@ -59,30 +55,22 @@ public class Event implements java.io.Serializable
 	{
 		switch(m_eventType)
 		{
+		case GUI_game_Start:
+			return "GUI_game_Start";
 		case GUI_game_Turn:
 			return "GUI_game_Turn";
 		case Generic:
 			return "Generic";
 		case game_Turn:
 			return "game_Turn";
-		case ConnectionClose:
-			return "ConnectionClose";
-		case ConnectionHandshake:
-			return "ConnectionHandshake";
-		case ConnectionPing:
-			return "ConnectionPing";
 		case GUI_back_to_Menu:
 			return "GUI_back_to_Menu";
 		case GUI_game_exit:
 			return "GUI_game_exit";
 		case GUI_to_the_Game:
 			return "GUI_to_the_Game";
-		case NewGameRequest:
-			return "NewGameRequest";
 		case game_Start:
 			return "game_Start";
-		case game_Start_GUI_Request:
-			return "game_Start_GUI_Request";
 		case gui_New_Game_Request:
 			return "gui_New_Game_Request";
 		case remote_New_Game_Accept:

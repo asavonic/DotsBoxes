@@ -15,18 +15,26 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import dotsboxes.EventManager;
+import dotsboxes.callbacks.EventCallback;
+import dotsboxes.events.Event;
 import dotsboxes.events.EventType;
+import dotsboxes.events.GameStartEvent;
 import dotsboxes.events.GameTurnEvent;
 import dotsboxes.game.TurnDesc;
 import dotsboxes.utils.Debug;
 
-public class Field extends JPanel
+public class Field extends JPanel implements EventCallback
 {
 	JFrame m_frame;
+	Field m_this;
 	
+	final int DEBUG = -2;
+	
+	boolean m_IsInit = false;
 	int m_num_players;
 	int m_fieldWidth;
 	int m_fieldHeight;
+	int m_current_player_tag;
 	int m_fatLine = 13;
 	
 	int field_begin_x;
@@ -41,24 +49,53 @@ public class Field extends JPanel
 	int[][] m_edgesH;
 	int[][] m_vertex;
     
-	Button button_1 = new Button("Back to menu.");
+	Button button_BackToMenu = new Button("Back to menu.");
+	Button button_Clear = new Button("Clear.");
 	
 	public Field(JFrame frame) 
 	{
 		m_frame = frame;
+		m_this = this;
 		
 		
-		button_1.addActionListener(new ActionListener() {
+		EventManager.Subscribe( EventType.game_Start, this); 
+		EventManager.Subscribe( EventType.game_Turn, this); 
+		
+		button_BackToMenu.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) 
 			{
-				EventManager.NewAnonimEvent( new dotsboxes.events.Event(EventType.GUI_back_to_Menu));
+				EventManager.NewEvent( new dotsboxes.events.Event(EventType.GUI_back_to_Menu), m_this);
 			}
 		});
 		
 		ButtonResize();
 		
-		this.add(button_1);
+		this.add(button_BackToMenu);
 		
+		button_Clear.addActionListener(new ActionListener() 
+		{
+			public void actionPerformed(ActionEvent e) 
+			{
+				for( int i = 1; i < m_fieldWidth; i++)
+		            for(int j = 0; j < m_fieldHeight; ++j)
+		            	if( DEBUG == m_edgesV[j][i])
+		            		m_edgesV[j][i] = 0;		            				
+				for( int i = 1; i < m_fieldHeight; i++)
+		            for(int j = 0; j < m_fieldWidth; ++j)
+		            	if( DEBUG == m_edgesH[i][j])
+		            		m_edgesH[i][j] = 0;
+
+		        for( int i = 0; i < m_fieldWidth; ++i)
+		        	for( int j = 0; j < m_fieldHeight; ++j)
+		        		if( DEBUG == m_vertex[i][j])
+		        			m_vertex[i][j] = 0;
+		        m_this.repaint();
+			}
+		});
+		
+		this.add(button_Clear);
+		
+		ButtonResize();
 		
 		this.addMouseListener( new MouseListener()
 		{
@@ -99,32 +136,26 @@ public class Field extends JPanel
 
 	public void ButtonResize()
 	{
-		button_1.setBounds(this.getWidth() - 100, 0, 100, 30);
+		button_BackToMenu.setBounds(this.getWidth() - 100, 0, 100, 30);
+		button_Clear.setBounds(this.getWidth() - 200, 0, 100, 30);
 	}
 	
-	public void Init(int width, int height, int num_players)
+	public void Init(int width, int height, int num_players, int begin_player_tag)
 	{
 		m_num_players = num_players;
 		m_fieldWidth = width;
 		m_fieldHeight = height;
-	
-		if( m_fieldWidth > m_fieldHeight)
-		{
-			m_edgesH   = new int[m_fieldHeight + 1][m_fieldWidth];
-			m_edgesV   = new int[m_fieldHeight][m_fieldWidth + 1];
-		}
-		else{if( m_fieldWidth < m_fieldHeight)
-		{
-			m_edgesH   = new int[m_fieldHeight][m_fieldWidth + 1];
-			m_edgesV   = new int[m_fieldHeight + 1][m_fieldWidth];
-		}
-		else
-		{
-			m_edgesH   = new int[m_fieldHeight + 1][m_fieldWidth];
-			m_edgesV   = new int[m_fieldHeight][m_fieldWidth + 1];		
-		}
-		}
+		m_current_player_tag = begin_player_tag;
+		
+		m_edgesH   = new int[m_fieldHeight + 1][m_fieldWidth];
+		m_edgesV   = new int[m_fieldHeight][m_fieldWidth + 1];		
 		m_vertex   = new int[m_fieldWidth][m_fieldHeight];
+		
+		m_vertex   = new int[m_fieldWidth][m_fieldHeight];
+		
+		m_IsInit = true;
+		
+		
 	}
 	
 	public void DetectClick(int x, int y)
@@ -149,9 +180,10 @@ public class Field extends JPanel
                 	{
                 		//j--;
                 		i--;
-                		m_edgesV[i][j] = 1;//TODO
-                		TurnDesc tDesc = new TurnDesc(i, j, 1, true);//TODO player tag.
-                		EventManager.NewAnonimEvent(new dotsboxes.events.GameTurnEvent(EventType.GUI_game_Turn, true, tDesc));
+                		if(Debug.isEnabled())
+                			m_edgesV[i][j] = DEBUG;//TODO
+                		TurnDesc tDesc = new TurnDesc(i, j, 2, true);//TODO player tag.
+                		EventManager.NewEvent(new dotsboxes.events.GameTurnEvent(EventType.GUI_game_Turn, true, tDesc), this);
                 		Debug.log("Vertical.");
                 		this.repaint();
                 		return;
@@ -180,9 +212,10 @@ public class Field extends JPanel
                 	if(x_pos > x)
                 	{
                 		j--;
-                		m_edgesH[i][j] = 1;//TODO
-                		TurnDesc tDesc = new TurnDesc(i, j, 1, false);//TODO player tag.
-                		EventManager.NewAnonimEvent(new dotsboxes.events.GameTurnEvent(EventType.GUI_game_Turn, true, tDesc));
+                		if(Debug.isEnabled())
+                			m_edgesH[i][j] = DEBUG;//TODO
+                		TurnDesc tDesc = new TurnDesc(i, j, 2, false);//TODO player tag.
+                		EventManager.NewEvent(new dotsboxes.events.GameTurnEvent(EventType.GUI_game_Turn, true, tDesc), this);
                 		Debug.log("Horizontal.");
                 		this.repaint();
                 		return;
@@ -205,9 +238,10 @@ public class Field extends JPanel
 				
 				if(rect.contains(x, y))
 				{
-					m_vertex[i][j] = 1;
-					TurnDesc tDesc = new TurnDesc(i, j, 1, false);//TODO player tag.
-            		EventManager.NewAnonimEvent(new dotsboxes.events.GameTurnEvent(EventType.GUI_game_Turn, false, tDesc));
+					if(Debug.isEnabled())
+						m_vertex[i][j] = DEBUG;
+					TurnDesc tDesc = new TurnDesc(i, j, 2, false);//TODO player tag.
+            		EventManager.NewEvent(new dotsboxes.events.GameTurnEvent(EventType.GUI_game_Turn, false, tDesc), this);
             		Debug.log("Squere.");
             		this.repaint();
             		return;
@@ -221,6 +255,7 @@ public class Field extends JPanel
         Graphics2D g2 = (Graphics2D)g;
 
         this.setSize(m_frame.getWidth(), m_frame.getHeight());
+        this.setBounds(m_frame.getBounds());
         ButtonResize();
         int x = this.getX();
         int y = this.getY();
@@ -233,10 +268,14 @@ public class Field extends JPanel
 		
 	public void DrawBox(Graphics2D g2, int x, int y, int width, int height)
 	{
+		int miniFatLine = 5; // Diff between line width generic edge and user marked edge.
+		
+		if(!m_IsInit)
+			return;
 		field_begin_x = x + m_fatLine; // Start field.
-		field_begin_y = y + m_fatLine + button_1.getHeight(); 
+		field_begin_y = y + m_fatLine + button_BackToMenu.getHeight(); 
 		field_width = width - 2 * m_fatLine  - (width % m_fieldWidth);
-		field_height = height - 3 * m_fatLine - (height % m_fieldHeight) - button_1.getHeight();
+		field_height = height - 3 * m_fatLine - (height % m_fieldHeight) - button_BackToMenu.getHeight();
 		
         g2.setColor(Color.black);
         g2.setStroke(new BasicStroke(m_fatLine));
@@ -248,18 +287,25 @@ public class Field extends JPanel
         
         for( int i = 1; i < m_fieldWidth; i++)
         {
+        	g2.setStroke(new BasicStroke(m_fatLine));
         	int x_pos = field_begin_x + i * squre_width;
             g2.drawLine( x_pos, field_begin_y, x_pos, field_begin_y + field_height);
             
+            g2.setStroke(new BasicStroke(m_fatLine - miniFatLine));
             for(int j = 0; j < m_fieldHeight; ++j)
             {
             	switch(m_edgesV[j][i])
             	{
             	case 0:
             		break;
-            	case 1:
+            	case DEBUG:
             		g2.setColor(Color.blue);
-            		g2.drawLine( x_pos, field_begin_y + j * squre_height, x_pos, field_begin_y + (j + 1) * squre_height);
+            		g2.drawLine( x_pos, field_begin_y + j * squre_height + m_fatLine / 2 - m_fatLine % 2 - miniFatLine, x_pos, field_begin_y + (j + 1) * squre_height  - m_fatLine / 2 - m_fatLine % 2 + miniFatLine);
+            		g2.setColor(Color.black);
+            		break;
+            	case 2:
+            		g2.setColor(Color.green);
+            		g2.drawLine( x_pos, field_begin_y + j * squre_height + m_fatLine / 2 - m_fatLine % 2 - miniFatLine, x_pos, field_begin_y + (j + 1) * squre_height  - m_fatLine / 2 - m_fatLine % 2 + miniFatLine);
             		g2.setColor(Color.black);
             		break;
             	}
@@ -269,18 +315,26 @@ public class Field extends JPanel
         
         for( int i = 1; i < m_fieldHeight; i++)
         {
-        	int y_pos = field_begin_y + i * squre_height;
+        	g2.setStroke(new BasicStroke(m_fatLine));
+        	int y_pos = field_begin_y + i * squre_height ;
             g2.drawLine( field_begin_x, y_pos, field_begin_x + field_width, y_pos);
             
+            g2.setStroke(new BasicStroke(m_fatLine - miniFatLine));
             for(int j = 0; j < m_fieldWidth; ++j)
             {
+            	
             	switch(m_edgesH[i][j])
             	{
             	case 0:
             		break;
-            	case 1:
+            	case DEBUG:
             		g2.setColor(Color.blue);
-            		g2.drawLine( field_begin_x + j * squre_width, y_pos, field_begin_x + (j + 1) * squre_width, y_pos);
+            		g2.drawLine( field_begin_x + j * squre_width + m_fatLine / 2 + m_fatLine % 2  - miniFatLine, y_pos, field_begin_x + (j + 1) * squre_width - m_fatLine / 2 + miniFatLine, y_pos);
+            		g2.setColor(Color.black);
+            		break;
+            	case 2:
+            		g2.setColor(Color.green);
+            		g2.drawLine( field_begin_x + j * squre_width  + m_fatLine / 2 + m_fatLine % 2 - miniFatLine, y_pos, field_begin_x + (j + 1) * squre_width - m_fatLine / 2 + miniFatLine, y_pos);
             		g2.setColor(Color.black);
             		break;
             	}
@@ -292,20 +346,59 @@ public class Field extends JPanel
         {
         	for( int j = 0; j < m_fieldHeight; ++j)
         	{
-        		int x_pos = field_begin_x + i * squre_width;
-        		int y_pos = field_begin_y + j * squre_height;
+        		int x_pos = field_begin_x + i * squre_width + m_fatLine / 2 + m_fatLine % 2 ;
+        		int y_pos = field_begin_y + j * squre_height + m_fatLine / 2 + m_fatLine % 2;
         		
         		switch(m_vertex[i][j])
         		{
         		case 0:
         			break;
-        		case 1:
+        		case DEBUG:
         			g2.setColor(Color.red);
-        			g2.fillRect(x_pos, y_pos, squre_width, squre_height);
+        			g2.fillRect(x_pos, y_pos, squre_width - m_fatLine, squre_height - m_fatLine);
+            		g2.setColor(Color.black);
+        			break;
+        		case 2:
+        			g2.setColor(Color.green);
+        			g2.fillRect(x_pos, y_pos, squre_width - m_fatLine, squre_height - m_fatLine);
             		g2.setColor(Color.black);
         			break;
         		}
         	}
         }
+	}
+
+	private void HandleGameTurnEvent(GameTurnEvent event)
+	{
+		if(event.isEdgeChanged())
+		{
+			if(event.getVert())
+				m_edgesV[event.getI()][event.getJ()] = event.getPlrTag();
+			else
+				m_edgesH[event.getI()][event.getJ()] = event.getPlrTag();
+		}
+		else
+			m_vertex[event.getI()][event.getJ()] = event.getPlrTag();
+	}
+	
+	@Override
+	public void HandleEvent(dotsboxes.events.Event ev) 
+	{
+		switch(ev.GetType())
+		{
+		case game_Turn:
+			GameTurnEvent turnEvent = (GameTurnEvent)ev;
+			HandleGameTurnEvent(turnEvent);
+			this.repaint();
+			break;
+		case game_Start:
+			GameStartEvent g = (GameStartEvent)ev;
+			Init(g.getFieldWidth(), g.getFieldHeight(),  g.getNumPlayers(), g.getBeginPlayer());
+			this.repaint();
+			break;
+		default:
+			Debug.log("Unknown event in GameSession!");
+			return;
+		}
 	}
 }

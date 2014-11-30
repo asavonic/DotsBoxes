@@ -8,16 +8,16 @@ package dotsboxes.game;
  *
  */
 public class NewGameDesc {
-	public int numPlayers;
+	String m_gameName;
+	public int m_num_players;
 	int m_sizeFieldWidth;
 	int m_sizeFieldHeight;
-	String m_gameName;
 	
 	public int getNumPlayers() {
-		return numPlayers;
+		return m_num_players;
 	}
-	public void setNum_players(int num_players) {
-		this.numPlayers = num_players;
+	public void setNumPlayers(int num_players) {
+		this.m_num_players = num_players;
 	}
 	public int getSizeFieldWidth() {
 		return m_sizeFieldWidth;
@@ -36,5 +36,12 @@ public class NewGameDesc {
 	}
 	public void setGameName(String gameName) {
 		m_gameName = gameName;
+	}
+
+	public NewGameDesc(int sizeFieldWidth, int sizeFieldHeight, int num_players)
+	{
+		m_sizeFieldWidth  = sizeFieldWidth;
+		m_sizeFieldHeight = sizeFieldHeight;
+		m_num_players     = num_players;
 	}
 }
