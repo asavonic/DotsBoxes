@@ -10,6 +10,7 @@ public enum EventType
 	GUI_game_exit,
 	game_Turn,
 	game_Start,
+	GUI_game_Start,
 	
 	gui_New_Game_Request,
 	remote_New_Game_Request,

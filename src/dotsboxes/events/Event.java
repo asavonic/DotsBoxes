@@ -59,6 +59,8 @@ public class Event implements java.io.Serializable
 	{
 		switch(m_eventType)
 		{
+		case GUI_game_Start:
+			return "GUI_game_Start";
 		case GUI_game_Turn:
 			return "GUI_game_Turn";
 		case Generic:
