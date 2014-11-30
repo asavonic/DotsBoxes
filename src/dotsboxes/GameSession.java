@@ -42,7 +42,7 @@ public class GameSession implements EventCallback
 		
 		m_edgesH   = new int[m_fieldHeight + 1][m_fieldWidth];
 		m_edgesV   = new int[m_fieldHeight][m_fieldWidth + 1];		
-		m_vertex   = new int[m_fieldWidth][m_fieldHeight];
+		m_vertex   = new int[m_fieldHeight][m_fieldWidth];
 		m_counters = new int[m_numberOfPlayers + 1];
 		m_history  = new Vector<Event>();
 		
@@ -87,6 +87,7 @@ public class GameSession implements EventCallback
 				m_turnBlock = false;
 				SendEvent(game_event, false);
 				m_history.add(game_event);
+				CheckWin();
 			}
 		}
 	}
@@ -225,9 +226,9 @@ public class GameSession implements EventCallback
 			Debug.log("Player " + player_tag + " try to mark vertex [" + i + "][" + j + "] but edges around this vertex doesn't mark as him.");
 			return false;
 		}
-		if (0 == m_vertex[i][j])
+		if (0 == m_vertex[j][i])
 		{
-			m_vertex[i][j] = player_tag;
+			m_vertex[j][i] = player_tag;
 			m_counters[player_tag] += 1;
 			Debug.log("Player " + player_tag + " mark vertex [" + i + "][" + j + "].");
 			return true;
@@ -242,16 +243,6 @@ public class GameSession implements EventCallback
 	private int CheckWin()
 	{
 		//Go across horizontal edges.
-		for( int i = 0; i < m_fieldHeight; ++i)
-			for( int j = 1; j < m_fieldWidth; ++j)
-			{
-				if ((empty == m_edgesH[i][j]))
-				{
-					return 0;
-				}
-			}
-		
-		//Go across vertical edges.
 		for( int i = 1; i < m_fieldHeight; ++i)
 			for( int j = 1; j < m_fieldWidth; ++j)
 			{
@@ -261,12 +252,22 @@ public class GameSession implements EventCallback
 				}
 			}
 		
+		//Go across vertical edges.
+		for( int i = 0; i < m_fieldHeight; ++i)
+			for( int j = 1; j < m_fieldWidth; ++j)
+			{
+				if ((empty == m_edgesV[i][j]))
+				{
+					return 0;
+				}
+			}
+		
 		// OK. All edges marked. 
-		//Check fot all vertex marked.
+		//Check for all vertex marked.
 		for( int i = 0; i < m_fieldHeight; ++i)
 			for( int j = 0; j < m_fieldWidth; ++j)
 			{
-				if ((empty == m_vertex[i][j]))
+				if (empty == m_vertex[i][j])
 				{
 					return 0;
 				}
@@ -281,6 +282,7 @@ public class GameSession implements EventCallback
 				player_tag = i;
 			}
 		
+		Debug.log("Player " + player_tag + " win!.");
 		return player_tag;
 	}
 	
