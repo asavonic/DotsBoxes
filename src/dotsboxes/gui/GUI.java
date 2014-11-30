@@ -4,6 +4,7 @@ import java.awt.EventQueue;
 import javax.swing.*;
 
 import dotsboxes.gui.Field;
+import dotsboxes.gui.mainmenu.MainMenu;
 import dotsboxes.gui.newgame.NewGameGUI;
 
 import java.awt.*;
@@ -75,7 +76,7 @@ public class GUI implements EventCallback{
 		initialize();
 	}
 
-	Panel Menu = new Panel();
+	MainMenu Menu = new MainMenu(m_frame);
 	Field Field = new Field(m_frame);
 	Panel Config = new Panel();
 	NewGameGUI NewGameGUI = new NewGameGUI();
@@ -159,41 +160,8 @@ public class GUI implements EventCallback{
 		m_frame.setBounds(10, 10, 756, 505);
 		Menu.setBounds(m_frame.getBounds());
 		m_frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		//frame.getContentPane().setLayout(null);
 		
-		
-		Menu.setLayout(new GridLayout(0, 1, 0, 0));
-		
-		Button StartGame = new Button("Lets start game!");
-		StartGame.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) 
-			{
-				
-				EventManager.NewEvent( new dotsboxes.events.Event(EventType.GUI_game_Start), m_this);
-			}
-		});
-		Menu.add(StartGame);
-		
-		if ( Debug.isEnabled() ) {
-			JButton debug_call_field = new JButton("debug call field");
-			debug_call_field.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) 
-				{
-					EventManager.NewEvent(new GUI_NewGameRequest( 2, 0, 6, 8), m_this);
-				}
-			});
-			Menu.add(debug_call_field);	
-		}
-		
-		
-		Button button = new Button("Exit");
-		button.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) 
-			{
-				EventManager.NewEvent( new dotsboxes.events.Event(EventType.GUI_game_exit), m_this);
-			}
-		});
-		Menu.add(button);
+
 		m_frame.add(Menu);
 		Field.setBounds(m_frame.getBounds());
 		
