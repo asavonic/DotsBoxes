@@ -69,12 +69,14 @@ public class GUI implements EventCallback{
 	public JFrame m_frame = new JFrame();
 
 	public GUI() {
+		m_this = this;
 		initialize();
 	}
 
 	Panel Menu = new Panel();
 	Field Field = new Field(m_frame);
 	Panel Config = new Panel();
+	GUI m_this;
 	
 	public void ShowMenu()
 	{
@@ -155,7 +157,8 @@ public class GUI implements EventCallback{
 		StartGame.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) 
 			{
-				EventManager.NewAnonimEvent( new dotsboxes.events.Event(EventType.game_Start));
+				
+				EventManager.NewEvent( new dotsboxes.events.Event(EventType.GUI_game_Start), m_this);
 			}
 		});
 		Menu.add(StartGame);
@@ -164,7 +167,7 @@ public class GUI implements EventCallback{
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) 
 			{
-				EventManager.NewAnonimEvent( new dotsboxes.events.Event(EventType.GUI_game_exit));
+				EventManager.NewEvent( new dotsboxes.events.Event(EventType.GUI_game_exit), m_this);
 			}
 		});
 		Menu.add(button);
