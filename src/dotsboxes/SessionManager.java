@@ -9,13 +9,18 @@ import java.net.UnknownHostException;
 import java.rmi.AccessException;
 import java.rmi.AlreadyBoundException;
 import java.rmi.RemoteException;
+import java.util.Vector;
 
+import dotsboxes.EventManager.EventSenderPair;
 import dotsboxes.callbacks.EventCallback;
 import dotsboxes.events.CurrentPlayerChange;
 import dotsboxes.events.Event;
 import dotsboxes.events.EventType;
+import dotsboxes.events.GUI_NewGameRequest;
 import dotsboxes.events.GameStartEvent;
 import dotsboxes.events.GameTurnEvent;
+import dotsboxes.events.ListPlayersEvent;
+import dotsboxes.events.NewGameAccept;
 import dotsboxes.game.NewGameDesc;
 import dotsboxes.game.TurnDesc;
 import dotsboxes.players.PlayerDesc;
@@ -23,6 +28,7 @@ import dotsboxes.gui.GUI;
 import dotsboxes.rmi.ConnectionManager;
 import dotsboxes.utils.Debug;
 import dotsboxes.utils.Configuration;
+import dotsboxes.utils.CircleBuffer;
 
 public class SessionManager implements EventCallback
 {
@@ -51,18 +57,87 @@ public class SessionManager implements EventCallback
 		
 		//GameTurnEvent g_event = new GameTurnEvent(EventType.game_Turn, true, new TurnDesc( 0, 1, 1));
 		
-		m_CurrentPlayer = new PlayerDesc();
-		m_CurrentPlayer.setName("Tester" + Configuration.getPort() );
-		try {
-			m_CurrentPlayer.setInetAdress( InetAddress.getByName("127.0.0.1") );
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		}
+		//m_CurrentPlayer = new PlayerDesc();
+		//m_CurrentPlayer.setName("Tester" + Configuration.getPort() );
+		//try {
+		//	m_CurrentPlayer.setInetAdress( InetAddress.getByName("127.0.0.1") );
+		//} catch (UnknownHostException e) {
+		//	e.printStackTrace();
+		//}
+		
+		EventManager.NewAnonimEvent(new GUI_NewGameRequest(2, 1, 5, 9));
+		EventManager.NewAnonimEvent(new NewGameAccept( new PlayerDesc()));
 		
 		//EventManager.NewEvent( new CurrentPlayerChange(m_CurrentPlayer), this);
 	}
 	
-	private PlayerDesc m_CurrentPlayer;
+	private void CheckForOurTurn()
+	{
+		PlayerDesc player = m_playersList.getNext();
+		if(m_localPlayersDescs.contains(player))
+		{
+			m_CurrentPlayer = player;
+			EventManager.NewEvent(new Event(EventType.turn_unlock), this);
+		}
+	}
+	
+	private void GameCreate(GUI_NewGameRequest event)
+	{
+		Debug.log("SessionManager: GameCreate()");
+		m_remote_players_num = event.getNumRemotePlayers();
+		m_local_players_num = event.getNumLocalPlayers();
+		m_fieldHeight = event.getFieldHeight();
+		m_fieldWidth = event.getFieldWidth();
+		
+		if(0 == m_local_players_num)
+			Debug.log("Error! Number of local players 0!");
+		
+		for ( int i = 0; i < m_local_players_num; ++i)
+		{
+			PlayerDesc player = new PlayerDesc();//TODO: Andrew! Write right initialization of PlayerDesc! 
+			m_playerDescs.addElement(player);
+			m_localPlayersDescs.addElement(player);
+		}
+		
+		if(0 != m_remote_players_num) //We need remote players.
+		{
+			m_gameConnections.find_n_players(m_remote_players_num); // Request for some number of remote players.
+		}
+		else // Only local players We can start!
+		{
+			NewGameDesc game_desc = new NewGameDesc( m_fieldWidth, m_fieldHeight, m_local_players_num);
+			EventManager.NewEvent( new GameStartEvent( game_desc, 1), this);
+			m_playersList = new CircleBuffer(m_playerDescs);
+			
+			EventManager.NewEvent( new ListPlayersEvent( m_playersList), this);
+			
+			CheckForOurTurn();
+			
+			m_GUI.ShowField();
+		}
+	}
+	
+	private void NewRemotePlayer( NewGameAccept event)
+	{
+		if( m_playerDescs.size() == m_remote_players_num + m_local_players_num)
+		{
+			Debug.log("Error! No more need players!");
+			return;
+		}
+		m_playerDescs.addElement(event.getDesc());
+		if( m_playerDescs.size() == m_remote_players_num + m_local_players_num)
+		{
+			NewGameDesc game_desc = new NewGameDesc( m_fieldWidth, m_fieldHeight, m_local_players_num);
+			EventManager.NewEvent( new GameStartEvent( game_desc, 1), this);
+			m_playersList = new CircleBuffer(m_playerDescs);
+			
+			EventManager.NewEvent( new ListPlayersEvent( m_playersList), this);
+			
+			CheckForOurTurn();
+			
+			m_GUI.ShowField();
+		}
+	}
 	
 	public void Run()
 	{
@@ -74,11 +149,6 @@ public class SessionManager implements EventCallback
 	 * @param void.
 	 * @retval void
 	 */
-	public void Delete()
-	{
-		m_game.Delete();
-		Debug.log("Session manager destroyed.");
-	}
 	
 	@Override
 	public void HandleEvent(Event event) {
@@ -86,26 +156,34 @@ public class SessionManager implements EventCallback
 		
 		switch ( event.GetType() ) {
 		case GUI_back_to_Menu: 
+			//TODO: delete this:
+			CheckForOurTurn();
+			//end of delete
 			m_GUI.ShowMenu();
 			break;
 		case GUI_game_Start:
-			int some_number_of_players = 3;
-			int some_height_of_field = 2;	
-			int some_width_of_field = 9;	
-			NewGameDesc game_desc = new NewGameDesc( some_width_of_field, some_height_of_field, some_number_of_players);
-			EventManager.NewEvent( new GameStartEvent( game_desc, 1), this);
-			
+			//int some_number_of_players = 3;
+			//int some_height_of_field = 2;	
+			//int some_width_of_field = 9;	
+			//NewGameDesc game_desc = new NewGameDesc( some_width_of_field, some_height_of_field, some_number_of_players);
+			//EventManager.NewEvent( new GameStartEvent( game_desc, 1), this);
 			
 			m_GUI.ShowField();
 			break;
-		case GUI_game_Turn:
-			break;
-		case Generic:
-			break;
 		case gui_New_Game_Request:
-			HandleGUINewGameRequest(event);
+			GameCreate((GUI_NewGameRequest)event);
+			break;
+		case remote_New_Game_Accept:
+			NewRemotePlayer((NewGameAccept)event);
+			break;
+		case playersList:
+			ListPlayersEvent ev = (ListPlayersEvent) event;
+			m_playersList = ev.getPlayersList();
+			CheckForOurTurn();
 			break;
 		case game_Turn:
+			
+			CheckForOurTurn();
 			break;
 		case GUI_game_exit:
 			System.exit(0);
@@ -114,13 +192,11 @@ public class SessionManager implements EventCallback
 		}
 	}
 	
-	public void HandleGUINewGameRequest(Event event)
-	{
-		Debug.log("SessionManager: HandleGUINewGameRequest()");
-		int remote_players_num = 2; // TODO remove hardcode, get it from event
-		m_gameConnections.find_n_players(remote_players_num); // add NewGameDesc
-	}
 	
+	int m_remote_players_num;
+	int m_local_players_num;
+	int m_fieldHeight;
+	int m_fieldWidth;
 	
 	GameSession       m_game;
 	ConnectionManager m_connect;
@@ -128,5 +204,11 @@ public class SessionManager implements EventCallback
 	EventManager      m_eventMngr;
 	GUI               m_GUI;
 	int m_current_player_tag;
+	Vector<PlayerDesc> m_playerDescs = new Vector<PlayerDesc>();
+	Vector<PlayerDesc> m_localPlayersDescs = new Vector<PlayerDesc>();
+	CircleBuffer m_playersList;
+	private PlayerDesc m_CurrentPlayer;
+	
+
 	
 }
