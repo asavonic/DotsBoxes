@@ -39,11 +39,7 @@ public class Event implements java.io.Serializable
 		//Debug.log("Event type returned.");
 		return m_eventType;
 	}
-	
-	public void Cast(EventType type)
-	{
-		m_eventType = type;
-	}
+
 	/**
 	 * @name    Delete
 	 * @brief   Destroy event object.
