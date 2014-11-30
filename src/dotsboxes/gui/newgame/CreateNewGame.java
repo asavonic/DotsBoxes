@@ -95,7 +95,7 @@ public class CreateNewGame extends JPanel implements EventCallback {
                 5,
                 SpringLayout.NORTH, parent);
 
-		JLabel field_height_label = new JLabel("Field width: "); 
+		JLabel field_height_label = new JLabel("Field height: "); 
 		add(field_height_label);
 		
 		layout.putConstraint(SpringLayout.WEST, field_height_label,
