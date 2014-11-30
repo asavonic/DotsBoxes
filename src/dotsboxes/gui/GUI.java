@@ -11,6 +11,7 @@ import java.awt.geom.*;
 
 import dotsboxes.callbacks.EventCallback;
 import dotsboxes.events.EventType;
+import dotsboxes.events.GUI_NewGameRequest;
 import dotsboxes.events.GameTurnEvent;
 import dotsboxes.game.TurnDesc;
 import dotsboxes.utils.Debug;
@@ -170,6 +171,18 @@ public class GUI implements EventCallback{
 		});
 		Menu.add(StartGame);
 		
+		if ( Debug.isEnabled() ) {
+			JButton debug_call_field = new JButton("debug call field");
+			debug_call_field.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) 
+				{
+					EventManager.NewEvent(new GUI_NewGameRequest( 2, 0, 6, 8), m_this);
+				}
+			});
+			Menu.add(debug_call_field);	
+		}
+		
+		
 		Button button = new Button("Exit");
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) 
@@ -191,6 +204,7 @@ public class GUI implements EventCallback{
 		
 		NewGameGUI.setBounds(m_frame.getBounds());
 		m_frame.add(NewGameGUI);
+		
 		
 		Menu.setVisible(false);
 		Config.setVisible(false);
