@@ -12,6 +12,10 @@ public enum EventType
 	game_Start,
 	GUI_game_Start,
 	
+	playersList,
+	
+	turn_unlock,
+	
 	gui_New_Game_Request,
 	remote_New_Game_Request,
 	remote_New_Game_Accept,
