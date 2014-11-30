@@ -8,6 +8,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.SpringLayout;
 
 import dotsboxes.EventManager;
@@ -18,11 +19,11 @@ import dotsboxes.events.GUI_NewGameRequest;
 
 public class CreateNewGame extends JPanel implements EventCallback {
 	
-	JSpinner m_numLocalPlayers = new JSpinner();
-	JSpinner m_numRemotePlayers = new JSpinner();
+	JSpinner m_numLocalPlayers = new JSpinner( new SpinnerNumberModel(1, 1, 9, 1) );
+	JSpinner m_numRemotePlayers = new JSpinner(new SpinnerNumberModel(0, 0, 9, 1) );
 	
-	JSpinner m_fieldWidth = new JSpinner();
-	JSpinner m_fieldHeight = new JSpinner();
+	JSpinner m_fieldWidth = new JSpinner( new SpinnerNumberModel(5, 1, 9, 1) );
+	JSpinner m_fieldHeight = new JSpinner( new SpinnerNumberModel(5, 1, 9, 1) );
 	
 	public CreateNewGame(Container parent) {
 		m_Parent = parent;
