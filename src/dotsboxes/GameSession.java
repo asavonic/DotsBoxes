@@ -10,6 +10,7 @@ import dotsboxes.events.Event;
 import dotsboxes.events.EventType;
 import dotsboxes.events.GameStartEvent;
 import dotsboxes.events.GameTurnEvent;
+import dotsboxes.game.TurnDesc;
 import dotsboxes.utils.Debug;
 
 public class GameSession implements EventCallback
@@ -79,7 +80,7 @@ public class GameSession implements EventCallback
 				m_history.add(game_event);
 			}
 		}
-		else 
+		/*else 
 		{
 			boolean result = AddMark( game_event.getI(), game_event.getJ(), game_event.getPlrTag());
 			if (result)
@@ -89,7 +90,7 @@ public class GameSession implements EventCallback
 				m_history.add(game_event);
 				CheckWin();
 			}
-		}
+		}*/
 	}
 	
 	/*private void Turn(Event ev)
@@ -183,6 +184,18 @@ public class GameSession implements EventCallback
 			{
 				m_edgesV[i][j] = player_tag;
 				Debug.log("Player " + player_tag + " mark edge [" + i + "][" + j + "](vertical).");
+				if (AddMark(j, i, player_tag))
+				{
+					TurnDesc desc = new TurnDesc(j , i, player_tag);
+					GameTurnEvent ev = new GameTurnEvent(EventType.game_Turn, false,desc, false);
+					EventManager.NewEvent(ev, this);
+				}
+				if (AddMark(j - 1, i, player_tag))
+				{
+					TurnDesc desc = new TurnDesc(j - 1, i, player_tag);
+					GameTurnEvent ev = new GameTurnEvent(EventType.game_Turn, false,desc, false);
+					EventManager.NewEvent(ev, this);
+				}
 				return true;
 			}
 			else 
@@ -196,6 +209,18 @@ public class GameSession implements EventCallback
 			{
 				m_edgesH[i][j] = player_tag;
 				Debug.log("Player " + player_tag + " mark edge [" + i + "][" + j + "](horizontal).");
+				if (AddMark(j, i, player_tag))
+				{
+					TurnDesc desc = new TurnDesc(j , i, player_tag);
+					GameTurnEvent ev = new GameTurnEvent(EventType.game_Turn, false,desc, false);
+					EventManager.NewEvent(ev, this);
+				}
+				if (AddMark(j, i - 1, player_tag))
+				{
+					TurnDesc desc = new TurnDesc(j , i - 1, player_tag);
+					GameTurnEvent ev = new GameTurnEvent(EventType.game_Turn, false ,desc, false);
+					EventManager.NewEvent(ev, this);
+				}
 				return true;
 			}
 			else 
