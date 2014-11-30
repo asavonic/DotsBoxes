@@ -123,7 +123,7 @@ public class GUI implements EventCallback{
 					Menu.repaint();
 					Field.setSize(m_frame.getWidth(), m_frame.getHeight());
 					Config.setSize(m_frame.getWidth(), m_frame.getHeight());
-					//button_1.setBounds(m_frame.getWidth() - 100, m_frame.getY() + 10, 80, 30);
+					Field.repaint();
 				}
 
 				@Override
