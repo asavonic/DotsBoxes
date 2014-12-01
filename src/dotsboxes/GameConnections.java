@@ -110,6 +110,10 @@ public class GameConnections implements EventCallback {
 	
 	public void HandleGameStartEvent( Event event )
 	{
+		if ( m_GamePlayers == null ) {
+			Debug.log("GameConnections: no remote players, skip GameStartEvent");
+			return;
+		}
 		Debug.log("GameConnections: broadcasting game start to " + m_GamePlayers.size() + " players");
 		broadcast_event(event, m_GamePlayers);
 		Debug.log("GameConnections: handled new game event");
