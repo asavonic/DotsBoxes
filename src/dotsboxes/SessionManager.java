@@ -57,18 +57,27 @@ public class SessionManager implements EventCallback
 		
 		//GameTurnEvent g_event = new GameTurnEvent(EventType.game_Turn, true, new TurnDesc( 0, 1, 1));
 		
-		//m_CurrentPlayer = new PlayerDesc();
-		//m_CurrentPlayer.setName("Tester" + Configuration.getPort() );
-		//try {
-		//	m_CurrentPlayer.setInetAdress( InetAddress.getByName("127.0.0.1") );
-		//} catch (UnknownHostException e) {
-		//	e.printStackTrace();
-		//}
+		// TODO REMOVE HARDCODE 
+		// 		LOGIN REQUIRED
+		// FROM HERE
+		try {
+			m_CurrentPlayer = new PlayerDesc("Tester" + Configuration.getPort(),
+											 InetAddress.getByName("127.0.0.1"),
+											 Configuration.getPort(),
+											 ("111111" + Configuration.getPort()).getBytes() );
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		//EventManager.NewAnonimEvent(new GUI_NewGameRequest(2, 1, 5, 9));
 		//EventManager.NewAnonimEvent(new NewGameAccept( new PlayerDesc()));
 		
-		//EventManager.NewEvent( new CurrentPlayerChange(m_CurrentPlayer), this);
+		EventManager.NewEvent( new CurrentPlayerChange(m_CurrentPlayer), this);
+		m_playerDescs.addElement(m_CurrentPlayer);
+		m_localPlayersDescs.addElement(m_CurrentPlayer);
+		
+		// TODO TO HERE
 	}
 	
 	private void CheckForOurTurn()
@@ -100,10 +109,22 @@ public class SessionManager implements EventCallback
 		if(0 == m_local_players_num)
 			Debug.log("Error! Number of local players 0!");
 		
-		for ( int i = 0; i < m_local_players_num; ++i)
+		// TODO HARDCODED LOOP FROM 1 instead of 0
+		for ( int i = 1; i < m_local_players_num; ++i)
 		{
-			PlayerDesc player = new PlayerDesc();//TODO: Andrew! Write right initialization of PlayerDesc! 
-			player.setName(String.valueOf(i));
+			PlayerDesc player = null;
+			try {
+				player = new PlayerDesc(String.valueOf(i), 
+									InetAddress.getByName("127.0.0.1"), 
+									10000 + i, 
+									("000000" + String.valueOf(i)).getBytes() );
+			} catch (UnknownHostException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}																//TODO: Andrew! Write right initialization of PlayerDesc! 
+			
+																			// done, but this even uglier than it was before this *fix*
+																			// remove later
 			m_playerDescs.addElement(player);
 			m_localPlayersDescs.addElement(player);
 		}

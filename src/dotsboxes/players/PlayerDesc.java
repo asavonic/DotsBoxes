@@ -16,15 +16,33 @@ public class PlayerDesc implements java.io.Serializable {
 	 */
 	private static final long serialVersionUID = -7892422205180102465L;
 	
-	InetAddress m_InetAdress;
+	InetAddress m_InetAddress;
 	int m_Port;
 	String m_Name;
 	byte[] m_Hash;
 	
+	public PlayerDesc(String name, InetAddress address, int port, byte[] hash)
+	{
+		m_Name = name;
+		m_InetAddress = address;
+		m_Port = port;
+		m_Hash = hash;
+	}
+	
+	public PlayerDesc(String str)
+	{
+		try {
+			fromString(str);
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	public void fromString(String str) throws UnknownHostException {
 		String[] elements = str.split(" ");
 		m_Name = elements[0];
-		m_InetAdress = InetAddress.getByName(elements[1]);
+		m_InetAddress = InetAddress.getByName(elements[1]);
 		m_Port = Integer.parseInt(elements[2]);
 		
 		String hash_str = elements[3];
@@ -40,14 +58,14 @@ public class PlayerDesc implements java.io.Serializable {
 		return m_Port == player.getPort() &&
 			   m_Hash == player.getHash() &&
 			   m_Name.equals( player.getName() ) &&
-			   m_InetAdress.equals( player.getInetAdress() );
+			   m_InetAddress.equals( player.getInetAddress() );
 	}
 	
-	public InetAddress getInetAdress() {
-		return m_InetAdress;
+	public InetAddress getInetAddress() {
+		return m_InetAddress;
 	}
-	public void setInetAdress(InetAddress inetAdress) {
-		m_InetAdress = inetAdress;
+	public void setInetAddress(InetAddress inetAddress) {
+		m_InetAddress = inetAddress;
 	}
 	public int getPort() {
 		return m_Port;

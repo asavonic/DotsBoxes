@@ -31,8 +31,7 @@ public class PlayersMap implements Iterable<PlayerDesc>
 		List<String> file = Files.readAllLines(filename);
 		
 		for( String line : file ) {
-			PlayerDesc player = new PlayerDesc();
-			player.fromString(line);
+			PlayerDesc player = new PlayerDesc(line);
 			m_KnownPlayers.add(player);
 		}
 	}

@@ -30,7 +30,7 @@ public class Connection
 	public void Connect(PlayerDesc local_player, PlayerDesc remote_player) throws RemoteException, NotBoundException, ConnectionAlreadyEstablished
 	{
 		Debug.log("Connection.Connect(): trying to connect");
-		Registry registry = LocateRegistry.getRegistry(remote_player.getInetAdress().getHostAddress(), remote_player.getPort());
+		Registry registry = LocateRegistry.getRegistry(remote_player.getInetAddress().getHostAddress(), remote_player.getPort());
 		NodeRegister remote_register = (NodeRegister)registry.lookup("NodeRegister");
 		
 		Debug.log("Connection.Connect(): sending connection request");
