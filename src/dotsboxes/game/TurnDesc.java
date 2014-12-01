@@ -22,4 +22,18 @@ public class TurnDesc
 		m_player_tag = player_tag;
 		m_vert = vert;
 	}
+	
+	public TurnDesc( int i, int j, boolean vert)
+	{
+		m_i = i;
+		m_j = j;
+		m_vert = vert;
+	}
+	
+	public TurnDesc( int i, int j)
+	{
+		m_i = i;
+		m_j = j;
+		m_vert = false;
+	}
 }
