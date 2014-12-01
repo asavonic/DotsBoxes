@@ -11,6 +11,7 @@ import dotsboxes.callbacks.EventCallback;
 import dotsboxes.events.CurrentPlayerChange;
 import dotsboxes.events.Event;
 import dotsboxes.events.EventType;
+import dotsboxes.events.GameStartEvent;
 import dotsboxes.events.NewGameAccept;
 import dotsboxes.events.NewGameRequest;
 import dotsboxes.players.PlayerDesc;
@@ -18,6 +19,7 @@ import dotsboxes.players.PlayersMap;
 import dotsboxes.rmi.Connection;
 import dotsboxes.rmi.ConnectionManager;
 import dotsboxes.rmi.exceptions.ConnectionAlreadyEstablished;
+import dotsboxes.utils.CircleBuffer;
 import dotsboxes.utils.Debug;
 import dotsboxes.utils.Configuration;
 
@@ -39,13 +41,14 @@ public class GameConnections implements EventCallback {
 		EventManager.Subscribe(EventType.remote_New_Game_Accept, this);
 		EventManager.Subscribe(EventType.remote_New_Game_Request, this);
 		EventManager.Subscribe(EventType.internal_Current_Player_Change, this);
+		EventManager.Subscribe(EventType.game_Start, this);
 	}
 	
-	public void broadcast_event(Event event)
+	public void broadcast_event(Event event, Iterable<PlayerDesc> container)
 	{
 		Debug.log("broadcast_event() up to " + m_PlayersMap.getPlayersList().size() + " players" );
 		
-		for( PlayerDesc player : m_PlayersMap.getPlayersList() ) {
+		for( PlayerDesc player : container ) {
 			try {
 				Connection player_connection = ConnectionManager.getConnection(player);
 				if ( player_connection == null ) {
@@ -63,7 +66,7 @@ public class GameConnections implements EventCallback {
 	public void find_n_players(int num_players)
 	{
 		Debug.log("GameConnections: find_n_players()");
-		broadcast_event(new NewGameRequest(m_CurrentPlayer));
+		broadcast_event(new NewGameRequest(m_CurrentPlayer), m_PlayersMap );
 		
 	}
 	
@@ -105,8 +108,30 @@ public class GameConnections implements EventCallback {
 		Debug.log("GameConnections: " + m_CurrentPlayer.getName() + " is now the active user");
 	}
 	
+	public void HandleGameStartEvent( Event event )
+	{
+		GameStartEvent game_start = (GameStartEvent) event;
+		try {
+			m_GamePlayers = game_start.getPlayersList().clone();
+		} catch (CloneNotSupportedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		Debug.log("GameConnections: broadcasting game start to " + m_GamePlayers.size() + " players");
+		broadcast_event(event, m_GamePlayers);
+		
+		Debug.log("GameConnections: handled new game event");
+	}
+	
+	private void HandleGameTurnEvent(Event event) 
+	{
+		Debug.log("GameConnections: broadcasting game turn to " + m_GamePlayers.size() + " players");
+		broadcast_event(event, m_GamePlayers);
+	}
+	
 	private PlayersMap m_PlayersMap;
 	private PlayerDesc m_CurrentPlayer;
+	private CircleBuffer m_GamePlayers;
 
 	@Override
 	public void HandleEvent(Event event) {
@@ -116,8 +141,10 @@ public class GameConnections implements EventCallback {
 		case Generic:
 			break;
 		case game_Start:
+			HandleGameStartEvent(event);
 			break;
 		case game_Turn:
+			HandleGameTurnEvent(event);
 			break;
 		case remote_New_Game_Accept:
 			HandleNewGameAccept(event);
