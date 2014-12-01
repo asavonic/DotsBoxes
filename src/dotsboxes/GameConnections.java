@@ -110,16 +110,8 @@ public class GameConnections implements EventCallback {
 	
 	public void HandleGameStartEvent( Event event )
 	{
-		GameStartEvent game_start = (GameStartEvent) event;
-		try {
-			m_GamePlayers = game_start.getPlayersList().clone();
-		} catch (CloneNotSupportedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		Debug.log("GameConnections: broadcasting game start to " + m_GamePlayers.size() + " players");
 		broadcast_event(event, m_GamePlayers);
-		
 		Debug.log("GameConnections: handled new game event");
 	}
 	
@@ -127,6 +119,16 @@ public class GameConnections implements EventCallback {
 	{
 		Debug.log("GameConnections: broadcasting game turn to " + m_GamePlayers.size() + " players");
 		broadcast_event(event, m_GamePlayers);
+	}
+	
+	public void set_remote_players(CircleBuffer game_players)
+	{
+		try {
+			m_GamePlayers = game_players.clone();
+		} catch (CloneNotSupportedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	private PlayersMap m_PlayersMap;

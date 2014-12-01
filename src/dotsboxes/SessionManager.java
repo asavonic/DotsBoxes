@@ -162,6 +162,9 @@ public class SessionManager implements EventCallback
 			all_players.addAll(m_remotePlayersDescs);
 			
 			m_playersList = new CircleBuffer(all_players);
+			
+			m_gameConnections.set_remote_players(new CircleBuffer(m_remotePlayersDescs));
+			
 			NewGameDesc game_desc = new NewGameDesc( m_fieldWidth, m_fieldHeight, m_local_players_num);
 			EventManager.NewEvent( new GameStartEvent( game_desc, 1, m_playersList), this);
 			
