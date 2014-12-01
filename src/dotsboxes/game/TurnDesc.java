@@ -1,7 +1,12 @@
 package dotsboxes.game;
 
-public class TurnDesc 
+public class TurnDesc implements java.io.Serializable 
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3101177773968674368L;
+	
 	public int     m_player_tag;
 	public boolean m_vert;       // Is vertical edges?
 	public int     m_i;

@@ -6,6 +6,11 @@ import dotsboxes.utils.CircleBuffer;
 public class GameStartEvent extends Event
 {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4854650289528011194L;
+	
 	int m_BeginPlayerTag;
 	NewGameDesc m_desc;
 	CircleBuffer m_playersList;

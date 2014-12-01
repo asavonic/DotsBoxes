@@ -7,7 +7,7 @@ import java.util.function.Consumer;
 
 import dotsboxes.players.PlayerDesc;
 
-public class CircleBuffer implements Iterable<PlayerDesc>, Cloneable
+public class CircleBuffer implements Iterable<PlayerDesc>, Cloneable, java.io.Serializable
 {
 	Vector<PlayerDesc> m_buffer;
 	int m_index;

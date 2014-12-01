@@ -7,7 +7,12 @@ package dotsboxes.game;
  *
  *
  */
-public class NewGameDesc {
+public class NewGameDesc implements java.io.Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1999455417610589169L;
+	
 	String m_gameName;
 	public int m_num_players;
 	public int m_sizeFieldWidth;
