@@ -74,7 +74,6 @@ public class SessionManager implements EventCallback
 		//EventManager.NewAnonimEvent(new NewGameAccept( new PlayerDesc()));
 		
 		EventManager.NewEvent( new CurrentPlayerChange(m_CurrentPlayer), this);
-		m_playerDescs.addElement(m_CurrentPlayer);
 		m_localPlayersDescs.addElement(m_CurrentPlayer);
 		
 		// TODO TO HERE
@@ -125,7 +124,6 @@ public class SessionManager implements EventCallback
 			
 																			// done, but this even uglier than it was before this *fix*
 																			// remove later
-			m_playerDescs.addElement(player);
 			m_localPlayersDescs.addElement(player);
 		}
 		
@@ -135,7 +133,10 @@ public class SessionManager implements EventCallback
 		}
 		else // Only local players We can start!
 		{
-			m_playersList = new CircleBuffer(m_playerDescs);
+			Vector<PlayerDesc> all_players = (Vector<PlayerDesc>) m_localPlayersDescs.clone();
+			all_players.addAll(m_remotePlayersDescs);
+			
+			m_playersList = new CircleBuffer(all_players);
 			NewGameDesc game_desc = new NewGameDesc( m_fieldWidth, m_fieldHeight, m_local_players_num);
 			EventManager.NewEvent( new GameStartEvent( game_desc, 0, m_playersList), this);
 			
@@ -147,15 +148,20 @@ public class SessionManager implements EventCallback
 	
 	private void NewRemotePlayer( NewGameAccept event)
 	{
-		if( m_playerDescs.size() == m_remote_players_num + m_local_players_num)
+		if( m_remotePlayersDescs.size() == m_remote_players_num )
 		{
-			Debug.log("Error! No more need players!");
+			Debug.log("Error! No need more players!");
 			return;
 		}
-		m_playerDescs.addElement(event.getSender());
-		if( m_playerDescs.size() == m_remote_players_num + m_local_players_num)
+		
+		m_remotePlayersDescs.addElement(event.getSender());
+		
+		if( m_remotePlayersDescs.size() == m_remote_players_num )
 		{
-			m_playersList = new CircleBuffer(m_playerDescs);
+			Vector<PlayerDesc> all_players = (Vector<PlayerDesc>) m_localPlayersDescs.clone();
+			all_players.addAll(m_remotePlayersDescs);
+			
+			m_playersList = new CircleBuffer(all_players);
 			NewGameDesc game_desc = new NewGameDesc( m_fieldWidth, m_fieldHeight, m_local_players_num);
 			EventManager.NewEvent( new GameStartEvent( game_desc, 1, m_playersList), this);
 			
@@ -231,8 +237,10 @@ public class SessionManager implements EventCallback
 	EventManager      m_eventMngr;
 	GUI               m_GUI;
 	int m_current_player_tag;
-	Vector<PlayerDesc> m_playerDescs = new Vector<PlayerDesc>();
+	
 	Vector<PlayerDesc> m_localPlayersDescs = new Vector<PlayerDesc>();
+	Vector<PlayerDesc> m_remotePlayersDescs = new Vector<PlayerDesc>();
+	
 	CircleBuffer m_playersList;
 	private PlayerDesc m_CurrentPlayer;
 	
