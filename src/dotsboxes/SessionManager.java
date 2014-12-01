@@ -83,6 +83,7 @@ public class SessionManager implements EventCallback
 		if(m_localPlayersDescs.contains(player))
 		{
 			m_CurrentPlayer = player;
+			EventManager.NewEvent(new CurrentPlayerChange(m_CurrentPlayer), this);
 			EventManager.NewEvent(new Event(EventType.turn_unlock), this);
 		}
 		GUI_CurrentPlayerChanged event = new GUI_CurrentPlayerChanged(player.getName());
