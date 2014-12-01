@@ -23,23 +23,24 @@ public class GameSession implements EventCallback
 	 * @param field_size - size of game field.
 	 * @param players_number - number of players.
 	 */
-	GameSession( int field_height, int field_width, int players_number, int current_player_tag )
+	GameSession( int field_height, int field_width, int players_number, int begin__player_tag )
 	{
 		EventManager.Subscribe( EventType.game_Turn, this); //Subscribe on game_Turn event.
 		EventManager.Subscribe( EventType.GUI_game_Turn, this); 
 		EventManager.Subscribe( EventType.game_Start, this); 
 		EventManager.Subscribe( EventType.turn_unlock, this); 
+		EventManager.Subscribe( EventType.internal_Current_Player_Change, this); 
 		
-		Init( field_height, field_width, players_number, current_player_tag);
+		Init( field_height, field_width, players_number, begin__player_tag);
 	}
 	
-	private void Init(int field_height, int field_width, int players_number, int current_player_tag)
+	private void Init(int field_height, int field_width, int players_number, int begin__player_tag)
 	{
 		m_fieldHeight      = field_height;
 		m_fieldWidth       = field_width;
 		m_numberOfPlayers  = players_number;
 		
-		current_player_tag = current_player_tag;
+		m_current_player_tag = begin__player_tag;
 		
 		m_edgesH   = new int[m_fieldHeight + 1][m_fieldWidth];
 		m_edgesV   = new int[m_fieldHeight][m_fieldWidth + 1];		
@@ -67,7 +68,7 @@ public class GameSession implements EventCallback
 		EventManager.NewEvent(ev, this);
 	}
 	
-	private void GUITurn(Event ev)
+	private boolean GUITurn(Event ev)
 	{
 		GameTurnEvent game_event = (GameTurnEvent) ev; 
 		if (game_event.isEdgeChanged())
@@ -78,22 +79,13 @@ public class GameSession implements EventCallback
 				m_turnBlock = true;
 				SendEvent(game_event, true);
 				m_history.add(game_event);
+				return true;
 			}
 		}
-		/*else 
-		{
-			boolean result = AddMark( game_event.getI(), game_event.getJ(), game_event.getPlrTag());
-			if (result)
-			{
-				m_turnBlock = false;
-				SendEvent(game_event, false);
-				m_history.add(game_event);
-				CheckWin();
-			}
-		}*/
+		return false;
 	}
 	
-	/*private void Turn(Event ev)
+	private void Turn(Event ev)
 	{
 		GameTurnEvent game_event1 = (GameTurnEvent) ev; 
 		if (m_history.contains(ev))    // I can do that better.
@@ -103,28 +95,24 @@ public class GameSession implements EventCallback
 		}
 		if (game_event1.isEdgeChanged())
 		{
-			boolean result = AddEdge( game_event1.getI(), game_event1.getJ(), game_event1.getVert(), game_event1.getPlrTag());
+			boolean result = AddEdge( game_event1.getI(), game_event1.getJ(), game_event1.getVert(), m_current_player_tag);
 			if (result)
 			{
-				SendEvent(game_event1);
+				//SendEvent(game_event1);
 				m_history.add(game_event1);
 			}
 		}
-		else 
+		else
 		{
-			boolean result = AddMark( game_event1.getI(), game_event1.getJ(), game_event1.getPlrTag());
+			boolean result = AddEdge( game_event1.getI(), game_event1.getJ(), game_event1.getVert(), m_current_player_tag);
 			if (result)
 			{
-				SendEvent(game_event1);
+				//SendEvent(game_event1);
 				m_history.add(game_event1);
 			}
 		}
-	}*/
-	
-	private void CheckOurTurn()
-	{
-		
 	}
+	
 	/**
 	 * @name    HandleEvent
 	 * @brief   Handle event.
@@ -134,21 +122,23 @@ public class GameSession implements EventCallback
 	 */
 	public void HandleEvent( Event ev)
 	{
-		
-		
 		switch(ev.GetType())
 		{
 		case GUI_game_Turn:
 			Debug.log("GUI_game_Turn resived.");
 			if(!m_turnBlock)
-				GUITurn(ev);
+				if(GUITurn(ev))
+					m_current_player_tag++;
 			break;
 		case turn_unlock:
 			Debug.log("You have not turn.");
 			m_turnBlock = false;
 			break;
 		case game_Turn:
-			//Turn(ev);
+			GameTurnEvent turn_event = (GameTurnEvent) ev;
+			Turn(ev);
+			if( turn_event.isSwitchTurn())
+				m_current_player_tag++;
 			break;
 		case game_Start:
 			GameStartEvent g = (GameStartEvent)ev;
@@ -395,6 +385,7 @@ public class GameSession implements EventCallback
 	int m_fieldWidth;
 	int m_numberOfPlayers;
 	boolean m_turnBlock = false;
+	int m_current_player_tag;
 	int m_edgesV[][];  // List of vertical edges.
 	int m_edgesH[][];  // List of horizontal edges.
 	int m_vertex[][];
