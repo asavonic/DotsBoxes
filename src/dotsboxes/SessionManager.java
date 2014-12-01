@@ -20,7 +20,6 @@ import dotsboxes.events.GUI_CurrentPlayerChanged;
 import dotsboxes.events.GUI_NewGameRequest;
 import dotsboxes.events.GameStartEvent;
 import dotsboxes.events.GameTurnEvent;
-import dotsboxes.events.ListPlayersEvent;
 import dotsboxes.events.NewGameAccept;
 import dotsboxes.game.NewGameDesc;
 import dotsboxes.game.TurnDesc;
@@ -115,11 +114,9 @@ public class SessionManager implements EventCallback
 		}
 		else // Only local players We can start!
 		{
-			NewGameDesc game_desc = new NewGameDesc( m_fieldWidth, m_fieldHeight, m_local_players_num);
-			EventManager.NewEvent( new GameStartEvent( game_desc, 0), this);
 			m_playersList = new CircleBuffer(m_playerDescs);
-			
-			EventManager.NewEvent( new ListPlayersEvent( m_playersList), this);
+			NewGameDesc game_desc = new NewGameDesc( m_fieldWidth, m_fieldHeight, m_local_players_num);
+			EventManager.NewEvent( new GameStartEvent( game_desc, 0, m_playersList), this);
 			
 			CheckForOurTurn();
 			
@@ -137,14 +134,11 @@ public class SessionManager implements EventCallback
 		m_playerDescs.addElement(event.getDesc());
 		if( m_playerDescs.size() == m_remote_players_num + m_local_players_num)
 		{
-			NewGameDesc game_desc = new NewGameDesc( m_fieldWidth, m_fieldHeight, m_local_players_num);
-			EventManager.NewEvent( new GameStartEvent( game_desc, 1), this);
 			m_playersList = new CircleBuffer(m_playerDescs);
-			
-			EventManager.NewEvent( new ListPlayersEvent( m_playersList), this);
+			NewGameDesc game_desc = new NewGameDesc( m_fieldWidth, m_fieldHeight, m_local_players_num);
+			EventManager.NewEvent( new GameStartEvent( game_desc, 1, m_playersList), this);
 			
 			CheckForOurTurn();
-			
 			m_GUI.ShowField();
 		}
 	}
@@ -181,16 +175,16 @@ public class SessionManager implements EventCallback
 			//m_GUI.ShowField();
 			m_GUI.ShowNewGameGUI();
 			break;
+		case game_Start:
+			GameStartEvent ev = (GameStartEvent) event;
+			m_playersList = ev.getPlayersList();
+			CheckForOurTurn();
+			break;
 		case gui_New_Game_Request:
 			GameCreate((GUI_NewGameRequest)event);
 			break;
 		case remote_New_Game_Accept:
 			NewRemotePlayer((NewGameAccept)event);
-			break;
-		case playersList:
-			ListPlayersEvent ev = (ListPlayersEvent) event;
-			m_playersList = ev.getPlayersList();
-			CheckForOurTurn();
 			break;
 		case game_Turn:
 			GameTurnEvent turnEvent = (GameTurnEvent) event;
