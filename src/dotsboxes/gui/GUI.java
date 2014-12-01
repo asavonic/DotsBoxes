@@ -83,6 +83,7 @@ public class GUI implements EventCallback{
 	
 	public void ShowMenu()
 	{
+		NewGameGUI.setVisible(false);
 		Menu.setBounds(m_frame.getBounds());
 		Menu.repaint();
 		Menu.setVisible(true);	
@@ -92,6 +93,7 @@ public class GUI implements EventCallback{
 	
 	public void ShowConfig()
 	{
+		NewGameGUI.setVisible(false);
 		Menu.setVisible(false);
 		Config.setVisible(true);
 		Field.setVisible(false);
@@ -99,6 +101,7 @@ public class GUI implements EventCallback{
 	
 	public void ShowField()
 	{
+		NewGameGUI.setVisible(false);
 		Menu.setVisible(false);
 		Config.setVisible(false);
 		Field.setBounds(m_frame.getBounds());
