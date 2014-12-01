@@ -116,7 +116,7 @@ public class SessionManager implements EventCallback
 		else // Only local players We can start!
 		{
 			NewGameDesc game_desc = new NewGameDesc( m_fieldWidth, m_fieldHeight, m_local_players_num);
-			EventManager.NewEvent( new GameStartEvent( game_desc, 1), this);
+			EventManager.NewEvent( new GameStartEvent( game_desc, 0), this);
 			m_playersList = new CircleBuffer(m_playerDescs);
 			
 			EventManager.NewEvent( new ListPlayersEvent( m_playersList), this);
@@ -167,7 +167,7 @@ public class SessionManager implements EventCallback
 		switch ( event.GetType() ) {
 		case GUI_back_to_Menu: 
 			//TODO: delete this:
-			CheckForOurTurn();
+			//CheckForOurTurn();
 			//end of delete
 			m_GUI.ShowMenu();
 			break;
