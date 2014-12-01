@@ -152,7 +152,7 @@ public class SessionManager implements EventCallback
 			Debug.log("Error! No more need players!");
 			return;
 		}
-		m_playerDescs.addElement(event.getDesc());
+		m_playerDescs.addElement(event.getSender());
 		if( m_playerDescs.size() == m_remote_players_num + m_local_players_num)
 		{
 			m_playersList = new CircleBuffer(m_playerDescs);
