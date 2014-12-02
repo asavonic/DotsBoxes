@@ -14,6 +14,7 @@ import java.awt.event.MouseListener;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import dotsboxes.EventManager;
@@ -21,6 +22,7 @@ import dotsboxes.callbacks.EventCallback;
 import dotsboxes.events.Event;
 import dotsboxes.events.EventType;
 import dotsboxes.events.GUI_CurrentPlayerChanged;
+import dotsboxes.events.GUI_GameOverEvent;
 import dotsboxes.events.GameStartEvent;
 import dotsboxes.events.GameTurnEvent;
 import dotsboxes.game.TurnDesc;
@@ -56,6 +58,7 @@ public class Field extends JPanel implements EventCallback
 	Button button_BackToMenu = new Button("Back to menu.");
 	Button button_Clear = new Button("Clear.");
 	JLabel currentPlayer = new JLabel("Text-Only Label");
+	JOptionPane m_gameOverPane = new JOptionPane();
 	
 	public Field(JFrame frame) 
 	{
@@ -66,6 +69,8 @@ public class Field extends JPanel implements EventCallback
 		EventManager.Subscribe( EventType.game_Start, this); 
 		EventManager.Subscribe( EventType.game_Turn, this); 
 		EventManager.Subscribe( EventType.GUI_current_player_changed, this); 
+		EventManager.Subscribe( EventType.GUI_game_over, this); 
+		
 		
 		button_BackToMenu.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) 
@@ -284,7 +289,7 @@ public class Field extends JPanel implements EventCallback
         DrawBox(g2, x, y, width, height);   
      }
 		
-	public void DrawBox(Graphics2D g2, int x, int y, int width, int height)
+	private void DrawBox(Graphics2D g2, int x, int y, int width, int height)
 	{
 		int miniFatLine = 5; // Diff between line width generic edge and user marked edge.
 		
@@ -389,8 +394,23 @@ public class Field extends JPanel implements EventCallback
         }
 	}
 
+	private void GameOver(GUI_GameOverEvent game_over)
+	{
+		Object[] options = {"Show field.",
+        "Back to menu."};
+		int n = JOptionPane.showOptionDialog(m_frame,
+		"Won player number " + game_over.getPlrTag(),
+		"GameOver!",
+		JOptionPane.YES_NO_OPTION,
+		JOptionPane.INFORMATION_MESSAGE,
+		null,     //do not use a custom Icon
+		options,  //the titles of buttons
+		options[0]); //default button title
+	}
+	
 	private void HandleGameTurnEvent(GameTurnEvent event)
 	{
+		
 		if(event.isEdgeChanged())
 		{
 			if(event.getVert())
@@ -420,6 +440,10 @@ public class Field extends JPanel implements EventCallback
 		case GUI_current_player_changed:
 			GUI_CurrentPlayerChanged event = (GUI_CurrentPlayerChanged) ev;
 			currentPlayer.setText(event.getPlayerName());
+			break;
+		case GUI_game_over:
+			GUI_GameOverEvent game_over = (GUI_GameOverEvent) ev;
+			GameOver(game_over);
 			break;
 		default:
 			Debug.log("Unknown event in GameSession!");

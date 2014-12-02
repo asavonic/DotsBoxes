@@ -8,6 +8,7 @@ import java.util.Vector;
 import dotsboxes.callbacks.EventCallback;
 import dotsboxes.events.Event;
 import dotsboxes.events.EventType;
+import dotsboxes.events.GUI_GameOverEvent;
 import dotsboxes.events.GameStartEvent;
 import dotsboxes.events.GameTurnEvent;
 import dotsboxes.game.TurnDesc;
@@ -73,7 +74,7 @@ public class GameSession implements EventCallback
 		Debug.log("GameSassion initializated.");
 	}
 	
-	private void SendEvent(GameTurnEvent event, boolean isSwitchTurn)
+	private void SendTurnEvent(GameTurnEvent event, boolean isSwitchTurn)
 	{
 		TurnDesc desc = new TurnDesc(event.getI(), event.getJ(), m_current_player_tag, event.getVert());
 		GameTurnEvent ev = new GameTurnEvent(EventType.game_Turn, event.isEdgeChanged(),desc, isSwitchTurn);
@@ -90,12 +91,12 @@ public class GameSession implements EventCallback
 			{
 				if(1 == result)
 				{
-					SendEvent(game_event, true);
+					SendTurnEvent(game_event, true);
 					m_turnBlock = true;
 				}
 				else
 				{
-					SendEvent(game_event, false);
+					SendTurnEvent(game_event, false);
 					m_turnBlock = false;
 				}
 				m_history.add(game_event);
@@ -133,6 +134,12 @@ public class GameSession implements EventCallback
 		}
 	}
 	
+	private void CheckWinAndSend()
+	{
+		int winner = CheckWin();
+		if(empty != winner)
+			EventManager.NewEvent( new GUI_GameOverEvent(winner), this);
+	}
 	
 	private void SwitchCurrentPlayer()
 	{
@@ -158,7 +165,7 @@ public class GameSession implements EventCallback
 					SwitchCurrentPlayer();
 					break;
 				}
-			CheckWin();
+			CheckWinAndSend();
 			break;
 		case turn_unlock:
 			Debug.log("You have not turn.");
@@ -169,7 +176,7 @@ public class GameSession implements EventCallback
 			Turn(ev);
 			if( turn_event.isSwitchTurn())
 				SwitchCurrentPlayer();
-			CheckWin();
+			CheckWinAndSend();
 			break;
 		case game_Start:
 			GameStartEvent g = (GameStartEvent)ev;
@@ -298,7 +305,7 @@ public class GameSession implements EventCallback
 			{
 				if ((empty == m_edgesH[i][j]))
 				{
-					return 0;
+					return empty;
 				}
 			}
 		
@@ -308,7 +315,7 @@ public class GameSession implements EventCallback
 			{
 				if ((empty == m_edgesV[i][j]))
 				{
-					return 0;
+					return empty;
 				}
 			}
 		
@@ -319,12 +326,12 @@ public class GameSession implements EventCallback
 			{
 				if (empty == m_vertex[i][j])
 				{
-					return 0;
+					return empty;
 				}
 			}
 		
-		int max = m_counters[0];
-		int player_tag = 0;
+		int max = 0;
+		int player_tag = empty;
 		for( int i = 0; i < m_numberOfPlayers; ++i)
 			if ( m_counters[i] > max)
 			{

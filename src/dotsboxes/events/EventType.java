@@ -12,6 +12,7 @@ public enum EventType
 	game_Turn,
 	game_Start,
 	GUI_game_Start,
+	GUI_game_over,
 	
 	playersList,
 	
