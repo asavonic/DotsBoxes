@@ -50,4 +50,9 @@ public class CircleBuffer implements Iterable<PlayerDesc>, Cloneable, java.io.Se
 		return obj;
 	}
 	
+	public PlayerDesc getAt( int i)
+	{
+		return m_buffer.elementAt(i);
+	}
+	
 }

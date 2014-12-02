@@ -138,7 +138,7 @@ public class GameSession implements EventCallback
 	{
 		int winner = CheckWin();
 		if(empty != winner)
-			EventManager.NewEvent( new GUI_GameOverEvent(winner), this);
+			EventManager.NewEvent( new GUI_GameOverEvent( winner), this);
 	}
 	
 	private void SwitchCurrentPlayer()

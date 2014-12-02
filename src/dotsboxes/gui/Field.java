@@ -26,6 +26,8 @@ import dotsboxes.events.GUI_GameOverEvent;
 import dotsboxes.events.GameStartEvent;
 import dotsboxes.events.GameTurnEvent;
 import dotsboxes.game.TurnDesc;
+import dotsboxes.players.PlayerDesc;
+import dotsboxes.utils.CircleBuffer;
 import dotsboxes.utils.Debug;
 
 public class Field extends JPanel implements EventCallback
@@ -35,6 +37,8 @@ public class Field extends JPanel implements EventCallback
 	
 	final int DEBUG = -1;
 	final int empty  = -2;
+	
+	CircleBuffer m_playersDesc;
 	
 	boolean m_IsInit = false;
 	int m_num_players;
@@ -398,10 +402,12 @@ public class Field extends JPanel implements EventCallback
 	{
 		final int BACK_TO_MENU = 1;
 		
+		PlayerDesc winner = m_playersDesc.getAt(game_over.getPlrTag());
+		
 		Object[] options = {"Show field.",
         "Back to menu."};
 		int n = JOptionPane.showOptionDialog(m_frame,
-		"Won player number " + game_over.getPlrTag(),
+		"Won player number " + winner.getName(),
 		"GameOver!",
 		JOptionPane.YES_NO_OPTION,
 		JOptionPane.INFORMATION_MESSAGE,
@@ -440,6 +446,7 @@ public class Field extends JPanel implements EventCallback
 		case game_Start:
 			GameStartEvent g = (GameStartEvent)ev;
 			Init(g.getFieldWidth(), g.getFieldHeight(),  g.getNumPlayers(), g.getBeginPlayer());
+			m_playersDesc = g.getPlayersList();
 			this.repaint();
 			break;
 		case GUI_current_player_changed:
