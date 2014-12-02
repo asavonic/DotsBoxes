@@ -292,8 +292,10 @@ public class Field extends JPanel implements EventCallback
 			return;
 		field_begin_x = x + m_fatLine; // Start field.
 		field_begin_y = y + m_fatLine + button_BackToMenu.getHeight(); 
-		field_width = width - 2 * m_fatLine  - (width % m_fieldWidth);
-		field_height = height - 3 * m_fatLine - (height % m_fieldHeight) - button_BackToMenu.getHeight();
+		field_width = width - 2 * m_fatLine;
+		field_width -= (field_width % m_fieldWidth);
+		field_height = height - 3 * m_fatLine - button_BackToMenu.getHeight();
+		field_height -= (field_height % m_fieldHeight);
 		
         g2.setColor(Color.black);
         g2.setStroke(new BasicStroke(m_fatLine));
@@ -318,12 +320,12 @@ public class Field extends JPanel implements EventCallback
             		break;
             	case DEBUG:
             		g2.setColor(Color.blue);
-            		g2.drawLine( x_pos, field_begin_y + j * squre_height + m_fatLine / 2 - m_fatLine % 2 - miniFatLine, x_pos, field_begin_y + (j + 1) * squre_height  - m_fatLine / 2 - m_fatLine % 2 + miniFatLine);
+            		g2.drawLine( x_pos, field_begin_y + j * squre_height + m_fatLine - m_fatLine % 2 - miniFatLine, x_pos, field_begin_y + (j + 1) * squre_height  - m_fatLine - m_fatLine % 2 + miniFatLine);
             		g2.setColor(Color.black);
             		break;
             	default:
             		g2.setColor(Color.green);
-            		g2.drawLine( x_pos, field_begin_y + j * squre_height + m_fatLine / 2 - m_fatLine % 2 - miniFatLine, x_pos, field_begin_y + (j + 1) * squre_height  - m_fatLine / 2 - m_fatLine % 2 + miniFatLine);
+            		g2.drawLine( x_pos, field_begin_y + j * squre_height + m_fatLine - m_fatLine % 2 - miniFatLine, x_pos, field_begin_y + (j + 1) * squre_height  - m_fatLine - m_fatLine % 2 + miniFatLine);
             		g2.setColor(Color.black);
             		break;
             	}
@@ -347,12 +349,12 @@ public class Field extends JPanel implements EventCallback
             		break;
             	case DEBUG:
             		g2.setColor(Color.blue);
-            		g2.drawLine( field_begin_x + j * squre_width + m_fatLine / 2 + m_fatLine % 2  - miniFatLine, y_pos, field_begin_x + (j + 1) * squre_width - m_fatLine / 2 + miniFatLine, y_pos);
+            		g2.drawLine( field_begin_x + j * squre_width + m_fatLine + m_fatLine % 2  - miniFatLine, y_pos, field_begin_x + (j + 1) * squre_width - m_fatLine + miniFatLine, y_pos);
             		g2.setColor(Color.black);
             		break;
             	default:
             		g2.setColor(Color.green);
-            		g2.drawLine( field_begin_x + j * squre_width  + m_fatLine / 2 + m_fatLine % 2 - miniFatLine, y_pos, field_begin_x + (j + 1) * squre_width - m_fatLine / 2 + miniFatLine, y_pos);
+            		g2.drawLine( field_begin_x + j * squre_width  + m_fatLine + m_fatLine % 2 - miniFatLine, y_pos, field_begin_x + (j + 1) * squre_width - m_fatLine + miniFatLine, y_pos);
             		g2.setColor(Color.black);
             		break;
             	}
@@ -378,7 +380,7 @@ public class Field extends JPanel implements EventCallback
             		g2.setColor(Color.black);
         			break;
         		default:
-        			g2.setColor(new Color(m_vertex[i][j] * 50, 50, 104));
+        			g2.setColor(new Color((m_vertex[i][j] * 50) % 255, (m_vertex[i][j] * 80)%255, 80));
         			g2.fillRect(x_pos, y_pos, squre_width - m_fatLine, squre_height - m_fatLine);
             		g2.setColor(Color.black);
         			break;
