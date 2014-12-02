@@ -396,6 +396,8 @@ public class Field extends JPanel implements EventCallback
 
 	private void GameOver(GUI_GameOverEvent game_over)
 	{
+		final int BACK_TO_MENU = 1;
+		
 		Object[] options = {"Show field.",
         "Back to menu."};
 		int n = JOptionPane.showOptionDialog(m_frame,
@@ -406,6 +408,9 @@ public class Field extends JPanel implements EventCallback
 		null,     //do not use a custom Icon
 		options,  //the titles of buttons
 		options[0]); //default button title
+		
+		if( BACK_TO_MENU == n)
+			EventManager.NewEvent(new dotsboxes.events.Event(EventType.GUI_back_to_Menu), this);
 	}
 	
 	private void HandleGameTurnEvent(GameTurnEvent event)
