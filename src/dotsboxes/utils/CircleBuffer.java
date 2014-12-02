@@ -1,9 +1,7 @@
 package dotsboxes.utils;
 
 import java.util.Iterator;
-import java.util.Spliterator;
 import java.util.Vector;
-import java.util.function.Consumer;
 
 import dotsboxes.players.PlayerDesc;
 
