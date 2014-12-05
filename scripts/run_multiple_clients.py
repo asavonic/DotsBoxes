@@ -4,7 +4,7 @@ import subprocess as proc
 
 parser = argparse.ArgumentParser(description="Launches multiple DotsBoxes instances")
 parser.add_argument("ports", metavar="PORT", type=int, nargs="+", help="TCP ports to use")
-parser.add_argument("--keep-configs", dest="keepconf", type=bool, default=False, help="Do not generate new configs - use existing ones")
+parser.add_argument("--keep-configs", dest="keepconf", action="store_true", default=False, help="Do not generate new configs - use existing ones")
 
 script_dir = os.path.dirname(os.path.realpath(__file__))
 root_dir = os.path.normpath( os.path.join( script_dir, ".." ) )
