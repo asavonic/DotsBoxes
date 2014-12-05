@@ -62,7 +62,7 @@ for player in players:
 
 processes = []
 for player in players:
-    cmd += [player.port]
+    player_cmd = cmd + [player.port]
     conf_filename = "{0}.conf".format(player.port)
 
     if not keepconf:
@@ -70,11 +70,11 @@ for player in players:
         with open(conf_filename, "w" ) as file:
             file.write( str(conf) )
 
-    cmd += [conf_filename]
+    player_cmd += [conf_filename]
 
     output_file = open( "{0}.log".format(player.name), "w")
 
-    processes.append( proc.Popen(cmd, stdout=output_file, stderr=output_file) )
+    processes.append( proc.Popen(player_cmd, stdout=output_file, stderr=output_file) )
 
 retcode = 0
 for process in processes:
