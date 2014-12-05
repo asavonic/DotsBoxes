@@ -4,16 +4,18 @@ import subprocess as proc
 
 parser = argparse.ArgumentParser(description="Launches multiple DotsBoxes instances")
 parser.add_argument("ports", metavar="PORT", type=int, nargs="+", help="TCP ports to use")
+parser.add_argument("--keep-configs", dest="keepconf", type=bool, default=False, help="Do not generate new configs - use existing ones")
 
 script_dir = os.path.dirname(os.path.realpath(__file__))
 root_dir = os.path.normpath( os.path.join( script_dir, ".." ) )
 classpath = os.path.join(root_dir, "bin")
 
-run_cmdline = "java -Dfile.encoding=UTF-8 -classpath {0} dotsboxes.DotsBoxes".format(classpath).split()
+cmd = "java -Dfile.encoding=UTF-8 -classpath {0} dotsboxes.DotsBoxes".format(classpath).split()
 
 args = parser.parse_args()
 
 ports = [ str(port) for port in args.ports ]
+keepconf = args.keepconf
 
 
 class Player:
@@ -52,14 +54,18 @@ for player in players:
 
 processes = []
 for player in players:
-    conf = KnownPlayersConfig(player.known_players)
+    cmd += [player.port]
     conf_filename = "{0}.conf".format(player.port)
-    with open(conf_filename, "w" ) as file:
-        file.write( str(conf) )
+
+    if not keepconf:
+        conf = KnownPlayersConfig(player.known_players)
+        with open(conf_filename, "w" ) as file:
+            file.write( str(conf) )
+
+    cmd += [conf_filename]
 
     output_file = open( "{0}.log".format(player.name), "w")
 
-    cmd = run_cmdline + [player.port, conf_filename]
     processes.append( proc.Popen(cmd, stdout=output_file, stderr=output_file) )
 
 retcode = 0
