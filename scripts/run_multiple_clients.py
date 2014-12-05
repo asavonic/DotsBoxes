@@ -1,21 +1,29 @@
 import os
+import sys
 import argparse
 import subprocess as proc
 
 parser = argparse.ArgumentParser(description="Launches multiple DotsBoxes instances")
 parser.add_argument("ports", metavar="PORT", type=int, nargs="+", help="TCP ports to use")
+
 parser.add_argument("--keep-configs", dest="keepconf", action="store_true", default=False, help="Do not generate new configs - use existing ones")
+parser.add_argument("--generate-only", dest="generate_only", action="store_true", default=False, help="Generate config files without processes run")
 
 script_dir = os.path.dirname(os.path.realpath(__file__))
 root_dir = os.path.normpath( os.path.join( script_dir, ".." ) )
 classpath = os.path.join(root_dir, "bin")
 
-cmd = "java -Dfile.encoding=UTF-8 -classpath {0} dotsboxes.DotsBoxes".format(classpath).split()
-
 args = parser.parse_args()
 
 ports = [ str(port) for port in args.ports ]
 keepconf = args.keepconf
+generate_only = args.generate_only
+
+if keepconf and generate_only:
+    sys.stderr.write("--keep-configs and --generate-only are mutually exclusive\n")
+    exit(1)
+
+cmd = "java -Dfile.encoding=UTF-8 -classpath {0} dotsboxes.DotsBoxes".format(classpath).split()
 
 
 class Player:
