@@ -4,8 +4,6 @@ P0.   Redesign initial connection to known players
 
 P0.   Fix remote game
 
-P1.   Fix runner script.
-
 P1.   Add check in host if remote player contained 2 players( local for him)..
 
 P1.   Add join list.
@@ -40,6 +38,8 @@ P0.   Add methods in PlayersList to get remote and local players based on our ip
 P0.   Change tag in PlayersList to use Hash -- tag removed, since we check for local player based on our ip and port
 
 P2.   Determine our global IP -- using Amazon ip checker
+
+P1.   Fix runner script.
 
 Completed:
 
