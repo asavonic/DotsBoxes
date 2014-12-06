@@ -70,7 +70,7 @@ public class Field extends JPanel implements EventCallback
 		
 		
 		EventManager.Subscribe( EventType.game_Start, this); 
-		EventManager.Subscribe( EventType.game_Turn, this); 
+		EventManager.Subscribe( EventType.GUI_game_Turn, this); 
 		EventManager.Subscribe( EventType.GUI_current_player_changed, this); 
 		EventManager.Subscribe( EventType.GUI_game_over, this); 
 		
@@ -436,7 +436,7 @@ public class Field extends JPanel implements EventCallback
 	{
 		switch(ev.GetType())
 		{
-		case game_Turn:
+		case GUI_game_Turn:
 			GameTurnEvent turnEvent = (GameTurnEvent)ev;
 			HandleGameTurnEvent(turnEvent);
 			this.repaint();

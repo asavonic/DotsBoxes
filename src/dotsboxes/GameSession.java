@@ -81,7 +81,11 @@ public class GameSession implements EventCallback
 	{
 		TurnDesc desc = new TurnDesc(event.getI(), event.getJ(), m_current_player_tag, event.getVert());
 		GameTurnEvent ev = new GameTurnEvent(EventType.game_Turn, event.isEdgeChanged(),desc, isSwitchTurn);
+		
+		GameTurnEvent ev_GUI = new GameTurnEvent(EventType.GUI_game_Turn, event.isEdgeChanged(),desc, isSwitchTurn);
+		
 		EventManager.NewEvent(ev, this);
+		EventManager.NewEvent(ev_GUI, this);
 	}
 	
 	private int GUITurn(Event ev)
@@ -122,7 +126,9 @@ public class GameSession implements EventCallback
 			int result = AddEdge( game_event1.getI(), game_event1.getJ(), game_event1.getVert(), game_event1.getPlrTag());
 			if (0 != result)
 			{
-				//SendEvent(game_event1);
+				TurnDesc desc = game_event1.getTurnDesc();
+				GameTurnEvent game_turn_GUI = new GameTurnEvent(EventType.GUI_game_Turn, true, desc);
+				EventManager.NewEvent(game_turn_GUI, this);
 				m_history.add(game_event1);
 			}
 		}
@@ -146,7 +152,7 @@ public class GameSession implements EventCallback
 			case game_Turn:
 				GameTurnEvent game_turn = (GameTurnEvent) event;
 				TurnDesc desc = new TurnDesc(game_turn.getI(), game_turn.getJ(), empty, game_turn.getVert());
-				GameTurnEvent revert_event = new GameTurnEvent(EventType.game_Turn, game_turn.isEdgeChanged(), desc , false);
+				GameTurnEvent revert_event = new GameTurnEvent(EventType.GUI_game_Turn, game_turn.isEdgeChanged(), desc , false);
 				EventManager.NewEvent(revert_event, this);
 				EventManager.NewAnonimEvent(new Event(EventType.show_history));
 				break;
@@ -162,7 +168,7 @@ public class GameSession implements EventCallback
 			case game_Turn:
 				GameTurnEvent game_turn = (GameTurnEvent) event;
 				TurnDesc desc = new TurnDesc(game_turn.getI(), game_turn.getJ(), game_turn.getPlrTag(), game_turn.getVert());
-				GameTurnEvent revert_event = new GameTurnEvent(EventType.game_Turn, game_turn.isEdgeChanged(), desc , false);
+				GameTurnEvent revert_event = new GameTurnEvent(EventType.GUI_game_Turn, game_turn.isEdgeChanged(), desc , false);
 				EventManager.NewEvent(revert_event, this);
 				EventManager.NewAnonimEvent(new Event(EventType.show_history));
 				break;
@@ -274,6 +280,10 @@ public class GameSession implements EventCallback
 					TurnDesc desc = new TurnDesc(j , i, player_tag);
 					GameTurnEvent ev = new GameTurnEvent(EventType.game_Turn, false,desc, false);
 					EventManager.NewEvent(ev, this);
+					
+					GameTurnEvent ev_GUI = new GameTurnEvent(EventType.GUI_game_Turn, false,desc, false);
+					EventManager.NewEvent(ev_GUI, this);
+					
 					result = 1;
 					m_history.addElement(ev);
 				}
@@ -282,6 +292,9 @@ public class GameSession implements EventCallback
 					TurnDesc desc = new TurnDesc(j - 1, i, player_tag);
 					GameTurnEvent ev = new GameTurnEvent(EventType.game_Turn, false,desc, false);
 					EventManager.NewEvent(ev, this);
+					
+					GameTurnEvent ev_GUI = new GameTurnEvent(EventType.GUI_game_Turn, false,desc, false);
+					EventManager.NewEvent(ev_GUI, this);
 					result = 1;
 					m_history.addElement(ev);
 				}
@@ -303,6 +316,9 @@ public class GameSession implements EventCallback
 					TurnDesc desc = new TurnDesc(j , i, player_tag);
 					GameTurnEvent ev = new GameTurnEvent(EventType.game_Turn, false,desc, false);
 					EventManager.NewEvent(ev, this);
+					
+					GameTurnEvent ev_GUI = new GameTurnEvent(EventType.GUI_game_Turn, false,desc, false);
+					EventManager.NewEvent(ev_GUI, this);
 					m_history.addElement(ev);
 					result = 1;
 				}
@@ -311,6 +327,9 @@ public class GameSession implements EventCallback
 					TurnDesc desc = new TurnDesc(j , i - 1, player_tag);
 					GameTurnEvent ev = new GameTurnEvent(EventType.game_Turn, false ,desc, false);
 					EventManager.NewEvent(ev, this);
+					
+					GameTurnEvent ev_GUI = new GameTurnEvent(EventType.GUI_game_Turn, false,desc, false);
+					EventManager.NewEvent(ev_GUI, this);
 					m_history.addElement(ev);
 					result = 1;
 				}
@@ -489,7 +508,7 @@ public class GameSession implements EventCallback
 	int m_fieldHeight;
 	int m_fieldWidth;
 	int m_numberOfPlayers;
-	boolean m_turnBlock = false;
+	boolean m_turnBlock = true;
 	int m_current_player_tag;
 	int m_edgesV[][];  // List of vertical edges.
 	int m_edgesH[][];  // List of horizontal edges.
