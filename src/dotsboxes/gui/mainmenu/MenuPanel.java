@@ -48,7 +48,7 @@ public class MenuPanel extends JPanel implements EventCallback {
 			debug_call_field.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) 
 				{
-					EventManager.NewEvent(new GUI_NewGameRequest( 2, 0, 6, 8), m_this);
+					EventManager.NewEvent(new GUI_NewGameRequest( 4, 0, 4, 5), m_this);
 				}
 			});
 			add(debug_call_field);	
