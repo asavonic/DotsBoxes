@@ -59,7 +59,7 @@ public class FindNewGame extends JPanel {
 		String result = null;
 		result += game.getGameName() + "\n";
 		result += "Field size: " + game.getSizeFieldWidth() + " x " + game.getSizeFieldHeight() + "\n";
-		result += "Number of players: " + game.getNumPlayers() + "\n";
+		result += "Number of players: " + (game.getNumLocalPlayers() + game.getNumRemotePlayers()) + "\n";
 		
 		return result;
 	}
