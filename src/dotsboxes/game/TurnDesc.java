@@ -34,11 +34,5 @@ public class TurnDesc implements java.io.Serializable
 		m_j = j;
 		m_vert = vert;
 	}
-	
-	public TurnDesc( int i, int j)
-	{
-		m_i = i;
-		m_j = j;
-		m_vert = false;
-	}
+
 }
