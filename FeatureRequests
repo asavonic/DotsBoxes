@@ -10,8 +10,6 @@ P1.   Add check in host if remote player contained 2 players( local for him)..
 
 P1.   Add join list.
 
-P2.   Determine our global IP. 
-
 P2.   Add set known IPs GUI window.  
 
 P3.   Add "dead heat" for game over.
@@ -40,6 +38,8 @@ P0.   Game turn event forwarding
 P0.   Add methods in PlayersList to get remote and local players based on our ip and port
 
 P0.   Change tag in PlayersList to use Hash -- tag removed, since we check for local player based on our ip and port
+
+P2.   Determine our global IP -- using Amazon ip checker
 
 Completed:
 
