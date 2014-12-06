@@ -21,6 +21,7 @@ import dotsboxes.events.GUI_NewGameRequest;
 import dotsboxes.events.GameStartEvent;
 import dotsboxes.events.GameTurnEvent;
 import dotsboxes.events.NewGameAccept;
+import dotsboxes.events.SleepEvent;
 import dotsboxes.game.NewGameDesc;
 import dotsboxes.game.TurnDesc;
 import dotsboxes.players.PlayerDesc;
@@ -194,6 +195,7 @@ public class SessionManager implements EventCallback
 			//CheckForOurTurn();
 			//end of delete
 			m_GUI.ShowMenu();
+			EventManager.KillEvents(EventType.show_history);
 			break;
 		case GUI_game_Start:
 			//int some_number_of_players = 3;
@@ -220,6 +222,14 @@ public class SessionManager implements EventCallback
 			GameTurnEvent turnEvent = (GameTurnEvent) event;
 			if(turnEvent.isSwitchTurn())
 				CheckForOurTurn();
+			break;
+		case sleep_event:
+			SleepEvent sleep = (SleepEvent) event;
+			try {
+				Thread.sleep(sleep.getTime());
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 			break;
 		case GUI_game_exit:
 			System.exit(0);

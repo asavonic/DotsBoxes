@@ -14,8 +14,9 @@ public enum EventType
 	GUI_game_Start,
 	GUI_game_over,
 	
+	show_history,
 	playersList,
-	
+	sleep_event,
 	
 	turn_unlock,
 	
