@@ -21,7 +21,6 @@ import dotsboxes.EventManager;
 import dotsboxes.callbacks.EventCallback;
 import dotsboxes.events.Event;
 import dotsboxes.events.EventType;
-import dotsboxes.events.GUI_CurrentPlayerChanged;
 import dotsboxes.events.GUI_GameOverEvent;
 import dotsboxes.events.GameStartEvent;
 import dotsboxes.events.GameTurnEvent;
@@ -45,7 +44,6 @@ public class Field extends JPanel implements EventCallback
 	int m_num_players;
 	int m_fieldWidth;
 	int m_fieldHeight;
-	int m_current_player_tag;
 	
 	int field_begin_x;
 	int field_begin_y; 
@@ -60,7 +58,7 @@ public class Field extends JPanel implements EventCallback
 	int[][] m_vertex;
     
 	Button button_BackToMenu = new Button("Back to menu.");
-	Button button_Clear = new Button("Clear.");
+	//Button button_Clear = new Button("Clear.");
 	JLabel currentPlayer = new JLabel("Text-Only Label");
 	JOptionPane m_gameOverPane = new JOptionPane();
 	
@@ -89,7 +87,7 @@ public class Field extends JPanel implements EventCallback
 		
 		this.add(currentPlayer);
 		
-		button_Clear.addActionListener(new ActionListener() 
+		/*button_Clear.addActionListener(new ActionListener() 
 		{
 			public void actionPerformed(ActionEvent e) 
 			{
@@ -110,7 +108,7 @@ public class Field extends JPanel implements EventCallback
 			}
 		});
 		
-		this.add(button_Clear);
+		this.add(button_Clear);*/
 		
 		ButtonResize();
 		
@@ -154,17 +152,16 @@ public class Field extends JPanel implements EventCallback
 	public void ButtonResize()
 	{
 		button_BackToMenu.setBounds(this.getWidth() - 100, 0, 100, 30);
-		button_Clear.setBounds(this.getWidth() - 200, 0, 100, 30);
+		//button_Clear.setBounds(this.getWidth() - 200, 0, 100, 30);
 		
 		currentPlayer.setBounds(this.getWidth() - 400, 0, 150, 30);
 	}
 	
-	public void Init(int width, int height, int num_players, int begin_player_tag)
+	public void Init(int width, int height, int num_players)
 	{
 		m_num_players = num_players;
 		m_fieldWidth = width;
 		m_fieldHeight = height;
-		m_current_player_tag = begin_player_tag;
 		
 		m_edgesH   = new int[m_fieldHeight + 1][m_fieldWidth];
 		m_edgesV   = new int[m_fieldHeight][m_fieldWidth + 1];		
@@ -445,13 +442,18 @@ public class Field extends JPanel implements EventCallback
 			break;
 		case game_Start:
 			GameStartEvent g = (GameStartEvent)ev;
-			Init(g.getFieldWidth(), g.getFieldHeight(),  g.getNumPlayers(), g.getBeginPlayer());
-			m_playersDesc = g.getPlayersList();
+			Init(g.getFieldWidth(), g.getFieldHeight(),  g.getNumPlayers());
+			try
+			{
+				m_playersDesc = g.getPlayersList().clone();
+			}
+			catch(CloneNotSupportedException ex)
+			{}
 			this.repaint();
 			break;
 		case GUI_current_player_changed:
-			GUI_CurrentPlayerChanged event = (GUI_CurrentPlayerChanged) ev;
-			currentPlayer.setText(event.getPlayerName());
+			PlayerDesc desc = m_playersDesc.getNext();
+			currentPlayer.setText(desc.getName());
 			break;
 		case GUI_game_over:
 			GUI_GameOverEvent game_over = (GUI_GameOverEvent) ev;

@@ -2,15 +2,13 @@ package dotsboxes.events;
 
 import dotsboxes.players.PlayerDesc;
 
-public class CurrentPlayerChange extends Event {
-
-	/**
-	 * 
-	 */
+public class CurrentPlayerChange extends Event 
+{
 	private static final long serialVersionUID = -2758876956151407239L;
+	private PlayerDesc m_NewPlayer;
 
 	public CurrentPlayerChange(PlayerDesc new_player) {
-		super(EventType.internal_Current_Player_Change);
+		super(EventType.local_Current_Player_Change);
 		m_NewPlayer = new_player;
 	}
 	
@@ -21,7 +19,4 @@ public class CurrentPlayerChange extends Event {
 	public void setNewPlayer(PlayerDesc newPlayer) {
 		m_NewPlayer = newPlayer;
 	}
-
-	private PlayerDesc m_NewPlayer;
-
 }

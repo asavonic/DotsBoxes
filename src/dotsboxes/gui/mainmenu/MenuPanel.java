@@ -17,6 +17,7 @@ import dotsboxes.callbacks.EventCallback;
 import dotsboxes.events.Event;
 import dotsboxes.events.EventType;
 import dotsboxes.events.GUI_NewGameRequest;
+import dotsboxes.game.NewGameDesc;
 import dotsboxes.utils.Debug;
 
 public class MenuPanel extends JPanel implements EventCallback {
@@ -48,7 +49,8 @@ public class MenuPanel extends JPanel implements EventCallback {
 			debug_call_field.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) 
 				{
-					EventManager.NewEvent(new GUI_NewGameRequest( 4, 0, 4, 5), m_this);
+					NewGameDesc desc = new NewGameDesc(4, 5, 4, 0);
+					EventManager.NewEvent(new GUI_NewGameRequest(desc), m_this);
 				}
 			});
 			add(debug_call_field);	

@@ -2,12 +2,11 @@ package dotsboxes.events;
 
 import dotsboxes.players.PlayerDesc;
 
-public class EventWithSender extends Event {
-
-	/**
-	 * 
-	 */
+public class EventWithSender extends Event 
+{
 	private static final long serialVersionUID = -8859320870204839506L;
+	
+	private PlayerDesc m_Sender;
 
 	public EventWithSender(EventType someThing, PlayerDesc sender) {
 		super(someThing);
@@ -22,5 +21,5 @@ public class EventWithSender extends Event {
 		m_Sender = sender;
 	}
 
-	PlayerDesc m_Sender;
+	
 }

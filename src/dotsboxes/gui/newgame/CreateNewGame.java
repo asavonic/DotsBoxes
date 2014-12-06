@@ -16,6 +16,7 @@ import dotsboxes.callbacks.EventCallback;
 import dotsboxes.events.Event;
 import dotsboxes.events.EventType;
 import dotsboxes.events.GUI_NewGameRequest;
+import dotsboxes.game.NewGameDesc;
 
 public class CreateNewGame extends JPanel implements EventCallback {
 	
@@ -127,10 +128,13 @@ public class CreateNewGame extends JPanel implements EventCallback {
 		join_button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) 
 			{
-				EventManager.NewEvent(new GUI_NewGameRequest( (int) m_numLocalPlayers.getValue(), 
-															  (int) m_numRemotePlayers.getValue(), 
-															  (int) m_fieldHeight.getValue(), 
-															  (int) m_fieldWidth.getValue()), self);
+				NewGameDesc desc = new NewGameDesc(
+								(int) m_fieldWidth.getValue(),
+								(int) m_fieldHeight.getValue(), 
+								(int) m_numLocalPlayers.getValue(), 
+								(int) m_numRemotePlayers.getValue());
+								
+				EventManager.NewEvent(new GUI_NewGameRequest( desc), self);
 			}
 		});
 		

@@ -47,7 +47,7 @@ public class FindNewGame extends JPanel {
 		join_button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) 
 			{
-				EventManager.NewAnonimEvent( new dotsboxes.events.Event(EventType.gui_New_Game_Accept));
+				EventManager.NewAnonimEvent( new dotsboxes.events.Event(EventType.GUI_New_Game_Accept));
 			}
 		});
 		
