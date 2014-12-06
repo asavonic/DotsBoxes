@@ -43,6 +43,7 @@ public class GameConnections implements EventCallback {
 		EventManager.Subscribe(EventType.remote_New_Game_Request, this);
 		EventManager.Subscribe(EventType.local_Current_Player_Change, this);
 		EventManager.Subscribe(EventType.game_Start, this);
+		EventManager.Subscribe(EventType.game_Turn, this);
 	}
 	
 	public void broadcast_event(Event event, Iterable<PlayerDesc> container)
