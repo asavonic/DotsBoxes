@@ -75,9 +75,9 @@ for player in players:
 
     player_cmd += [conf_filename]
 
-    output_file = open( "{0}.log".format(player.name), "w")
-
-    processes.append( proc.Popen(player_cmd, stdout=output_file, stderr=output_file) )
+    if not generate_only:
+        output_file = open( "{0}.log".format(player.name), "w")
+        processes.append( proc.Popen(player_cmd, stdout=output_file, stderr=output_file) )
 
 retcode = 0
 for process in processes:
