@@ -8,6 +8,8 @@ P1.   Add join list.
 
 P2.   Add set known IPs GUI window.  
 
+P3.   Add remote tracker for initial setup
+
 P3.   Add "dead heat" for game over.
 
 P3.   Add print game turn history if anything crash in GameSession in debug mode.
