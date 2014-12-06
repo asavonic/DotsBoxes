@@ -23,17 +23,34 @@ public class PlayersList extends TaggedCircleBuffer<PlayerDesc, String> {
 		super();
 	}
 	
-	public PlayersList getPlayersByTag(String tag)
+	public PlayersList getLocalPlayers()
 	{
 		Vector<TaggedValue<PlayerDesc, String>> buffer = getBuffer();
-		Vector<PlayerDesc> players_by_tag = new Vector<PlayerDesc>();
+		PlayersList local = new PlayersList();
 		for (TaggedValue<PlayerDesc, String> player : buffer ) {
-			if ( player.tag.equals(tag) ) {
-				players_by_tag.add( player.value );
+			if ( player.value.isLocal() ) {
+				local.add( player.value, player.tag );
 			}
 		}
 		
-		return new PlayersList( players_by_tag, tag );
+		return local;
+	}
+
+	public PlayersList getRemotePlayers()
+	{
+		Vector<TaggedValue<PlayerDesc, String>> buffer = getBuffer();
+		PlayersList remote = new PlayersList();
+		for (TaggedValue<PlayerDesc, String> player : buffer ) {
+			if ( ! player.value.isLocal() ) {
+				remote.add( player.value, player.tag );
+			}
+		}
+		
+		return remote;
+	}
+	
+	private void add(PlayerDesc value, String tag) {
+		super.add( new TaggedValue<PlayerDesc, String>( value, tag) );
 	}
 
 	public PlayersList clone() throws CloneNotSupportedException

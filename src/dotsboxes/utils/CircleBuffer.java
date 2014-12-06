@@ -79,4 +79,9 @@ public class CircleBuffer<T> implements Iterable<T>, Cloneable, java.io.Serializ
 		m_buffer.addAll(buffer);
 	}
 	
+	public void add(T value)
+	{
+		m_buffer.add(value);
+	}
+	
 }

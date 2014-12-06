@@ -6,6 +6,7 @@ package dotsboxes.players;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
+import dotsboxes.utils.Configuration;
 import dotsboxes.utils.Hash;
 
 /**
@@ -63,6 +64,11 @@ public class PlayerDesc implements java.io.Serializable {
 			   m_Hash.equals( player.getHash() ) &&
 			   m_Name.equals( player.getName() ) &&
 			   m_InetAddress.equals( player.getInetAddress() );
+	}
+	
+	public boolean isLocal()
+	{
+		return m_Port == Configuration.getPort() && m_InetAddress.equals( Configuration.getAddress() );
 	}
 	
 	public InetAddress getInetAddress() {
