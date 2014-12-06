@@ -23,6 +23,8 @@ import dotsboxes.rmi.exceptions.ConnectionAlreadyEstablished;
 import dotsboxes.utils.CircleBuffer;
 import dotsboxes.utils.Debug;
 import dotsboxes.utils.Configuration;
+import dotsboxes.utils.PlayersList;
+import dotsboxes.utils.TaggedValue;
 
 /**
  *
@@ -47,9 +49,8 @@ public class GameConnections implements EventCallback {
 	}
 	
 	public void broadcast_event(Event event, Iterable<PlayerDesc> container)
-	{
-		Debug.log("broadcast_event() up to " + m_PlayersMap.getPlayersList().size() + " players" );
-		
+	{		
+		int events_sent = 0;
 		for( PlayerDesc player : container ) {
 			try {
 				Connection player_connection = ConnectionManager.getConnection(player);
@@ -57,9 +58,30 @@ public class GameConnections implements EventCallback {
 					player_connection = ConnectionManager.connect(m_CurrentPlayer, player);
 				}
 				player_connection.send_event(event);
+				events_sent++;
 			} catch (RemoteException | NotBoundException
 					| ConnectionAlreadyEstablished e) {
 				Debug.log("broadcast_event(): unable to connect to player" + player.getName() );
+				Debug.log("broadcast_event(): " + e.getMessage() );
+			}
+		}
+		Debug.log("broadcast_event(): sent event to " + events_sent + " players" );
+	}
+	
+	public void broadcast_event(Event event, PlayersList container)
+	{
+		Debug.log("broadcast_event() up to " + m_PlayersMap.getPlayersList().size() + " players" );
+		
+		for( TaggedValue<PlayerDesc, String> player : container ) {
+			try {
+				Connection player_connection = ConnectionManager.getConnection(player.value);
+				if ( player_connection == null ) {
+					player_connection = ConnectionManager.connect(m_CurrentPlayer, player.value);
+				}
+				player_connection.send_event(event);
+			} catch (RemoteException | NotBoundException
+					| ConnectionAlreadyEstablished e) {
+				Debug.log("broadcast_event(): unable to connect to player" + player.value.getName() );
 				Debug.log("broadcast_event(): " + e.getMessage() );
 			}
 		}
@@ -135,7 +157,7 @@ public class GameConnections implements EventCallback {
 		broadcast_event(event, m_GamePlayers);
 	}
 	
-	public void set_remote_players(CircleBuffer game_players)
+	public void set_remote_players(PlayersList game_players)
 	{
 		try {
 			m_GamePlayers = game_players.clone();
@@ -147,7 +169,7 @@ public class GameConnections implements EventCallback {
 	
 	private PlayersMap m_PlayersMap;
 	private PlayerDesc m_CurrentPlayer;
-	private CircleBuffer m_GamePlayers;
+	private PlayersList m_GamePlayers;
 
 	@Override
 	public void HandleEvent(Event event) {
