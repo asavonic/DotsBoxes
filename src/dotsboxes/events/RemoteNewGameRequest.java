@@ -1,25 +1,24 @@
-/**
- * 
- */
 package dotsboxes.events;
 
 import dotsboxes.game.NewGameDesc;
 import dotsboxes.players.PlayerDesc;
 
-/**
- *
- *
- */
-public class GUI_NewGameRequest extends Event 
-{
-	private static final long serialVersionUID = -4645586334808772848L;
+public class RemoteNewGameRequest extends EventWithSender {
+
+	NewGameDesc m_NewGameDesc;
 	
-	private NewGameDesc m_NewGameDesc;
-	
-	public GUI_NewGameRequest(int numLocalPlayers, int numRemotePlayers, int fieldHeight, int fieldWidth) 
+	public RemoteNewGameRequest( PlayerDesc sender, NewGameDesc NewGameDesc) 
 	{
-		super(EventType.gui_New_Game_Request);
-		m_NewGameDesc = new NewGameDesc(fieldWidth, fieldHeight, numLocalPlayers, numRemotePlayers);
+		super(EventType.remote_New_Game_Request, sender);
+		m_NewGameDesc = NewGameDesc;
+	}
+
+	public NewGameDesc getNewGameDesc() {
+		return m_NewGameDesc;
+	}
+
+	public void setNewGameDesc(NewGameDesc newGameDesc) {
+		m_NewGameDesc = newGameDesc;
 	}
 	
 	public int getNumLocalPlayers()

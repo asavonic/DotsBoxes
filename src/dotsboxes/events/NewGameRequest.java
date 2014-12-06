@@ -30,4 +30,24 @@ public class NewGameRequest extends EventWithSender {
 	public void setNewGameDesc(NewGameDesc newGameDesc) {
 		m_NewGameDesc = newGameDesc;
 	}
+	
+	public int getNumLocalPlayers()
+	{
+		return m_NewGameDesc.getNumLocalPlayers();
+	}
+	
+	public int getNumRemotePlayers()
+	{
+		return m_NewGameDesc.getNumRemotePlayers();
+	}
+	
+	public int getFieldHeight()
+	{
+		return m_NewGameDesc.getSizeFieldHeight();
+	}
+	
+	public int getFieldWidth()
+	{
+		return m_NewGameDesc.getSizeFieldWidth();
+	}
 }

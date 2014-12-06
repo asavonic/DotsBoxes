@@ -35,7 +35,7 @@ public class GameStartEvent extends Event
 	
 	public int getNumPlayers()
 	{
-		return m_desc.m_num_players;
+		return m_desc.getNumLocalPlayers() + m_desc.getNumRemotePlayers();
 	}
 	
 	public int getBeginPlayer()
