@@ -4,11 +4,13 @@ package dotsboxes;
  * @brief  This file implements class that handle game logic object and connection object.
  */
 
+import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.rmi.AccessException;
 import java.rmi.AlreadyBoundException;
 import java.rmi.RemoteException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Vector;
 
 import dotsboxes.EventManager.EventSenderPair;
@@ -31,6 +33,7 @@ import dotsboxes.rmi.ConnectionManager;
 import dotsboxes.utils.Debug;
 import dotsboxes.utils.Configuration;
 import dotsboxes.utils.CircleBuffer;
+import dotsboxes.utils.Hash;
 import dotsboxes.utils.PlayersList;
 import dotsboxes.utils.TaggedValue;
 
@@ -65,11 +68,19 @@ public class SessionManager implements EventCallback
 		// 		LOGIN REQUIRED
 		// FROM HERE
 		try {
-			m_CurrentPlayer = new PlayerDesc("Tester" + Configuration.getPort(),
+			String player_name = "Tester" + Configuration.getPort();
+			String player_pass = "qwerty";
+			m_CurrentPlayer = new PlayerDesc(player_name,
 											 InetAddress.getByName("127.0.0.1"),
 											 Configuration.getPort(),
-											 ("111111" + Configuration.getPort()).getBytes() );
+											 new Hash(player_name, player_pass) );
 		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NoSuchAlgorithmException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -119,11 +130,13 @@ public class SessionManager implements EventCallback
 		{
 			PlayerDesc player = null;
 			try {
-				player = new PlayerDesc(String.valueOf(i), 
-									InetAddress.getByName("127.0.0.1"), 
-									10000 + i, 
-									("000000" + String.valueOf(i)).getBytes() );
-			} catch (UnknownHostException e) {
+				String player_name = String.valueOf(i);
+				String player_pass = "qwerty";
+				player = new PlayerDesc(player_name,
+												 InetAddress.getByName("127.0.0.1"),
+												 Configuration.getPort(),
+												 new Hash(player_name, player_pass) );
+			} catch (UnknownHostException | UnsupportedEncodingException | NoSuchAlgorithmException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}																//TODO: Andrew! Write right initialization of PlayerDesc! 

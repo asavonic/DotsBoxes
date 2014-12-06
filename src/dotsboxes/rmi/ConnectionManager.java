@@ -47,6 +47,7 @@ public final class ConnectionManager {
 	{
 		Connection new_connection = new Connection();
 		new_connection.Connect(local_player_desc, remote_player_desc);
+		m_ActiveConnections.add(new_connection);
 		return new_connection;
 	}
 	

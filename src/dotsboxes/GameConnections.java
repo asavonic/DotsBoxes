@@ -127,6 +127,10 @@ public class GameConnections implements EventCallback {
 	
 	private void HandleGameTurnEvent(Event event) 
 	{
+		if ( m_GamePlayers == null ) {
+			Debug.log("GameConnections: no remote players, skip GameStartEvent");
+			return;
+		}
 		Debug.log("GameConnections: broadcasting game turn to " + m_GamePlayers.size() + " players");
 		broadcast_event(event, m_GamePlayers);
 	}

@@ -6,6 +6,8 @@ package dotsboxes.players;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
+import dotsboxes.utils.Hash;
+
 /**
  * Represents the player.
  * Contains his address, name and unique hash
@@ -19,9 +21,9 @@ public class PlayerDesc implements java.io.Serializable {
 	InetAddress m_InetAddress;
 	int m_Port;
 	String m_Name;
-	byte[] m_Hash;
+	Hash m_Hash;
 	
-	public PlayerDesc(String name, InetAddress address, int port, byte[] hash)
+	public PlayerDesc(String name, InetAddress address, int port, Hash hash)
 	{
 		m_Name = name;
 		m_InetAddress = address;
@@ -46,17 +48,19 @@ public class PlayerDesc implements java.io.Serializable {
 		m_Port = Integer.parseInt(elements[2]);
 		
 		String hash_str = elements[3];
-		m_Hash = new byte[hash_str.length()];
+		byte[] hash = new byte[hash_str.length()];
 		
 		for( int i = 0; i < hash_str.length(); i++) {
-			m_Hash[i] = (byte) hash_str.charAt(i);
+			hash[i] = (byte) hash_str.charAt(i);
 		}
+		
+		m_Hash = new Hash(hash);
 	}
 	
 	public boolean equals(PlayerDesc player)
 	{
 		return m_Port == player.getPort() &&
-			   m_Hash == player.getHash() &&
+			   m_Hash.equals( player.getHash() ) &&
 			   m_Name.equals( player.getName() ) &&
 			   m_InetAddress.equals( player.getInetAddress() );
 	}
@@ -79,10 +83,10 @@ public class PlayerDesc implements java.io.Serializable {
 	public void setName(String name) {
 		m_Name = name;
 	}
-	public byte[] getHash() {
+	public Hash getHash() {
 		return m_Hash;
 	}
-	public void setHash(byte[] hash) {
+	public void setHash(Hash hash) {
 		m_Hash = hash;
 	}
 }
