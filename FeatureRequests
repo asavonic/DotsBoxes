@@ -1,5 +1,9 @@
 FeatureRequsts:
 
+P0.   Refactor SessionManager start game logic
+
+P0.   Fix remote game
+
 P1.   Fix runner script.
 
 P1.   Add join list.
