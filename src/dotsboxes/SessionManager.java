@@ -194,11 +194,7 @@ public class SessionManager implements EventCallback
 			m_gameConnections.set_remote_players( m_playersList.getRemotePlayers() );
 		}
 	}
-	
-	public void Run()
-	{
-		EventManager.ProcessEvents();
-	}
+
 	/**
 	 * @name  Delete
 	 * @brief Destroy GameSession and ConnectionManager.
