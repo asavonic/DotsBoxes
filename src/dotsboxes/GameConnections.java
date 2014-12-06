@@ -13,7 +13,7 @@ import dotsboxes.events.Event;
 import dotsboxes.events.EventType;
 import dotsboxes.events.GameStartEvent;
 import dotsboxes.events.NewGameAccept;
-import dotsboxes.events.NewGameRequest;
+import dotsboxes.events.RemoteNewGameRequest;
 import dotsboxes.players.PlayerDesc;
 import dotsboxes.players.PlayersMap;
 import dotsboxes.rmi.Connection;
@@ -40,7 +40,7 @@ public class GameConnections implements EventCallback {
 		
 		EventManager.Subscribe(EventType.remote_New_Game_Accept, this);
 		EventManager.Subscribe(EventType.remote_New_Game_Request, this);
-		EventManager.Subscribe(EventType.internal_Current_Player_Change, this);
+		EventManager.Subscribe(EventType.local_Current_Player_Change, this);
 		EventManager.Subscribe(EventType.game_Start, this);
 	}
 	
@@ -66,7 +66,7 @@ public class GameConnections implements EventCallback {
 	public void find_n_players(int num_players)
 	{
 		Debug.log("GameConnections: find_n_players()");
-		broadcast_event(new NewGameRequest(m_CurrentPlayer), m_PlayersMap );
+		broadcast_event(new RemoteNewGameRequest(m_CurrentPlayer, null), m_PlayersMap ); // Fix this null.
 		
 	}
 	
@@ -78,7 +78,7 @@ public class GameConnections implements EventCallback {
 	
 	public void HandleNewGameRequest( Event event )
 	{
-		NewGameRequest new_game_request = (NewGameRequest) event;
+		RemoteNewGameRequest new_game_request = (RemoteNewGameRequest) event;
 		Debug.log("GameConnections: " + new_game_request.getSender().getName() + " requested us to join the game, accepting");
 
 		Connection remote = ConnectionManager.getConnection(new_game_request.getSender());
@@ -94,7 +94,7 @@ public class GameConnections implements EventCallback {
 		}
 		
 		try {
-			remote.send_event(new NewGameAccept(m_CurrentPlayer));
+			remote.send_event(new NewGameAccept(m_CurrentPlayer, 1)); //TODO: HARDCODED! We shouldn't answer here.
 		} catch (RemoteException e) {
 			// add reset
 			e.printStackTrace();
@@ -158,7 +158,7 @@ public class GameConnections implements EventCallback {
 		case remote_New_Game_Request:
 			HandleNewGameRequest(event);
 			break;
-		case internal_Current_Player_Change:
+		case local_Current_Player_Change:
 			HandleCurrentPlayerChange(event);
 			break;
 		default:

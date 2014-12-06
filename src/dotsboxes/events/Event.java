@@ -66,11 +66,15 @@ public class Event implements java.io.Serializable
 	}
 	
 	public String TypeToString()
-	{
+	{		
 		switch(m_eventType)
 		{
+		default:
+			return "Please define this type " + String.valueOf(m_eventType.getClass()) + " in ./src/dotsboxes/events/Event.java +70!";
 		case GUI_game_Start:
 			return "GUI_game_Start";
+		case GUI_game_over:
+			return "GUI_game_over";
 		case GUI_game_Turn:
 			return "GUI_game_Turn";
 		case Generic:
@@ -81,24 +85,29 @@ public class Event implements java.io.Serializable
 			return "GUI_back_to_Menu";
 		case GUI_game_exit:
 			return "GUI_game_exit";
-		case GUI_to_the_Game:
-			return "GUI_to_the_Game";
+		//case GUI_to_the_Game:
+		//	return "GUI_to_the_Game";
 		case game_Start:
 			return "game_Start";
-		case gui_New_Game_Request:
+		case GUI_New_Game_Request:
 			return "gui_New_Game_Request";
 		case remote_New_Game_Accept:
 			return "remote_New_Game_Accept";
 		case remote_New_Game_Request:
 			return "remote_New_Game_Request";
-		case internal_Current_Player_Change:
+		case local_Current_Player_Change:
 			return "internal_Current_Player_Change";
-		case gui_New_Game_Accept:
+		case GUI_New_Game_Accept:
 			return "gui_New_Game_Accept";
 		case GUI_current_player_changed:
 			return "GUI_current_player_changed";
-		default:
-			return "Please define this type in ./src/dotsboxes/events/Event.java!";
+		case show_history:
+			return "show_history";
+		case sleep_event:
+			return "sleep_event";
+		case turn_unlock:
+			return "turn_unlock";
+		
 		}
 	}
 }

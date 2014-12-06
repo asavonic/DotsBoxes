@@ -21,4 +21,8 @@ public class PlayersList extends TaggedCircleBuffer<PlayerDesc, String> {
 		super();
 	}
 
+	public PlayersList clone() throws CloneNotSupportedException
+	{
+		return (PlayersList) super.clone();
+	}
 }

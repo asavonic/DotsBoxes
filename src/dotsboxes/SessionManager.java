@@ -16,13 +16,11 @@ import dotsboxes.callbacks.EventCallback;
 import dotsboxes.events.CurrentPlayerChange;
 import dotsboxes.events.Event;
 import dotsboxes.events.EventType;
-import dotsboxes.events.GUI_CurrentPlayerChanged;
 import dotsboxes.events.GUI_NewGameAccept;
 import dotsboxes.events.GUI_NewGameRequest;
 import dotsboxes.events.GameStartEvent;
 import dotsboxes.events.GameTurnEvent;
 import dotsboxes.events.NewGameAccept;
-import dotsboxes.events.NewGameRequest;
 import dotsboxes.events.RemoteNewGameRequest;
 import dotsboxes.events.SleepEvent;
 import dotsboxes.game.NewGameDesc;
@@ -99,7 +97,7 @@ public class SessionManager implements EventCallback
 			EventManager.NewEvent(new CurrentPlayerChange(m_CurrentPlayer), this);
 			EventManager.NewEvent(new Event(EventType.turn_unlock), this);
 		}
-		GUI_CurrentPlayerChanged event = new GUI_CurrentPlayerChanged(player.getName());
+		Event event = new Event(EventType.GUI_current_player_changed);
 		EventManager.NewEvent(event, this);
 	}
 	
@@ -204,13 +202,13 @@ public class SessionManager implements EventCallback
 		case game_Start:
 			GameCreate((GameStartEvent)event);
 			break;
-		case gui_New_Game_Request:
+		case GUI_New_Game_Request:
 			GameCreate((GUI_NewGameRequest)event);
 			break;
 		case remote_New_Game_Accept:
 			NewRemotePlayer((NewGameAccept)event);
 			break;
-		case gui_New_Game_Accept:
+		case GUI_New_Game_Accept:
 			GUI_NewGameAccept game_accept_event = (GUI_NewGameAccept) event;
 			m_local_players_num = game_accept_event.getNumLocalPlayers();
 			

@@ -10,7 +10,6 @@ public class GUI_GameOverEvent extends Event
 		super(EventType.GUI_game_over);
 		m_player_tag  = player_tag;
 	}
-
 	
 	public int getPlrTag()
 	{

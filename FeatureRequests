@@ -1,0 +1,35 @@
+FeatureRequsts:
+
+P0.   Fix players game turn sequence
+
+P0.   Game turn event forwarding
+
+P0.   Redesign initial connection to known players 
+
+P0.   Refactor SessionManager start game logic
+
+P0.   Fix remote game
+
+P1.   Fix runner script.
+
+P1.   Add join list.
+
+P2.   Determine our global IP. 
+
+P2.   Redesign events.
+
+P2.   Add set known IPs GUI window.  
+
+P3.   Add "dead heat" for game over.
+
+P3.   Add print game turn history if anything crash in GameSession in debug mode.
+
+P3.   Write game description and user guide.
+
+P3.   Add back to menu button on FindNewGame and CreateNewGame window.
+
+P3.   Add list of all plaayers and focus on current player in Field window.
+
+P4.   Write comments for all. 
+
+P4.   Delete all warnings.

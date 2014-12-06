@@ -38,4 +38,8 @@ public class TaggedCircleBuffer<T, Tag> extends CircleBuffer< TaggedValue<T, Tag
 		append( buffer.getBuffer() );
 	}
 
+	public TaggedCircleBuffer<T, Tag> clone() throws CloneNotSupportedException
+	{
+		return (TaggedCircleBuffer<T, Tag>) super.clone();
+	}
 }

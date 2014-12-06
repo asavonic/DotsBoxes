@@ -4,12 +4,8 @@ import dotsboxes.game.NewGameDesc;
 import dotsboxes.utils.CircleBuffer;
 import dotsboxes.utils.PlayersList;
 
-public class GameStartEvent extends Event
+public class GameStartEvent extends EventWithGameDesc
 {
-	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 4854650289528011194L;
 	
 	int m_BeginPlayerTag;
@@ -18,25 +14,14 @@ public class GameStartEvent extends Event
 
 	public GameStartEvent( NewGameDesc desc, int beginPlayerTag, PlayersList playersList) 
 	{
-		super(EventType.game_Start);
+		super(EventType.game_Start, desc, null);
 		m_BeginPlayerTag = beginPlayerTag;
 		m_playersList = playersList;
-		m_desc = desc;
-	}
-	
-	public int getFieldWidth()
-	{
-		return m_desc.getSizeFieldWidth();
-	}
-	
-	public int getFieldHeight()
-	{
-		return m_desc.getSizeFieldHeight();
 	}
 	
 	public int getNumPlayers()
 	{
-		return m_desc.getNumLocalPlayers() + m_desc.getNumRemotePlayers();
+		return getNumLocalPlayers() + getNumRemotePlayers();
 	}
 	
 	public int getBeginPlayer()
