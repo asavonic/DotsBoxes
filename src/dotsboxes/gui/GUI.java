@@ -13,7 +13,10 @@ import java.awt.geom.*;
 import dotsboxes.callbacks.EventCallback;
 import dotsboxes.events.EventType;
 import dotsboxes.events.GUI_NewGameRequest;
+import dotsboxes.events.GameStartEvent;
 import dotsboxes.events.GameTurnEvent;
+import dotsboxes.events.NewGameAccept;
+import dotsboxes.events.SleepEvent;
 import dotsboxes.game.TurnDesc;
 import dotsboxes.utils.Debug;
 
@@ -71,9 +74,14 @@ public class GUI implements EventCallback{
 
 	public JFrame m_frame = new JFrame();
 
-	public GUI() {
+	public GUI() 
+	{
 		m_this = this;
 		initialize();
+	
+		EventManager.Subscribe( EventType.GUI_back_to_Menu, this); 
+		EventManager.Subscribe( EventType.game_Start, this); 
+		EventManager.Subscribe( EventType.GUI_game_Start, this); 
 	}
 
 	MainMenu Menu = new MainMenu(m_frame);
@@ -187,7 +195,19 @@ public class GUI implements EventCallback{
 	@Override
 	public void HandleEvent(dotsboxes.events.Event event) 
 	{
-		// TODO Auto-generated method stub
+		switch ( event.GetType() ) 
+		{
+		case GUI_back_to_Menu: 
+			this.ShowMenu();
+			EventManager.KillEvents(EventType.show_history);
+			break;
+		case game_Start:
+			this.ShowField();
+			break;
+		case GUI_game_Start:
+			this.ShowNewGameGUI();
+			break;
+		}
 		
 	}
 }
