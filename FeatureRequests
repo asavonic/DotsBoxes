@@ -1,5 +1,7 @@
 FeatureRequsts:
 
+P0.   Redesign initial connection to known players 
+
 P0.   Refactor SessionManager start game logic
 
 P0.   Fix remote game
