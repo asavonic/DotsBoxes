@@ -1,5 +1,7 @@
 FeatureRequsts:
 
+P0.   Fix players game turn sequence
+
 P0.   Game turn event forwarding
 
 P0.   Redesign initial connection to known players 
