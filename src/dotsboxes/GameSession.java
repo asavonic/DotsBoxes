@@ -11,6 +11,7 @@ import dotsboxes.events.EventType;
 import dotsboxes.events.GUI_GameOverEvent;
 import dotsboxes.events.GameStartEvent;
 import dotsboxes.events.GameTurnEvent;
+import dotsboxes.events.SleepEvent;
 import dotsboxes.game.TurnDesc;
 import dotsboxes.utils.Debug;
 
@@ -30,6 +31,8 @@ public class GameSession implements EventCallback
 		EventManager.Subscribe( EventType.GUI_game_Turn, this); 
 		EventManager.Subscribe( EventType.game_Start, this); 
 		EventManager.Subscribe( EventType.turn_unlock, this); 
+		EventManager.Subscribe( EventType.show_history, this); 
+		
 		
 		Init( field_height, field_width, players_number, begin__player_tag);
 	}
@@ -134,11 +137,47 @@ public class GameSession implements EventCallback
 		}
 	}
 	
+	void ShowRevertHistory(int history_indx)
+	{
+			Event event = m_history.elementAt(history_indx);
+			switch(event.GetType())
+			{
+			case GUI_game_Turn:
+			case game_Turn:
+				GameTurnEvent game_turn = (GameTurnEvent) event;
+				TurnDesc desc = new TurnDesc(game_turn.getI(), game_turn.getJ(), empty, game_turn.getVert());
+				GameTurnEvent revert_event = new GameTurnEvent(EventType.game_Turn, game_turn.isEdgeChanged(), desc , false);
+				EventManager.NewEvent(revert_event, this);
+				EventManager.NewAnonimEvent(new Event(EventType.show_history));
+				break;
+			}
+	}
+	
+	void ShowHistory(int history_indx)
+	{
+			Event event = m_history.elementAt(history_indx);
+			switch(event.GetType())
+			{
+			case GUI_game_Turn:
+			case game_Turn:
+				GameTurnEvent game_turn = (GameTurnEvent) event;
+				TurnDesc desc = new TurnDesc(game_turn.getI(), game_turn.getJ(), game_turn.getPlrTag(), game_turn.getVert());
+				GameTurnEvent revert_event = new GameTurnEvent(EventType.game_Turn, game_turn.isEdgeChanged(), desc , false);
+				EventManager.NewEvent(revert_event, this);
+				EventManager.NewAnonimEvent(new Event(EventType.show_history));
+				break;
+			}
+	}
+	
 	private void CheckWinAndSend()
 	{
 		int winner = CheckWin();
 		if(empty != winner)
+		{
 			EventManager.NewEvent( new GUI_GameOverEvent( winner), this);
+			EventManager.NewAnonimEvent(new Event(EventType.show_history));
+			m_history_indx = m_history.size() - 1;
+		}
 	}
 	
 	private void SwitchCurrentPlayer()
@@ -167,6 +206,23 @@ public class GameSession implements EventCallback
 				}
 			CheckWinAndSend();
 			break;
+		case show_history:
+			if( !m_reverse)
+			{
+				ShowHistory(m_history_indx);
+				if( m_history_indx == m_history.size() - 1)
+					m_reverse = true;
+				else m_history_indx++;
+			}
+			else
+			{
+				ShowRevertHistory(m_history_indx);
+				if( 0 == m_history_indx)
+					m_reverse = false;
+				else m_history_indx--;
+			}
+			EventManager.NewEvent(new SleepEvent(delay_show_history), this);
+			break;
 		case turn_unlock:
 			Debug.log("You have not turn.");
 			m_turnBlock = false;
@@ -176,6 +232,7 @@ public class GameSession implements EventCallback
 			Turn(ev);
 			if( turn_event.isSwitchTurn())
 				SwitchCurrentPlayer();
+			
 			CheckWinAndSend();
 			break;
 		case game_Start:
@@ -218,6 +275,7 @@ public class GameSession implements EventCallback
 					GameTurnEvent ev = new GameTurnEvent(EventType.game_Turn, false,desc, false);
 					EventManager.NewEvent(ev, this);
 					result = 1;
+					m_history.addElement(ev);
 				}
 				if (AddMark(j - 1, i, player_tag))
 				{
@@ -225,6 +283,7 @@ public class GameSession implements EventCallback
 					GameTurnEvent ev = new GameTurnEvent(EventType.game_Turn, false,desc, false);
 					EventManager.NewEvent(ev, this);
 					result = 1;
+					m_history.addElement(ev);
 				}
 				return ++result;
 			}
@@ -244,6 +303,7 @@ public class GameSession implements EventCallback
 					TurnDesc desc = new TurnDesc(j , i, player_tag);
 					GameTurnEvent ev = new GameTurnEvent(EventType.game_Turn, false,desc, false);
 					EventManager.NewEvent(ev, this);
+					m_history.addElement(ev);
 					result = 1;
 				}
 				if (AddMark(j, i - 1, player_tag))
@@ -251,6 +311,7 @@ public class GameSession implements EventCallback
 					TurnDesc desc = new TurnDesc(j , i - 1, player_tag);
 					GameTurnEvent ev = new GameTurnEvent(EventType.game_Turn, false ,desc, false);
 					EventManager.NewEvent(ev, this);
+					m_history.addElement(ev);
 					result = 1;
 				}
 				return ++result;
@@ -423,6 +484,8 @@ public class GameSession implements EventCallback
 		
 	}
 	
+	int m_history_indx = 0;
+	boolean m_reverse = true;
 	int m_fieldHeight;
 	int m_fieldWidth;
 	int m_numberOfPlayers;
@@ -433,6 +496,7 @@ public class GameSession implements EventCallback
 	int m_vertex[][];
 	int m_counters[];    // List of number of marked vertex.
 	Vector<Event> m_history;
-	static public int border = -1;
-	static public int empty  = -2;
+	static int border = -1;
+	static int empty  = -2;
+	static int delay_show_history = 200;
 }

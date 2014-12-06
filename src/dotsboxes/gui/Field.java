@@ -79,7 +79,7 @@ public class Field extends JPanel implements EventCallback
 		button_BackToMenu.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) 
 			{
-				EventManager.NewEvent( new dotsboxes.events.Event(EventType.GUI_back_to_Menu), m_this);
+				EventManager.NewEvent( new dotsboxes.events.Event(EventType.GUI_back_to_Menu, 100), m_this);
 			}
 		});
 		
@@ -416,7 +416,7 @@ public class Field extends JPanel implements EventCallback
 		options[0]); //default button title
 		
 		if( BACK_TO_MENU == n)
-			EventManager.NewEvent(new dotsboxes.events.Event(EventType.GUI_back_to_Menu), this);
+			EventManager.NewEvent(new dotsboxes.events.Event(EventType.GUI_back_to_Menu, 100), this);
 	}
 	
 	private void HandleGameTurnEvent(GameTurnEvent event)
