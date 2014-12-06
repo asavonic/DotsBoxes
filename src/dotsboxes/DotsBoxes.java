@@ -24,6 +24,7 @@ public class DotsBoxes {
 			int port = Integer.parseInt(args[0]);
 			Configuration.setPort(port);
 			Configuration.setKnownPlayersFilepath( args[1] );
+			Configuration.setAddress( InetAddress.getByName("127.0.0.1") );
 			
 			ConnectionManager.Init(port);
 			EventManager.Init();
@@ -33,6 +34,9 @@ public class DotsBoxes {
 		} catch (RemoteException | AlreadyBoundException e) {
 			e.printStackTrace();
 			System.exit(1);
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		
 	}
