@@ -6,6 +6,7 @@ import java.util.Vector;
 import dotsboxes.callbacks.EventCallback;
 import dotsboxes.events.Event;
 import dotsboxes.events.EventType;
+import dotsboxes.events.SleepEvent;
 import dotsboxes.utils.Debug;
 
 public final class EventManager 
@@ -80,25 +81,49 @@ public final class EventManager
 		}		
 	}
 	
+	public static void KillEvents(EventType type)
+	{
+		if (m_eventsQueue.isEmpty())
+			return;
+			
+		for( int i = 0; i < m_eventsQueue.size(); ++i)
+		{
+			EventSenderPair ray = m_eventsQueue.get(i);
+			
+			Event         event  = ray.GetEvent();
+			EventType    ev_type = event.GetType();
+			
+			if( ev_type == type)
+			{
+				m_eventsQueue.remove(i);
+				i--;
+			}
+		}
+	}
+	
 	public static void NewEvent(Event event, EventCallback callback)
 	{
 		if (null == m_subcribes && null ==  m_eventsQueue) 			// Check for init.
 			Init();  
 		
 		EventSenderPair ray = new EventSenderPair(event, callback);
-		m_eventsQueue.addElement(ray);         // Add event in queue.
+		int priority = event.getPriority();
+		int  indx_in_queue;
+		if (priority > 0 && !m_eventsQueue.isEmpty())
+		{
+			indx_in_queue =  (m_eventsQueue.size() - 1) / priority + 1;
+		}
+		else
+		{
+			indx_in_queue = m_eventsQueue.size();
+		}
+		m_eventsQueue.add( indx_in_queue, ray);         // Add event in queue.
 		if (Debug.isEnabled())
 			m_DebugHistory.addElement(ray);
 	}
 	public static void NewAnonimEvent(Event event)
 	{
-		if (null == m_subcribes && null ==  m_eventsQueue) 			// Check for init.
-			Init();  
-		
-		EventSenderPair ray = new EventSenderPair(event);
-		m_eventsQueue.addElement(ray);         // Add event in queue.
-		if (Debug.isEnabled())
-			m_DebugHistory.addElement(ray);
+		NewEvent(event, null);
 	}
 	
 	public static void ProcessEvents()
@@ -112,7 +137,7 @@ public final class EventManager
 				Event         event  = ray.GetEvent();
 				EventCallback sender = ray.GetSender();
 				EventType    ev_type = event.GetType();
-				
+		
 				if( null != sender )
 						Debug.log( "Process event " + event.TypeToString() + "pushed by" +  String.valueOf(sender.getClass()));
 				else
