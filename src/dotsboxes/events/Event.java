@@ -15,6 +15,7 @@ public class Event implements java.io.Serializable
 	 */
 	private static final long serialVersionUID = 1029903096709060936L;
 	protected EventType m_eventType;
+	private int m_priority;
 	/**
 	 * @name    Event
 	 * @brief   Constructor event.
@@ -24,6 +25,14 @@ public class Event implements java.io.Serializable
 	public Event( EventType someThing)
 	{
 		m_eventType = someThing;
+		m_priority = 0;
+		//Debug.log("Event created.");
+	}
+	
+	public Event( EventType someThing, int priority)
+	{
+		m_eventType = someThing;
+		m_priority = priority;
 		//Debug.log("Event created.");
 	}
 	
@@ -49,6 +58,11 @@ public class Event implements java.io.Serializable
 	public void Delete()
 	{
 		Debug.log("Event deleted.");
+	}
+	
+	public int getPriority()
+	{
+		return m_priority;
 	}
 	
 	public String TypeToString()
