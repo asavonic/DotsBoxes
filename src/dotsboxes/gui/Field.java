@@ -37,6 +37,7 @@ public class Field extends JPanel implements EventCallback
 	
 	final int DEBUG = -1;
 	final int empty  = -2;
+	int m_fatLine = 17;
 	
 	CircleBuffer m_playersDesc;
 	
@@ -45,7 +46,6 @@ public class Field extends JPanel implements EventCallback
 	int m_fieldWidth;
 	int m_fieldHeight;
 	int m_current_player_tag;
-	int m_fatLine = 13;
 	
 	int field_begin_x;
 	int field_begin_y; 
