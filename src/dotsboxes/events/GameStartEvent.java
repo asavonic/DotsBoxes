@@ -2,6 +2,7 @@ package dotsboxes.events;
 
 import dotsboxes.game.NewGameDesc;
 import dotsboxes.utils.CircleBuffer;
+import dotsboxes.utils.PlayersList;
 
 public class GameStartEvent extends Event
 {
@@ -13,9 +14,9 @@ public class GameStartEvent extends Event
 	
 	int m_BeginPlayerTag;
 	NewGameDesc m_desc;
-	CircleBuffer m_playersList;
+	PlayersList m_playersList;
 
-	public GameStartEvent( NewGameDesc desc, int beginPlayerTag, CircleBuffer playersList) 
+	public GameStartEvent( NewGameDesc desc, int beginPlayerTag, PlayersList playersList) 
 	{
 		super(EventType.game_Start);
 		m_BeginPlayerTag = beginPlayerTag;
@@ -43,7 +44,7 @@ public class GameStartEvent extends Event
 		return m_BeginPlayerTag;
 	}
 	
-	public CircleBuffer getPlayersList()
+	public PlayersList getPlayersList()
 	{
 		return m_playersList;
 	}

@@ -29,6 +29,7 @@ import dotsboxes.game.TurnDesc;
 import dotsboxes.players.PlayerDesc;
 import dotsboxes.utils.CircleBuffer;
 import dotsboxes.utils.Debug;
+import dotsboxes.utils.PlayersList;
 
 public class Field extends JPanel implements EventCallback
 {
@@ -39,7 +40,7 @@ public class Field extends JPanel implements EventCallback
 	final int empty  = -2;
 	int m_fatLine = 17;
 	
-	CircleBuffer m_playersDesc;
+	PlayersList m_playersDesc;
 	
 	boolean m_IsInit = false;
 	int m_num_players;
@@ -402,7 +403,7 @@ public class Field extends JPanel implements EventCallback
 	{
 		final int BACK_TO_MENU = 1;
 		
-		PlayerDesc winner = m_playersDesc.getAt(game_over.getPlrTag());
+		PlayerDesc winner = m_playersDesc.getAt(game_over.getPlrTag()).value;
 		
 		Object[] options = {"Show field.",
         "Back to menu."};

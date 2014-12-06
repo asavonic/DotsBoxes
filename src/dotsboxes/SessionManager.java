@@ -33,6 +33,8 @@ import dotsboxes.rmi.ConnectionManager;
 import dotsboxes.utils.Debug;
 import dotsboxes.utils.Configuration;
 import dotsboxes.utils.CircleBuffer;
+import dotsboxes.utils.PlayersList;
+import dotsboxes.utils.TaggedValue;
 
 public class SessionManager implements EventCallback
 {
@@ -90,7 +92,7 @@ public class SessionManager implements EventCallback
 			Debug.log("Player list not initializated!");
 			return;
 		}
-		PlayerDesc player = m_playersList.getNext();
+		PlayerDesc player = m_playersList.getNext().value;
 		if(m_localPlayersDescs.contains(player))
 		{
 			m_CurrentPlayer = player;
@@ -102,11 +104,10 @@ public class SessionManager implements EventCallback
 	}
 	
 	private void StartGame()
-	{
-		Vector<PlayerDesc> all_players = (Vector<PlayerDesc>) m_localPlayersDescs.clone();
-		all_players.addAll(m_remotePlayersDescs);
+	{	
+		m_playersList.append( new PlayersList( (Iterable<PlayerDesc>) m_localPlayersDescs.clone(), "local" ) );
+		m_playersList.append( new PlayersList( (Iterable<PlayerDesc>) m_remotePlayersDescs.clone(), "remote" ) );
 		
-		m_playersList = new CircleBuffer(all_players);
 		NewGameDesc game_desc = new NewGameDesc( m_fieldWidth, m_fieldHeight, m_local_players_num, m_remote_players_num);
 		EventManager.NewEvent( new GameStartEvent( game_desc, 0, m_playersList), this);
 		
@@ -257,7 +258,7 @@ public class SessionManager implements EventCallback
 	Vector<PlayerDesc> m_localPlayersDescs = new Vector<PlayerDesc>();
 	Vector<PlayerDesc> m_remotePlayersDescs = new Vector<PlayerDesc>();
 	
-	CircleBuffer m_playersList;
+	PlayersList m_playersList = new PlayersList();
 	private PlayerDesc m_CurrentPlayer;
 	
 

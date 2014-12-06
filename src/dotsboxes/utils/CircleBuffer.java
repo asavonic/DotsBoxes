@@ -5,29 +5,50 @@ import java.util.Vector;
 
 import dotsboxes.players.PlayerDesc;
 
-public class CircleBuffer implements Iterable<PlayerDesc>, Cloneable, java.io.Serializable
+public class CircleBuffer<T> implements Iterable<T>, Cloneable, java.io.Serializable
 {
-	Vector<PlayerDesc> m_buffer;
+	Vector<T> m_buffer;
 	int m_index;
 	
-	public CircleBuffer(Vector<PlayerDesc> buffer, int indx_begin )
+	public CircleBuffer(Vector<T> buffer, int indx_begin )
+	{
+		setBuffer(buffer, indx_begin);
+	}
+	
+	public void setBuffer(Vector<T> buffer, int indx_begin)
 	{
 		m_buffer = buffer;
 		m_index = indx_begin;
 	}
 	
-	public CircleBuffer(Vector<PlayerDesc> buffer)
+	public void setBuffer(Vector<T> buffer)
 	{
 		m_buffer = buffer;
 		m_index = 0;
 	}
 	
-	public PlayerDesc getNext()
+	public Vector<T> getBuffer()
 	{
-		PlayerDesc player = m_buffer.elementAt(m_index);
+		return m_buffer;
+	}
+	
+	public CircleBuffer(Vector<T> buffer)
+	{
+		setBuffer(buffer);
+	}
+	
+	public CircleBuffer()
+	{
+		m_buffer = new Vector<T>();
+		m_index = 0;
+	}
+	
+	public T getNext()
+	{
+		T value = m_buffer.elementAt(m_index);
 		m_index++;
 		m_index %= m_buffer.size();
-		return player;
+		return value;
 	}
 	
 	public int size()
@@ -36,21 +57,26 @@ public class CircleBuffer implements Iterable<PlayerDesc>, Cloneable, java.io.Se
 	}
 
 	@Override
-	public Iterator<PlayerDesc> iterator() {
+	public Iterator<T> iterator() {
 		return m_buffer.iterator();
 	}
 	
 	public CircleBuffer clone() throws CloneNotSupportedException
 	{
-		CircleBuffer obj =( CircleBuffer) super.clone();
-        obj.m_buffer = (Vector<PlayerDesc>) m_buffer.clone();
+		CircleBuffer<T> obj = (CircleBuffer<T>) super.clone();
+        obj.m_buffer = (Vector<T>) m_buffer.clone();
         obj.m_index = m_index;
 		return obj;
 	}
 	
-	public PlayerDesc getAt( int i)
+	public T getAt( int i)
 	{
 		return m_buffer.elementAt(i);
+	}
+	
+	public void append(Vector<T> buffer)
+	{
+		m_buffer.addAll(buffer);
 	}
 	
 }
