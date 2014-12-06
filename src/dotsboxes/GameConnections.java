@@ -11,6 +11,7 @@ import dotsboxes.callbacks.EventCallback;
 import dotsboxes.events.CurrentPlayerChange;
 import dotsboxes.events.Event;
 import dotsboxes.events.EventType;
+import dotsboxes.events.GUI_NewGameAccept;
 import dotsboxes.events.GameStartEvent;
 import dotsboxes.events.NewGameAccept;
 import dotsboxes.events.RemoteNewGameRequest;
@@ -94,7 +95,11 @@ public class GameConnections implements EventCallback {
 		}
 		
 		try {
-			remote.send_event(new NewGameAccept(m_CurrentPlayer, 1)); //TODO: HARDCODED! We shouldn't answer here.
+			GUI_NewGameAccept accept_for_SessionManager = new GUI_NewGameAccept(new_game_request, 1);
+			EventManager.NewEvent(accept_for_SessionManager, this);
+			
+			NewGameAccept accept = new NewGameAccept(m_CurrentPlayer, 1);
+			remote.send_event(accept); //TODO: HARDCODED! We shouldn't answer here.		
 		} catch (RemoteException e) {
 			// add reset
 			e.printStackTrace();
