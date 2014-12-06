@@ -1,7 +1,5 @@
 FeatureRequsts:
 
-P0.   Change tag in PlayersList to use Hash
-
 P0.   Redesign initial connection to known players 
 
 P0.   Fix remote game
@@ -40,6 +38,8 @@ P2.   Redesign events.
 P0.   Game turn event forwarding
 
 P0.   Add methods in PlayersList to get remote and local players based on our ip and port
+
+P0.   Change tag in PlayersList to use Hash -- tag removed, since we check for local player based on our ip and port
 
 Completed:
 
