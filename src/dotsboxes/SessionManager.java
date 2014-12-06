@@ -17,10 +17,13 @@ import dotsboxes.events.CurrentPlayerChange;
 import dotsboxes.events.Event;
 import dotsboxes.events.EventType;
 import dotsboxes.events.GUI_CurrentPlayerChanged;
+import dotsboxes.events.GUI_NewGameAccept;
 import dotsboxes.events.GUI_NewGameRequest;
 import dotsboxes.events.GameStartEvent;
 import dotsboxes.events.GameTurnEvent;
 import dotsboxes.events.NewGameAccept;
+import dotsboxes.events.NewGameRequest;
+import dotsboxes.events.RemoteNewGameRequest;
 import dotsboxes.events.SleepEvent;
 import dotsboxes.game.NewGameDesc;
 import dotsboxes.game.TurnDesc;
@@ -98,18 +101,21 @@ public class SessionManager implements EventCallback
 		EventManager.NewEvent(event, this);
 	}
 	
-	private void GameCreate(GUI_NewGameRequest event)
+	private void StartGame()
 	{
-		Debug.log("SessionManager: GameCreate()");
-		m_remote_players_num = event.getNumRemotePlayers();
-		m_local_players_num = event.getNumLocalPlayers();
-		m_fieldHeight = event.getFieldHeight();
-		m_fieldWidth = event.getFieldWidth();
+		Vector<PlayerDesc> all_players = (Vector<PlayerDesc>) m_localPlayersDescs.clone();
+		all_players.addAll(m_remotePlayersDescs);
 		
-		if(0 == m_local_players_num)
-			Debug.log("Error! Number of local players 0!");
+		m_playersList = new CircleBuffer(all_players);
+		NewGameDesc game_desc = new NewGameDesc( m_fieldWidth, m_fieldHeight, m_local_players_num, m_remote_players_num);
+		EventManager.NewEvent( new GameStartEvent( game_desc, 0, m_playersList), this);
 		
-		// TODO HARDCODED LOOP FROM 1 instead of 0
+		CheckForOurTurn();
+	}
+	
+	private void InitLocalPlayers()
+	{
+		// TODO HARDCODED LOOP FROM 1 instead of 0ss
 		for ( int i = 1; i < m_local_players_num; ++i)
 		{
 			PlayerDesc player = null;
@@ -127,24 +133,37 @@ public class SessionManager implements EventCallback
 																			// remove later
 			m_localPlayersDescs.addElement(player);
 		}
+	}
+	
+	private void GameCreate(GUI_NewGameRequest event)
+	{
+		Debug.log("SessionManager: GameCreate()");
+		m_remote_players_num = event.getNumRemotePlayers();
+		m_local_players_num = event.getNumLocalPlayers();
+		m_fieldHeight = event.getFieldHeight();
+		m_fieldWidth = event.getFieldWidth();
+		
+		InitLocalPlayers();
 		
 		if(0 != m_remote_players_num) //We need remote players.
 		{
 			m_gameConnections.find_n_players(m_remote_players_num); // Request for some number of remote players.
 		}
-		else // Only local players We can start!
-		{
-			Vector<PlayerDesc> all_players = (Vector<PlayerDesc>) m_localPlayersDescs.clone();
-			all_players.addAll(m_remotePlayersDescs);
-			
-			m_playersList = new CircleBuffer(all_players);
-			NewGameDesc game_desc = new NewGameDesc( m_fieldWidth, m_fieldHeight, m_local_players_num);
-			EventManager.NewEvent( new GameStartEvent( game_desc, 0, m_playersList), this);
-			
-			CheckForOurTurn();
-			
-			m_GUI.ShowField();
-		}
+		else StartGame(); // Only local players We can start!
+	}
+
+	private void GameCreate(GameStartEvent event)
+	{
+		m_remote_players_num = event.getNumPlayers() - m_local_players_num;
+		
+		m_fieldHeight = event.getFieldHeight();
+		m_fieldWidth = event.getFieldWidth();
+		
+		m_playersList = event.getPlayersList();
+		
+		InitLocalPlayers();
+		
+		CheckForOurTurn();
 	}
 	
 	private void NewRemotePlayer( NewGameAccept event)
@@ -159,18 +178,8 @@ public class SessionManager implements EventCallback
 		
 		if( m_remotePlayersDescs.size() == m_remote_players_num )
 		{
-			Vector<PlayerDesc> all_players = (Vector<PlayerDesc>) m_localPlayersDescs.clone();
-			all_players.addAll(m_remotePlayersDescs);
-			
-			m_playersList = new CircleBuffer(all_players);
-			
+			StartGame();
 			m_gameConnections.set_remote_players(new CircleBuffer(m_remotePlayersDescs));
-			
-			NewGameDesc game_desc = new NewGameDesc( m_fieldWidth, m_fieldHeight, m_local_players_num);
-			EventManager.NewEvent( new GameStartEvent( game_desc, 1, m_playersList), this);
-			
-			CheckForOurTurn();
-			m_GUI.ShowField();
 		}
 	}
 	
@@ -189,34 +198,27 @@ public class SessionManager implements EventCallback
 	public void HandleEvent(Event event) {
 		Debug.log("SessionManager: recieved event: " + event.TypeToString());
 		
-		switch ( event.GetType() ) {
-		case GUI_back_to_Menu: 
-			//TODO: delete this:
-			//CheckForOurTurn();
-			//end of delete
-			m_GUI.ShowMenu();
-			EventManager.KillEvents(EventType.show_history);
-			break;
-		case GUI_game_Start:
-			//int some_number_of_players = 3;
-			//int some_height_of_field = 2;	
-			//int some_width_of_field = 9;	
-			//NewGameDesc game_desc = new NewGameDesc( some_width_of_field, some_height_of_field, some_number_of_players);
-			//EventManager.NewEvent( new GameStartEvent( game_desc, 1), this);
-			
-			//m_GUI.ShowField();
-			m_GUI.ShowNewGameGUI();
-			break;
+		switch ( event.GetType() ) 
+		{
 		case game_Start:
-			GameStartEvent ev = (GameStartEvent) event;
-			m_playersList = ev.getPlayersList();
-			CheckForOurTurn();
+			GameCreate((GameStartEvent)event);
 			break;
 		case gui_New_Game_Request:
 			GameCreate((GUI_NewGameRequest)event);
 			break;
 		case remote_New_Game_Accept:
 			NewRemotePlayer((NewGameAccept)event);
+			break;
+		case gui_New_Game_Accept:
+			GUI_NewGameAccept game_accept_event = (GUI_NewGameAccept) event;
+			m_local_players_num = game_accept_event.getNumLocalPlayers();
+			
+			//get concrete remote game desc and set local players.
+			//emit event remote_New_Game_Accept.
+			break;
+		case remote_New_Game_Request:
+			RemoteNewGameRequest request_event = (RemoteNewGameRequest) event;
+			m_gameDescs.add(request_event);
 			break;
 		case game_Turn:
 			GameTurnEvent turnEvent = (GameTurnEvent) event;
@@ -251,6 +253,7 @@ public class SessionManager implements EventCallback
 	GUI               m_GUI;
 	int m_current_player_tag;
 	
+	Vector<RemoteNewGameRequest> m_gameDescs = new Vector<RemoteNewGameRequest>();
 	Vector<PlayerDesc> m_localPlayersDescs = new Vector<PlayerDesc>();
 	Vector<PlayerDesc> m_remotePlayersDescs = new Vector<PlayerDesc>();
 	
