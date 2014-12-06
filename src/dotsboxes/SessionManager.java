@@ -174,7 +174,7 @@ public class SessionManager implements EventCallback
 		m_playersList = event.getPlayersList();
 		
 		InitLocalPlayers();
-		
+		m_gameConnections.set_remote_players( m_playersList.getRemotePlayers() );
 		CheckForOurTurn();
 	}
 	
@@ -190,8 +190,8 @@ public class SessionManager implements EventCallback
 		
 		if( m_remotePlayersDescs.size() == m_remote_players_num )
 		{
-			StartGame();
 			m_gameConnections.set_remote_players( m_playersList.getRemotePlayers() );
+			StartGame();
 		}
 	}
 
