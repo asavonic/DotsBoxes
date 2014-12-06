@@ -16,8 +16,6 @@ P1.   Add join list.
 
 P2.   Determine our global IP. 
 
-P2.   Redesign events.
-
 P2.   Add set known IPs GUI window.  
 
 P3.   Add "dead heat" for game over.
@@ -33,3 +31,10 @@ P3.   Add list of all plaayers and focus on current player in Field window.
 P4.   Write comments for all. 
 
 P4.   Delete all warnings.
+
+
+Implemented:
+
+P2.   Redesign events.
+
+Completed:
