@@ -1,10 +1,10 @@
 FeatureRequsts:
 
-P0.   Game turn event forwarding
+P0.   Change tag in PlayersList to use Hash
+
+P0.   Add methods in PlayersList to get remote and local players based on our ip and port
 
 P0.   Redesign initial connection to known players 
-
-P0.   Refactor SessionManager start game logic
 
 P0.   Fix remote game
 
@@ -39,4 +39,8 @@ P0.   Fix players game turn sequence
 
 P2.   Redesign events.
 
+P0.   Game turn event forwarding
+
 Completed:
+
+P0.  Rejected - Refactor SessionManager start game logic
