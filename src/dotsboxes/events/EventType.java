@@ -42,6 +42,9 @@ public enum EventType
 	remote_New_Game_Accept,		// this event we get when remote player accept on our request.
 								// or we send this event when player press button "Join to the game".
 	
+	remote_Game_Turn,           // this event we send to avoid ambiguity between locally emitted and remote event
+								// without it GameConnection catches remote event and resends it back
+	
 //Other events:
 	
 	sleep_event,                 // event that tell EventManager " Go to sleep a little.".

@@ -13,7 +13,9 @@ import dotsboxes.events.Event;
 import dotsboxes.events.EventType;
 import dotsboxes.events.GUI_NewGameAccept;
 import dotsboxes.events.GameStartEvent;
+import dotsboxes.events.GameTurnEvent;
 import dotsboxes.events.NewGameAccept;
+import dotsboxes.events.RemoteGameTurnEvent;
 import dotsboxes.events.RemoteNewGameRequest;
 import dotsboxes.players.PlayerDesc;
 import dotsboxes.players.PlayersMap;
@@ -48,6 +50,7 @@ public class GameConnections implements EventCallback {
 		EventManager.Subscribe(EventType.local_Current_Player_Change, this);
 		EventManager.Subscribe(EventType.game_Start, this);
 		EventManager.Subscribe(EventType.game_Turn, this);
+		EventManager.Subscribe(EventType.remote_Game_Turn, this);
 	}
 	
 	public void broadcast_event(Event event, Iterable<PlayerDesc> container)
@@ -156,7 +159,9 @@ public class GameConnections implements EventCallback {
 			return;
 		}
 		Debug.log("GameConnections: broadcasting game turn to " + m_GamePlayers.size() + " players");
-		broadcast_event(event, m_GamePlayers);
+		
+		
+		broadcast_event( new RemoteGameTurnEvent((GameTurnEvent) event, m_CurrentPlayer) , m_GamePlayers);
 	}
 	
 	public void set_remote_players(PlayersList game_players)
@@ -192,12 +197,20 @@ public class GameConnections implements EventCallback {
 		case remote_New_Game_Request:
 			HandleNewGameRequest(event);
 			break;
+		case remote_Game_Turn:
+			HandleRemoteGameTurn(event);
+			break;
 		case local_Current_Player_Change:
 			HandleCurrentPlayerChange(event);
 			break;
 		default:
 			break;
 		}
+	}
+
+	public void HandleRemoteGameTurn(Event event) {
+		RemoteGameTurnEvent remote_game_turn = (RemoteGameTurnEvent) event; 
+		EventManager.NewEvent( remote_game_turn.getGameTurnEvent(), this );
 	}
 	
 }

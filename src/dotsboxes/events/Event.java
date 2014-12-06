@@ -95,6 +95,8 @@ public class Event implements java.io.Serializable
 			return "remote_New_Game_Accept";
 		case remote_New_Game_Request:
 			return "remote_New_Game_Request";
+		case remote_Game_Turn:
+			return "remote_Game_Turn";
 		case local_Current_Player_Change:
 			return "internal_Current_Player_Change";
 		case GUI_New_Game_Accept:
