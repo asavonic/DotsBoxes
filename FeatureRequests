@@ -1,7 +1,5 @@
 FeatureRequsts:
 
-P0.   Fix players game turn sequence
-
 P0.   Game turn event forwarding
 
 P0.   Redesign initial connection to known players 
@@ -11,6 +9,8 @@ P0.   Refactor SessionManager start game logic
 P0.   Fix remote game
 
 P1.   Fix runner script.
+
+P1.   Add check in host if remote player contained 2 players( local for him)..
 
 P1.   Add join list.
 
@@ -34,6 +34,8 @@ P4.   Delete all warnings.
 
 
 Implemented:
+
+P0.   Fix players game turn sequence
 
 P2.   Redesign events.
 
