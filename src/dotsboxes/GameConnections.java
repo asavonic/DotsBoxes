@@ -35,10 +35,12 @@ public class GameConnections implements EventCallback {
 	public GameConnections() {
 		Debug.log("GameConnections: initialization");
 		m_PlayersMap = new PlayersMap();
+
 		try {
 			m_PlayersMap.fromFile( Configuration.getKnownPlayersFilepath() );
 		} catch (IOException e) {
-			// if no config available - skip exception
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		
 		EventManager.Subscribe(EventType.remote_New_Game_Accept, this);

@@ -51,8 +51,9 @@ public class PlayerDesc implements java.io.Serializable {
 		String hash_str = elements[3];
 		byte[] hash = new byte[hash_str.length()];
 		
-		for( int i = 0; i < hash_str.length(); i++) {
-			hash[i] = (byte) hash_str.charAt(i);
+		for( int i = 0; i < hash_str.length(); i += 2) {
+			String digest = hash_str.substring(i, i+2);
+			hash[i/2]= (byte) Integer.parseInt(digest, 16);
 		}
 		
 		m_Hash = new Hash(hash);
@@ -61,7 +62,7 @@ public class PlayerDesc implements java.io.Serializable {
 	public boolean equals(PlayerDesc player)
 	{
 		return m_Port == player.getPort() &&
-			   m_Hash.equals( player.getHash() ) &&
+			   //m_Hash.equals( player.getHash() ) &&
 			   m_Name.equals( player.getName() ) &&
 			   m_InetAddress.equals( player.getInetAddress() );
 	}

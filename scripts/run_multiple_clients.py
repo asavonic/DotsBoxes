@@ -2,6 +2,8 @@ import os
 import sys
 import argparse
 import subprocess as proc
+import hashlib
+
 
 parser = argparse.ArgumentParser(description="Launches multiple DotsBoxes instances")
 parser.add_argument("ports", metavar="PORT", type=int, nargs="+", help="TCP ports to use")
@@ -27,15 +29,16 @@ cmd = "java -Dfile.encoding=UTF-8 -classpath {0} dotsboxes.DotsBoxes".format(cla
 
 
 class Player:
-    def __init__(self, name, ip, port, hash):
+    def __init__(self, name, password, ip, port):
         self.name = name
         self.ip = ip
         self.port = port
-        self.hash = hash
+        md5 = hashlib.md5( name + password )
+        self.hash = md5.hexdigest()
         self.known_players = []
 
     def __str__(self):
-        return "{0} {1} {2} {3}".format(self.name, self.ip, self.port, self.hash)
+        return "{0} {1} {2} {3}".format(self.name, self.ip, self.port, self.hash )
 
     def __eq__(self, other):
         return ( (self.name, self.ip, self.port, self.hash) == (other.name, other.ip, other.port, other.hash) )
@@ -52,7 +55,7 @@ class KnownPlayersConfig:
         players_str = [ str(player) for player in self.players ]
         return "\n".join(players_str)
 
-players = [ Player( "Tester" + str(port), "127.0.0.1", port, "000000" + port ) for port in ports ]
+players = [ Player( "Tester" + str(port), "qwerty", "127.0.0.1", port ) for port in ports ]
 
 # all to all connection
 for player in players:
