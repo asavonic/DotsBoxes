@@ -182,15 +182,21 @@ public class SessionManager implements EventCallback
 	
 	private void NewRemotePlayer( NewGameAccept event)
 	{
-		if( m_remotePlayersDescs.size() == m_remote_players_num )
+		int current_remote_players_size = m_remotePlayersDescs.size();
+		if( current_remote_players_size == m_remote_players_num )
 		{
-			Debug.log("Error! No need more players!");
+			Debug.log("Warning! No need more players!");
 			return;
 		}
 		
+		if( event.getNumberLocalPlayers() > (m_remote_players_num - current_remote_players_size))
+		{
+			Debug.log("Warning! Remote player have too much local players.!");
+			return;
+		}
 		m_remotePlayersDescs.addElement(event.getSender());
 		
-		if( m_remotePlayersDescs.size() == m_remote_players_num )
+		if( current_remote_players_size == m_remote_players_num )
 		{	
 			StartGame();
 			
