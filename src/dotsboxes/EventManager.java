@@ -171,6 +171,10 @@ public final class EventManager
 					PrintDebugHistory(5);
 				}
 			}
+			else
+			{
+				EventManager.NewAnonimEvent(new SleepEvent(100));
+			}
 		}
 	}
 	
