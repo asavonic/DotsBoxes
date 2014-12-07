@@ -20,6 +20,8 @@ P3.   Fix Unknown host exception when using hostname instead of ip
 
 P3.   Color contrast
 
+P3.   Remove dead code
+
 P3.   Add remote tracker for initial setup
 
 P3.   Add "dead heat" for game over.
