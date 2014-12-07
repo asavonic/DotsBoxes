@@ -214,7 +214,6 @@ public class SessionManager implements EventCallback
 	
 	@Override
 	public void HandleEvent(Event event) {
-		Debug.log("SessionManager: recieved event: " + event.TypeToString());
 		
 		switch ( event.GetType() ) 
 		{
