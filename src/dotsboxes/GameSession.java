@@ -134,12 +134,12 @@ public class GameSession implements EventCallback
 		}
 		else
 		{
-			int result = AddEdge( game_event1.getI(), game_event1.getJ(), game_event1.getVert(), game_event1.getPlrTag());
-			if (0 != result)
-			{
-				//SendEvent(game_event1);
-				m_history.add(game_event1);
-			}
+			//boolean result = AddMark( game_event1.getJ(), game_event1.getI(), game_event1.getPlrTag());
+			//if (result)
+			//{
+			//	//SendEvent(game_event1);
+			//	m_history.add(game_event1);
+			//}
 		}
 	}
 	
