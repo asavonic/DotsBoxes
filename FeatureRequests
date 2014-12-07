@@ -2,11 +2,23 @@ FeatureRequsts:
 
 P0.   Redesign initial connection to known players 
 
-P0.   Fix remote game
+P0.   Fix turn sequence hang -- 2 local + 1 remote player (or 1 local + 1 remote)
 
 P1.   Add join list.
 
+P1.   Debug history save/load
+
+P1.   UPnP support
+
 P2.   Add set known IPs GUI window.  
+
+P2.   Fix multiple game over for *server* side
+
+P3.   Edge highlighting
+
+P3.   Fix Unknown host exception when using hostname instead of ip
+
+P3.   Color contrast
 
 P3.   Add remote tracker for initial setup
 
@@ -42,6 +54,8 @@ P1.   Add check in host if remote player contained 2 players( local for him)..
 P2.   Determine our global IP -- using Amazon ip checker
 
 P2.   Redesign events.
+
+P0.   Fix remote game
 
 Completed:
 
