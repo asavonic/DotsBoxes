@@ -117,6 +117,8 @@ public class SessionManager implements EventCallback
 		m_playersList.append( new PlayersList( (Iterable<PlayerDesc>) m_localPlayersDescs.clone(), "local" ) );
 		m_playersList.append( new PlayersList( (Iterable<PlayerDesc>) m_remotePlayersDescs.clone(), "remote" ) );
 		
+		m_gameConnections.set_remote_players( m_playersList.getRemotePlayers() );
+		
 		NewGameDesc game_desc = new NewGameDesc( m_fieldWidth, m_fieldHeight, m_local_players_num, m_remote_players_num);
 		EventManager.NewEvent( new GameStartEvent( game_desc, 0, m_playersList), this);
 		
@@ -189,9 +191,9 @@ public class SessionManager implements EventCallback
 		m_remotePlayersDescs.addElement(event.getSender());
 		
 		if( m_remotePlayersDescs.size() == m_remote_players_num )
-		{
-			m_gameConnections.set_remote_players( m_playersList.getRemotePlayers() );
+		{	
 			StartGame();
+			
 		}
 	}
 
