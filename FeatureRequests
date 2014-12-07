@@ -4,8 +4,6 @@ P0.   Redesign initial connection to known players
 
 P0.   Fix remote game
 
-P1.   Add check in host if remote player contained 2 players( local for him)..
-
 P1.   Add join list.
 
 P2.   Add set known IPs GUI window.  
@@ -29,17 +27,19 @@ Implemented:
 
 P0.   Fix players game turn sequence
 
-P2.   Redesign events.
-
 P0.   Game turn event forwarding
 
 P0.   Add methods in PlayersList to get remote and local players based on our ip and port
 
 P0.   Change tag in PlayersList to use Hash -- tag removed, since we check for local player based on our ip and port
 
+P1.   Fix runner script.
+
+P1.   Add check in host if remote player contained 2 players( local for him)..
+
 P2.   Determine our global IP -- using Amazon ip checker
 
-P1.   Fix runner script.
+P2.   Redesign events.
 
 Completed:
 
