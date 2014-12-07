@@ -119,9 +119,12 @@ public class SessionManager implements EventCallback
 		
 		m_gameConnections.set_remote_players( m_playersList.getRemotePlayers() );
 		
-		NewGameDesc game_desc = new NewGameDesc( m_fieldWidth, m_fieldHeight, m_local_players_num, m_remote_players_num);
-		EventManager.NewEvent( new GameStartEvent( game_desc, 0, m_playersList), this);
 		
+		NewGameDesc game_desc = new NewGameDesc( m_fieldWidth, m_fieldHeight, m_local_players_num, m_remote_players_num);
+		try
+		{
+		EventManager.NewEvent( new GameStartEvent( game_desc, 0, m_playersList.clone()), this);
+		}  catch ( CloneNotSupportedException x){}
 		CheckForOurTurn();
 	}
 	
