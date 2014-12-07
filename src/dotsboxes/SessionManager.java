@@ -102,7 +102,7 @@ public class SessionManager implements EventCallback
 			return;
 		}
 		PlayerDesc player = m_playersList.getNext().value;
-		if(m_localPlayersDescs.contains(player))
+		if(player.isLocal())
 		{
 			m_CurrentPlayer = player;
 			EventManager.NewEvent(new CurrentPlayerChange(m_CurrentPlayer), this);
@@ -182,21 +182,20 @@ public class SessionManager implements EventCallback
 	
 	private void NewRemotePlayer( NewGameAccept event)
 	{
-		int current_remote_players_size = m_remotePlayersDescs.size();
-		if( current_remote_players_size == m_remote_players_num )
+		if( m_remotePlayersDescs.size() == m_remote_players_num )
 		{
 			Debug.log("Warning! No need more players!");
 			return;
 		}
 		
-		if( event.getNumberLocalPlayers() > (m_remote_players_num - current_remote_players_size))
+		if( event.getNumberLocalPlayers() > (m_remote_players_num - m_remotePlayersDescs.size()))
 		{
 			Debug.log("Warning! Remote player have too much local players.!");
 			return;
 		}
 		m_remotePlayersDescs.addElement(event.getSender());
 		
-		if( current_remote_players_size == m_remote_players_num )
+		if( m_remotePlayersDescs.size() == m_remote_players_num )
 		{	
 			StartGame();
 			
