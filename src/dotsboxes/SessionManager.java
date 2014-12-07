@@ -71,7 +71,7 @@ public class SessionManager implements EventCallback
 			String player_name = "Tester" + Configuration.getPort();
 			String player_pass = "qwerty";
 			m_CurrentPlayer = new PlayerDesc(player_name,
-											 InetAddress.getByName("127.0.0.1"),
+											 Configuration.getAddress(),
 											 Configuration.getPort(),
 											 new Hash(player_name, player_pass) );
 		} catch (UnknownHostException e) {
