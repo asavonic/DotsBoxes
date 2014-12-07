@@ -118,7 +118,7 @@ public final class EventManager
 			indx_in_queue = m_eventsQueue.size();
 		}
 		m_eventsQueue.add( indx_in_queue, ray);         // Add event in queue.
-		if (Debug.isEnabled())
+		if (Debug.isEnabled() && EventType.sleep_event != event.GetType() )
 			m_DebugHistory.addElement(ray);
 	}
 	public static void NewAnonimEvent(Event event)
@@ -138,11 +138,13 @@ public final class EventManager
 				EventCallback sender = ray.GetSender();
 				EventType    ev_type = event.GetType();
 		
-				if( null != sender )
-						Debug.log( "Process event " + event.TypeToString() + "pushed by" +  String.valueOf(sender.getClass()));
-				else
-					Debug.log( "Process " + event.TypeToString() + " pushed by anonim class" );
-				
+				if (EventType.sleep_event != event.GetType())
+				{
+					if( null != sender )
+							Debug.log( "Process event " + event.TypeToString() + "pushed by" +  String.valueOf(sender.getClass()));
+					else
+						Debug.log( "Process " + event.TypeToString() + " pushed by anonim class" );
+				}
 				
 				Vector<EventCallback> vector    = m_subcribes.get(ev_type);   // Get target customers.
 				Vector<EventCallback> vectorGen = m_subcribes.get(ev_type.Generic);   // Get generic customers.
@@ -163,9 +165,8 @@ public final class EventManager
 				{
 					Debug.log("No customers for event " + ev_type + ".");
 				}
-				Debug.log("Event  " + ev_type + " has been processed.");
 				m_eventsQueue.remove(0);
-				if (Debug.isEnabled())
+				if (Debug.isEnabled() && EventType.sleep_event != event.GetType())
 				{
 					m_completedCommandCount++;
 					PrintDebugHistory(5);
