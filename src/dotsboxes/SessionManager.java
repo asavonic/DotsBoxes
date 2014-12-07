@@ -74,9 +74,6 @@ public class SessionManager implements EventCallback
 											 Configuration.getAddress(),
 											 Configuration.getPort(),
 											 new Hash(player_name, player_pass) );
-		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
