@@ -135,10 +135,10 @@ public class SessionManager implements EventCallback
 				String player_name = String.valueOf(i);
 				String player_pass = "qwerty";
 				player = new PlayerDesc(player_name,
-												 InetAddress.getByName("127.0.0.1"),
+												 Configuration.getAddress(),
 												 Configuration.getPort(),
 												 new Hash(player_name, player_pass) );
-			} catch (UnknownHostException | UnsupportedEncodingException | NoSuchAlgorithmException e) {
+			} catch (UnsupportedEncodingException | NoSuchAlgorithmException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}																//TODO: Andrew! Write right initialization of PlayerDesc! 
