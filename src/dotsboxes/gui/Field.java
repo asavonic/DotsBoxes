@@ -453,7 +453,7 @@ public class Field extends JPanel implements EventCallback
 			break;
 		case GUI_current_player_changed:
 			PlayerDesc desc = m_playersDesc.getNext().value;
-			currentPlayer.setText(desc.getName());
+			currentPlayer.setText(desc.getName() + String.valueOf(desc.isLocal()));
 			break;
 		case GUI_game_over:
 			GUI_GameOverEvent game_over = (GUI_GameOverEvent) ev;
