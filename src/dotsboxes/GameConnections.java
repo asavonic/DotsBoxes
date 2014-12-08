@@ -4,8 +4,10 @@
 package dotsboxes;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.util.Vector;
 
 import dotsboxes.callbacks.EventCallback;
 import dotsboxes.events.CurrentPlayerChange;
@@ -77,7 +79,24 @@ public class GameConnections implements EventCallback {
 	{
 		Debug.log("broadcast_event() up to " + m_PlayersMap.getPlayersList().size() + " players" );
 		
+		// used to avoid multiple event send to a single client (if it holds more than one local player)
+		Vector<InetAddress> addresses_processed = new Vector<InetAddress>();
+		
 		for( TaggedValue<PlayerDesc, String> player : container ) {
+			boolean address_processed = false;
+			for (InetAddress addr : addresses_processed ) {
+				if ( addr.equals( player.value.getInetAddress() ) ) {
+					address_processed = true;
+					break;
+				}
+			}
+			
+			if ( address_processed ) {
+				continue;
+			} else {
+				addresses_processed.add( player.value.getInetAddress() );
+			}
+			
 			try {
 				Connection player_connection = ConnectionManager.getConnection(player.value);
 				if ( player_connection == null ) {
