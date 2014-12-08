@@ -1,7 +1,5 @@
 FeatureRequsts:
 
-P0.   Fix turn sequence hang -- 2 local + 1 remote player (or 1 local + 1 remote)
-
 P1.   Debug history save/load
 
 P2.   Add join list.
@@ -62,6 +60,8 @@ P2.   Add "dead heat" for game over.
 P2.   Redesign events.
 
 P0.   Fix remote game
+
+P0.   Fix turn sequence hang -- 2 local + 1 remote player (or 1 local + 1 remote)
 
 Completed:
 
