@@ -19,6 +19,7 @@ import dotsboxes.events.GameTurnEvent;
 import dotsboxes.events.NewGameAccept;
 import dotsboxes.events.RemoteGameTurnEvent;
 import dotsboxes.events.RemoteNewGameRequest;
+import dotsboxes.game.NewGameDesc;
 import dotsboxes.players.PlayerDesc;
 import dotsboxes.players.PlayersMap;
 import dotsboxes.rmi.Connection;
@@ -48,7 +49,6 @@ public class GameConnections implements EventCallback {
 		}
 		
 		EventManager.Subscribe(EventType.remote_New_Game_Accept, this);
-		EventManager.Subscribe(EventType.remote_New_Game_Request, this);
 		EventManager.Subscribe(EventType.local_Current_Player_Change, this);
 		EventManager.Subscribe(EventType.game_Start, this);
 		EventManager.Subscribe(EventType.game_Turn, this);
@@ -111,46 +111,32 @@ public class GameConnections implements EventCallback {
 		}
 	}
 	
-	public void find_n_players(int num_players)
+	public void find_n_players(int num_players, NewGameDesc new_game_desc )
 	{
 		Debug.log("GameConnections: find_n_players()");
-		broadcast_event(new RemoteNewGameRequest(m_CurrentPlayer, null), m_PlayersMap ); // Fix this null.
+		broadcast_event(new RemoteNewGameRequest(m_CurrentPlayer, new_game_desc), m_PlayersMap );
 		
 	}
 	
 	public void HandleNewGameAccept( Event event )
 	{
 		NewGameAccept new_game_accept = (NewGameAccept) event;
-		Debug.log("GameConnections: " + new_game_accept.getSender().getName() + " accepted our New_Game_Request");
-	}
-	
-	public void HandleNewGameRequest( Event event )
-	{
-		RemoteNewGameRequest new_game_request = (RemoteNewGameRequest) event;
-		Debug.log("GameConnections: " + new_game_request.getSender().getName() + " requested us to join the game, accepting");
-
-		Connection remote = ConnectionManager.getConnection(new_game_request.getSender());
 		
-		if ( remote == null ) {
-			// this should not normally happen since we already received event from sender
+		if ( new_game_accept.getSender().equals( m_CurrentPlayer ) ) {
 			try {
-				remote = ConnectionManager.connect(m_CurrentPlayer, new_game_request.getSender());
+				Connection player_connection = ConnectionManager.getConnection( new_game_accept.getRequest().getSender() );
+				if ( player_connection == null ) {
+					player_connection = ConnectionManager.connect(m_CurrentPlayer, new_game_accept.getRequest().getSender() );
+				}
+				player_connection.send_event(event);
 			} catch (RemoteException | NotBoundException
 					| ConnectionAlreadyEstablished e) {
-				e.printStackTrace();
+				Debug.log("HandleNewGameAccept(): unable to connect to player" + new_game_accept.getRequest().getSender().getName() );
+				Debug.log("HandleNewGameAccept(): " + e.getMessage() );
 			}
 		}
 		
-		try {
-			GUI_NewGameAccept accept_for_SessionManager = new GUI_NewGameAccept(new_game_request, 1);
-			EventManager.NewEvent(accept_for_SessionManager, this);
-			
-			NewGameAccept accept = new NewGameAccept(m_CurrentPlayer, 1);
-			remote.send_event(accept); //TODO: HARDCODED! We shouldn't answer here.		
-		} catch (RemoteException e) {
-			// add reset
-			e.printStackTrace();
-		}
+		Debug.log("GameConnections: " + new_game_accept.getSender().getName() + " accepted our New_Game_Request");
 	}
 	
 	public void HandleCurrentPlayerChange( Event event )
@@ -214,7 +200,6 @@ public class GameConnections implements EventCallback {
 			HandleNewGameAccept(event);
 			break;
 		case remote_New_Game_Request:
-			HandleNewGameRequest(event);
 			break;
 		case remote_Game_Turn:
 			HandleRemoteGameTurn(event);

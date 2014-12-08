@@ -1,7 +1,10 @@
 package dotsboxes.gui.newgame;
 
 import dotsboxes.EventManager;
+import dotsboxes.callbacks.EventCallback;
+import dotsboxes.events.Event;
 import dotsboxes.events.EventType;
+import dotsboxes.events.RemoteNewGameRequest;
 import dotsboxes.game.NewGameDesc;
 
 import java.awt.Button;
@@ -19,17 +22,20 @@ import javax.swing.JTextArea;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-public class FindNewGame extends JPanel {
+public class FindNewGame extends JPanel implements EventCallback {
 
-	LinkedList<NewGameDesc> m_gamesList;
+	LinkedList<RemoteNewGameRequest> m_gamesList = new LinkedList<RemoteNewGameRequest>();
 	
-	DefaultListModel m_listModel = new DefaultListModel();
-	JList m_listView = new JList(m_listModel);
+	DefaultListModel<String> m_listModel = new DefaultListModel<String>();
+	JList<String> m_listView = new JList<String>(m_listModel);
 	
 	JTextArea m_gameDesc = new JTextArea("TEST GAME DESCRIPTOR");
 	
 	public FindNewGame(Container parent) {
 		m_Parent = parent;
+		
+		EventManager.Subscribe( EventType.remote_New_Game_Request, this );
+		
 		this.setLayout( new GridLayout(0, 2));
 		
 		m_listView.addListSelectionListener( new ListSelectionListener() {
@@ -47,7 +53,11 @@ public class FindNewGame extends JPanel {
 		join_button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) 
 			{
-				EventManager.NewAnonimEvent( new dotsboxes.events.Event(EventType.GUI_New_Game_Accept));
+				if ( m_listView.getSelectedIndex() == -1 ) {
+					return;
+				}
+				
+				EventManager.NewAnonimEvent( new dotsboxes.events.GUI_NewGameAccept( m_gamesList.get( m_listView.getSelectedIndex() ), 1 ) );
 			}
 		});
 		
@@ -67,10 +77,19 @@ public class FindNewGame extends JPanel {
 	public void Update()
 	{
 		m_listModel.removeAllElements();
-		for(NewGameDesc game : m_gamesList) {
-			m_listModel.addElement(game.getGameName());
+		for(RemoteNewGameRequest game : m_gamesList) {
+			m_listModel.addElement(game.getNewGameDesc().getGameName() + " from player " + game.getSender().getName() );
 		}
 	}
 	
 	Container m_Parent;
+
+	@Override
+	public void HandleEvent(Event event) {
+		if ( event.GetType() == EventType.remote_New_Game_Request ) {
+			RemoteNewGameRequest remote_game_request = (RemoteNewGameRequest) event;
+			m_gamesList.add( remote_game_request );
+			Update();
+		}
+	}
 }

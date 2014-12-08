@@ -6,6 +6,7 @@ import dotsboxes.players.PlayerDesc;
 public class GUI_NewGameAccept extends Event
 {
 	RemoteNewGameRequest m_game_request;
+
 	int m_num_local_players;
 	public GUI_NewGameAccept( RemoteNewGameRequest game_request, int num_local_players) 
 	{
@@ -22,6 +23,10 @@ public class GUI_NewGameAccept extends Event
 	public NewGameDesc getGameDesc()
 	{
 		return m_game_request.getNewGameDesc();
+	}
+	
+	public RemoteNewGameRequest getGameRequest() {
+		return m_game_request;
 	}
 	
 	public int getNumLocalPlayers()

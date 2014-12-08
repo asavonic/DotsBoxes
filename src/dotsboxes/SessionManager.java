@@ -161,7 +161,7 @@ public class SessionManager implements EventCallback
 		
 		if(0 != m_remote_players_num) //We need remote players.
 		{
-			m_gameConnections.find_n_players(m_remote_players_num); // Request for some number of remote players.
+			m_gameConnections.find_n_players(m_remote_players_num, new NewGameDesc(m_fieldWidth, m_fieldHeight, m_local_players_num, m_remote_players_num) );
 		}
 		else StartGame(); // Only local players We can start!
 	}
@@ -227,8 +227,7 @@ public class SessionManager implements EventCallback
 			GUI_NewGameAccept game_accept_event = (GUI_NewGameAccept) event;
 			m_local_players_num = game_accept_event.getNumLocalPlayers();
 			
-			//get concrete remote game desc and set local players.
-			//emit event remote_New_Game_Accept.
+			EventManager.NewEvent( new NewGameAccept( game_accept_event.getGameRequest(), m_CurrentPlayer, m_local_players_num ), this);
 			break;
 		case remote_New_Game_Request:
 			RemoteNewGameRequest request_event = (RemoteNewGameRequest) event;

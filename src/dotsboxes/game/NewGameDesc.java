@@ -58,5 +58,8 @@ public class NewGameDesc implements java.io.Serializable {
 		m_sizeFieldHeight = sizeFieldHeight;
 		m_num_local_players = num_local_players;
 		m_num_remote_players = num_remote_players;
+		
+		m_gameName = "Field: " + m_sizeFieldWidth + "x" + m_sizeFieldHeight + ", players: " + (
+				m_num_local_players + m_num_remote_players);
 	}
 }
