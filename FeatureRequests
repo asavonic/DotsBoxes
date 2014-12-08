@@ -1,22 +1,22 @@
 FeatureRequsts:
 
-P0.   Redesign initial connection to known players 
-
 P0.   Fix turn sequence hang -- 2 local + 1 remote player (or 1 local + 1 remote)
-
-P1.   Add join list.
 
 P1.   Debug history save/load
 
-P1.   UPnP support
-
-P2.   Add set known IPs GUI window.  
+P2.   Add join list.
 
 P2.   Fix multiple game over for *server* side
 
-P3.   Edge highlighting
+P2.   Fix Unknown host exception when using hostname instead of ip
 
-P3.   Fix Unknown host exception when using hostname instead of ip
+P2.   Add "dead heat" for game over.
+
+P2.   Add back to menu button on FindNewGame and CreateNewGame window.
+
+P2.   Add eagle picture on MainMenu. 
+
+P3.   Edge highlighting
 
 P3.   Color contrast
 
@@ -24,15 +24,15 @@ P3.   Remove dead code
 
 P3.   Add remote tracker for initial setup
 
-P3.   Add "dead heat" for game over.
-
-P3.   Add print game turn history if anything crash in GameSession in debug mode.
-
 P3.   Write game description and user guide.
 
 P3.   Redesign Session Manager with new posibilities of CirclBuffer.
 
-P3.   Add back to menu button on FindNewGame and CreateNewGame window.
+P3.   Redesign initial connection to known players 
+
+P3.   UPnP support
+
+P3.   Add set known IPs GUI window.  
 
 P3.   Add list of all plaayers and focus on current player in Field window.
 
