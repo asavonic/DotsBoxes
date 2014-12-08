@@ -30,11 +30,15 @@ P3.   Add print game turn history if anything crash in GameSession in debug mode
 
 P3.   Write game description and user guide.
 
+P3.   Redesign Session Manager with new posibilities of CirclBuffer.
+
 P3.   Add back to menu button on FindNewGame and CreateNewGame window.
 
 P3.   Add list of all plaayers and focus on current player in Field window.
 
 P4.   Write comments for all. 
+
+P4.   Add keyboard hotkeys.
 
 P4.   Delete all warnings.
 
