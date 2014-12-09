@@ -177,10 +177,13 @@ public class GameSession implements EventCallback
 	
 	private void CheckWinAndSend()
 	{
+		if(m_gameOver)
+			return;
 		Vector<Integer> winners = CheckWin();
 		if(null != winners)
 		{
 			EventManager.NewEvent( new GUI_GameOverEvent( winners), this);
+			m_gameOver = true;
 			EventManager.NewAnonimEvent(new Event(EventType.show_history));
 			m_history_indx = m_history.size() - 1;
 		}
@@ -510,6 +513,7 @@ public class GameSession implements EventCallback
 	
 	int m_history_indx = 0;
 	boolean m_reverse = true;
+	boolean m_gameOver = false;
 	int m_fieldHeight;
 	int m_fieldWidth;
 	int m_numberOfPlayers;
