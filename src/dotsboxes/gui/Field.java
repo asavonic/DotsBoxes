@@ -11,6 +11,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.Vector;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -399,13 +400,23 @@ public class Field extends JPanel implements EventCallback
 	private void GameOver(GUI_GameOverEvent game_over)
 	{
 		final int BACK_TO_MENU = 1;
+		String string_of_winners = new String();
+		Vector<Integer> winners = game_over.getPlrTag();
 		
-		PlayerDesc winner = m_playersDesc.getAt(game_over.getPlrTag()).value;
+		if( winners.size() > 1)
+			string_of_winners += "Dead heat! Win players : ";
+		else 
+			string_of_winners += "Win player ";
 		
+		for( Integer win : winners)
+		{
+			PlayerDesc winner = m_playersDesc.getAt(win).value;
+			string_of_winners += winner.getName() + "  ";
+		}
 		Object[] options = {"Show field.",
         "Back to menu."};
 		int n = JOptionPane.showOptionDialog(m_frame,
-		"Won player number " + winner.getName(),
+		string_of_winners,
 		"GameOver!",
 		JOptionPane.YES_NO_OPTION,
 		JOptionPane.INFORMATION_MESSAGE,

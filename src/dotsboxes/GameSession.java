@@ -177,10 +177,10 @@ public class GameSession implements EventCallback
 	
 	private void CheckWinAndSend()
 	{
-		int winner = CheckWin();
-		if(empty != winner)
+		Vector<Integer> winners = CheckWin();
+		if(null != winners)
 		{
-			EventManager.NewEvent( new GUI_GameOverEvent( winner), this);
+			EventManager.NewEvent( new GUI_GameOverEvent( winners), this);
 			EventManager.NewAnonimEvent(new Event(EventType.show_history));
 			m_history_indx = m_history.size() - 1;
 		}
@@ -377,7 +377,7 @@ public class GameSession implements EventCallback
 		}
 	}
 	
-	private int CheckWin()
+	private Vector<Integer> CheckWin()
 	{
 		//Go across horizontal edges.
 		for( int i = 1; i < m_fieldHeight; ++i)
@@ -385,7 +385,7 @@ public class GameSession implements EventCallback
 			{
 				if ((empty == m_edgesH[i][j]))
 				{
-					return empty;
+					return null;
 				}
 			}
 		
@@ -395,7 +395,7 @@ public class GameSession implements EventCallback
 			{
 				if ((empty == m_edgesV[i][j]))
 				{
-					return empty;
+					return null;
 				}
 			}
 		
@@ -406,21 +406,26 @@ public class GameSession implements EventCallback
 			{
 				if (empty == m_vertex[i][j])
 				{
-					return empty;
+					return null;
 				}
 			}
 		
 		int max = 0;
-		int player_tag = empty;
+		Vector<Integer> winners = new Vector<Integer>();
 		for( int i = 0; i < m_numberOfPlayers; ++i)
 			if ( m_counters[i] > max)
 			{
 				max = m_counters[i];
-				player_tag = i;
+				winners.clear();
+				winners.add(i);
+			}
+			else if (m_counters[i] == max)
+			{
+				winners.add(i);
 			}
 		
-		Debug.log("Player " + player_tag + " win!.");
-		return player_tag;
+		Debug.log("Player " + winners + " win!.");
+		return winners;
 	}
 	
 	public void Draw()
