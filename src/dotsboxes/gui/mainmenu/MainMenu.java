@@ -13,6 +13,8 @@ public class MainMenu extends JPanel {
 	{
 		m_parent = parent;
 		
+		
+		
 		setLayout(new BorderLayout());
 		m_loginPanel.setPreferredSize(new Dimension(220, 100));
 		add( m_loginPanel, BorderLayout.LINE_END);
@@ -20,11 +22,14 @@ public class MainMenu extends JPanel {
 		m_menuPanel.setPreferredSize(new Dimension(200, 100));
 		add( m_menuPanel, BorderLayout.CENTER);
 		
-		
+		m_eagle.setPreferredSize(new Dimension(200, 200));
+		add( m_eagle, BorderLayout.PAGE_START);
+		m_eagle.repaint();
 	}
 	
 	Container m_parent;
 	
+	Logo m_eagle = new Logo(this);
 	MenuPanel m_menuPanel = new MenuPanel(this);
 	LoginPanel m_loginPanel = new LoginPanel(this);
 }
