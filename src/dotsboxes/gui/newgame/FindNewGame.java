@@ -16,13 +16,15 @@ import java.awt.event.ActionListener;
 import java.util.LinkedList;
 
 import javax.swing.DefaultListModel;
+import javax.swing.JButton;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-public class FindNewGame extends JPanel implements EventCallback {
+public class FindNewGame extends JPanel implements EventCallback{
+
 
 	LinkedList<RemoteNewGameRequest> m_gamesList = new LinkedList<RemoteNewGameRequest>();
 	
@@ -49,15 +51,28 @@ public class FindNewGame extends JPanel implements EventCallback {
 		add(m_listView);
 		add(m_gameDesc);
 		
+		JButton m_button_BackToMenu = new JButton("Back to menu.");
+		this.add(m_button_BackToMenu);
+		
+		m_button_BackToMenu.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) 
+			{
+				EventManager.NewEvent( new dotsboxes.events.Event(EventType.GUI_back_to_Menu, 100), self);
+			}
+		});
+		
+		
+		
 		Button join_button = new Button("Join game!");
 		join_button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) 
 			{
+
 				if ( m_listView.getSelectedIndex() == -1 ) {
 					return;
 				}
 				
-				EventManager.NewAnonimEvent( new dotsboxes.events.GUI_NewGameAccept( m_gamesList.get( m_listView.getSelectedIndex() ), 1 ) );
+				EventManager.NewEvent( new dotsboxes.events.GUI_NewGameAccept( m_gamesList.get( m_listView.getSelectedIndex() ), 1 ), self );
 			}
 		});
 		
@@ -81,8 +96,9 @@ public class FindNewGame extends JPanel implements EventCallback {
 			m_listModel.addElement(game.getNewGameDesc().getGameName() + " from player " + game.getSender().getName() );
 		}
 	}
-	
+
 	Container m_Parent;
+
 
 	@Override
 	public void HandleEvent(Event event) {
@@ -92,4 +108,8 @@ public class FindNewGame extends JPanel implements EventCallback {
 			Update();
 		}
 	}
+
+	FindNewGame self = this;
+
+
 }

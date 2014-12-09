@@ -1,5 +1,6 @@
 package dotsboxes.gui.newgame;
 
+import java.awt.Button;
 import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -124,6 +125,16 @@ public class CreateNewGame extends JPanel implements EventCallback {
                 3,
                 SpringLayout.NORTH, m_fieldHeight);
 		
+		JButton m_button_BackToMenu = new JButton("Back to menu.");
+		this.add(m_button_BackToMenu);
+		
+		m_button_BackToMenu.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) 
+			{
+				EventManager.NewEvent( new dotsboxes.events.Event(EventType.GUI_back_to_Menu, 100), self);
+			}
+		});
+		
 		JButton join_button = new JButton("Create game!");
 		join_button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) 
@@ -147,6 +158,13 @@ public class CreateNewGame extends JPanel implements EventCallback {
 		layout.putConstraint(SpringLayout.NORTH, join_button,
                 30,
                 SpringLayout.SOUTH, remote_players_label);
+		
+		layout.putConstraint(SpringLayout.WEST, parent,
+                5,
+                SpringLayout.WEST, m_button_BackToMenu);
+		layout.putConstraint(SpringLayout.NORTH, m_button_BackToMenu,
+                30,
+                SpringLayout.SOUTH, join_button);
 	}
 	
 	CreateNewGame self = this;
