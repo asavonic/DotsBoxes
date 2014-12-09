@@ -4,8 +4,6 @@ P1.   Debug history save/load
 
 P2.   Add join list.
 
-P2.   Fix multiple game over for *server* side
-
 P2.   Fix Unknown host exception when using hostname instead of ip
 
 P2.   Add back to menu button on FindNewGame and CreateNewGame window.
@@ -58,6 +56,8 @@ P2.   Determine our global IP -- using Amazon ip checker
 P2.   Add "dead heat" for game over.
 
 P2.   Redesign events.
+
+P2.   Fix multiple game over for *server* side
 
 P0.   Fix remote game
 
